@@ -60,6 +60,18 @@ class AdminListRecurseTreeNode(Node):
         self.template_nodes = template_nodes
         self.cl_var = cl_var
 
+    @classmethod
+    def parse(cls, parser, token):
+        bits = token.contents.split()
+        if len(bits) != 2:
+            raise TemplateSyntaxError(_('%s tag requires an admin ChangeList') % bits[0])
+
+        cl_var = Variable(bits[1])
+
+        template_nodes = parser.parse(('endadminlist_recursetree',))
+        parser.delete_first_token()
+        return cls(template_nodes, cl_var)
+
     def _render_node(self, context, cl, node):
         bits = []
         context.push()
@@ -105,13 +117,4 @@ def adminlist_recursetree(parser, token):
     """
     Very similar to the mptt recursetree, except that it also returns the styled admin code.
     """
-    bits = token.contents.split()
-    if len(bits) != 2:
-        raise TemplateSyntaxError(_('%s tag requires an admin ChangeList') % bits[0])
-
-    cl_var = Variable(bits[1])
-
-    template_nodes = parser.parse(('endadminlist_recursetree',))
-    parser.delete_first_token()
-
-    return AdminListRecurseTreeNode(template_nodes, cl_var)
+    return AdminListRecurseTreeNode.parse(parser, token)
