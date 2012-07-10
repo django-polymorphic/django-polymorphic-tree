@@ -1,4 +1,5 @@
 from django.contrib.admin.views.main import ChangeList
+from django.contrib.contenttypes.models import ContentType
 from django.template import Library, Node, TemplateSyntaxError, Variable
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -54,6 +55,23 @@ def breadcrumb_scope(parser, token):
     return BreadcrumbScope.parse(parser, token)
 
 
+@register.filter
+def real_model_name(node):
+    # Allow downcasted model to work.
+    # node.get_real_instance_class().__name__ would also work
+    return ContentType.objects.get_for_id(node.polymorphic_ctype_id).model
+
+
+@register.filter
+def mptt_breadcrumb(node):
+    """
+    Return a breadcrumb of nodes, for the admin breadcrumb
+    """
+    if node is None:
+        return []
+    else:
+        return list(node.get_ancestors())
+
 
 class AdminListRecurseTreeNode(Node):
     def __init__(self, template_nodes, cl_var):
@@ -85,7 +103,6 @@ class AdminListRecurseTreeNode(Node):
 
         context['columns'] = columns
         context['other_columns'] = [col for col in columns if col[0] not in ('action_checkbox', first_real_column[0])]
-        context['first_column_name'] = first_real_column[0]
         context['first_column'] = first_real_column[1]
         context['named_columns'] = dict(columns)
         context['node'] = node

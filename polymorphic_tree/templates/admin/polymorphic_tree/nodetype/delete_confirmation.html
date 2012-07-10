@@ -6,7 +6,7 @@
      <a href="../../../../">{% trans "Home" %}</a> &rsaquo;
      <a href="../../../">{{ app_label|capfirst|escape }}</a> &rsaquo;
      <a href="../../">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
-     {% for p in parent_breadcrumb %}
+     {% for p in object|mptt_breadcrumb %}
        <a href="../{{ p.id }}/">{{ p.title }}</a> &rsaquo;
      {% endfor %}
      <a href="../">{{ object|truncatewords:"18" }}</a> &rsaquo;
