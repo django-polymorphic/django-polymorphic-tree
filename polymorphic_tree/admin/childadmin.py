@@ -1,7 +1,6 @@
 from mptt.admin import MPTTModelAdmin
 from mptt.forms import MPTTAdminForm
 from polymorphic_tree.utils.polymorphicadmin import PolymorphicChildModelAdmin
-from polymorphic_tree.models import PolymorphicMPTTModel
 
 
 class PolymorpicMPTTAdminForm(MPTTAdminForm):
@@ -13,7 +12,7 @@ class PolymorphicMPTTChildModelAdmin(PolymorphicChildModelAdmin, MPTTModelAdmin)
     The internal machinery
     The admin screen for the ``PolymorphicMPTTModel`` objects.
     """
-    base_model = PolymorphicMPTTModel
+    base_model = None
     base_form = PolymorpicMPTTAdminForm
     base_fieldsets = None
 
