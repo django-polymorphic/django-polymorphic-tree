@@ -64,7 +64,7 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
     def __init__(self, model, admin_site, *args, **kwargs):
         super(PolymorphicParentModelAdmin, self).__init__(model, admin_site, *args, **kwargs)
         self.initialized_child_models = None
-        self.child_admin_site = AdminSite(name='polymorphic_child_admin')
+        self.child_admin_site = AdminSite(name=self.admin_site.name)
 
         # Allow to declaratively define the child models + admin classes
         if self.child_models is not None:
