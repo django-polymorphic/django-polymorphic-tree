@@ -46,13 +46,13 @@ class PolymorphicMPTTModelBase(MPTTModelBase, PolymorphicModelBase):
         return new_class
 
 
-class RestrictedTreeForeignKey(TreeForeignKey):
+class PolymorphicTreeForeignKey(TreeForeignKey):
     """
     A foreignkey that limits the node types the parent can be.
     """
 
     def clean(self, value, model_instance):
-        value = super(RestrictedTreeForeignKey, self).clean(value, model_instance)
+        value = super(PolymorphicTreeForeignKey, self).clean(value, model_instance)
         self._validate_parent(value, model_instance)
         return value
 
@@ -85,32 +85,22 @@ class PolymorphicMPTTModel(MPTTModel, PolymorphicModel):
     #: Whether the node type allows to have children.
     can_have_children = True
 
-
     # Django fields
-    parent = RestrictedTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'), help_text=_('You can also change the parent by dragging the item in the list.'))
-    objects = PolymorphicMPTTModelManager()
+    _default_manager = PolymorphicMPTTModelManager()
 
     class Meta:
         abstract = True
         ordering = ('lft',)
 
-    #class MPTTMeta:
-    #    order_insertion_by = 'title'
-
-
-    @property
-    def is_first_child(self):
-        return self.is_root_node() or (self.parent and (self.lft == self.parent.lft + 1))
-
-
-    @property
-    def is_last_child(self):
-        return self.is_root_node() or (self.parent and (self.rght + 1 == self.parent.rght))
+    # Define:
+    # parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'), help_text=_('You can also change the parent by dragging the item in the list.'))
+    # class MPTTMeta:
+    #     order_insertion_by = 'title'
 
 
 # South integration
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^polymorphic_tree\.models\.RestrictedTreeForeignKey"])
+    add_introspection_rules([], ["^polymorphic_tree\.models\.PolymorphicTreeForeignKey"])
 except ImportError:
     pass

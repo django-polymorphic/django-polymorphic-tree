@@ -59,12 +59,13 @@ The ``models.py`` file should define the custom node type, and any fields it has
 
     from django.db import models
     from django.utils.translation import ugettext_lazy as _
-    from polymorphic_tree.models import PolymorphicMPTTModel
+    from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 
 
     # A base model for the tree:
 
     class BaseTreeNode(PolymorphicMPTTModel):
+        parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'))
         title = models.CharField(_("Title"), max_length=200)
 
         class Meta:
@@ -72,7 +73,7 @@ The ``models.py`` file should define the custom node type, and any fields it has
             verbose_name_plural = _("Tree nodes")
 
 
-    # Create 3 derived models for the tree:
+    # Create 3 derived models for the tree nodes:
 
     class CategoryNode(BaseTreeNode):
         opening_title = models.CharField(_("Opening title"), max_length=200)
