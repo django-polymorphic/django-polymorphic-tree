@@ -1,0 +1,110 @@
+{# variation of admin/change_list_results.html #}
+{% load static i18n polymorphic_tree_admin_tags %}{% load url from future %}{% get_static_prefix as STATIC_URL %}
+
+{% if result_hidden_fields %}
+  <div class="hiddenfields">{# DIV for HTML validation #}
+    {% for item in result_hidden_fields %}{{ item }}{% endfor %}
+  </div>
+{% endif %}
+{% if results %}
+  <div class="results jqtree-django"><div id="js-result-list">
+    <table cellspacing="0" id="result_list">
+      <thead>
+      <tr>{# This is the Django 1.3 style for columns, so it works with both v1.3 and 1.4. #}
+        {% for header in result_headers %}<th scope="col"{{ header.class_attrib }}>
+        <div>{{ header.text|capfirst }}</div>
+        {% endfor %}
+      </tr>
+      </thead>
+      <tbody>
+      {% for result in results %}
+        {% if result.form.non_field_errors %}
+          <tr><td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td></tr>
+        {% endif %}
+        <tr class="{% cycle 'row1' 'row2' %}">{% for item in result %}{{ item }}{% endfor %}</tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div></div>
+{% endif %}
+
+<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}polymorphic_tree/jqtree/jqtree.css"/>
+<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}polymorphic_tree/adminlist/pagetree.css"/>
+<script type="text/javascript">
+  if(! window.jQuery && window.django )
+    window.jQuery = window.django.jQuery;
+  window.$ = window.jQuery || window.django.jQuery;
+</script>
+<script type="text/javascript" src="{{ STATIC_URL }}polymorphic_tree/jquery.cookie.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}polymorphic_tree/jqtree/tree.jquery.js"></script>
+<script type="text/javascript">
+  /*
+   * This code is currently inline because it is generated using various template variables and translation messages.
+   */
+
+  var data = [{% adminlist_recursetree cl %}{% with is_leaf=node.is_leaf_node %}
+    {id: {{ node.pk }}, classes: 'nodetype-{{ node.plugin.type_name|lower }}', can_have_children: {{ node.can_have_children|yesno:'true,false' }}, label: '<div class="col-primary{% if is_leaf %} leaf{% endif %}"><div class="col first-column"><a href="{{ change_url }}"{% if cl.is_popup %} onclick="opener.dismissRelatedLookupPopup(window, {{ node.pk }}); return false;"{% endif %}>{{ first_column|escapejs }}</a></div></div>{% if other_columns %}<div class="col-metadata">{% for name, repr in other_columns %}<div class="col col-{{ name }}">{{ repr|escapejs }}</div>{% endfor %}</div>{% endif %}'{% if not is_leaf %},
+     children: [ {{ children }}
+     ]{% endif %}},{% endwith %}{% endadminlist_recursetree %}
+    null  // for MSIE
+  ];
+  data.pop();
+
+
+  function onCreateLi(node, $li) {
+    // Move node contents directly in li element. not in a span.
+    var $div = $li.children('div')
+    var $span = $div.children('span');
+    var contents = $span.children();
+    $span.remove();
+    $li.addClass(node.classes);
+    $div.append(contents);
+  }
+
+  function onCanMoveTo(moved_node, target_node, position)
+  {
+    return ( target_node.can_have_children || position != 'inside' );
+  }
+
+  var tree = jQuery("#js-result-list").tree({
+    data: data,
+    autoOpen: true,
+    saveState: true,
+    dragAndDrop: {{ cl.is_popup|yesno:"false,true" }},
+    onCreateLi: onCreateLi,
+    onCanMoveTo: onCanMoveTo
+  });
+
+  tree.before('<table class="js-tree-header"><thead><tr>{% for header in result_headers %}<th{{ header.class_attrib }}><div>{{ header.text|capfirst }}</div></th>{% endfor %}</tr></thead></table>');
+  tree.bind('tree.move', function(e) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '{{ cl.model_admin.api_node_moved_view_url }}',
+      dataType: 'json',
+      data: {
+        'moved_id': parseInt(e.move_info.moved_node.id),
+        'target_id': parseInt(e.move_info.target_node.id),
+        'previous_parent_id': parseInt(e.move_info.previous_parent.id || 0),
+        'position': e.move_info.position,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      error: onMoveError
+    });
+  });
+
+  function onMoveError(xhr, status, exception) {
+    response = jQuery.parseJSON(xhr.response);
+    // TODO: it would be possible to stream new data from the server instead.
+    if( response.action == 'reload' ) {
+      alert('{% trans "Unable to move the node, the current display is out-of-date.\nThe current page now reloaded." %}');
+      location.reload();
+    }
+    else if( response.action == 'reject' ) {
+      alert('{% trans "It is not allowed to move a node to the last position.\nThe current page will now reload." %}');
+      location.reload();
+    }
+    else {
+      alert('{% trans "There was an error while moving the node, please reload the current page." %}');
+    }
+  }
+</script>

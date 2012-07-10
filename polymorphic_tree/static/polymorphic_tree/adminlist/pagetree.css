@@ -1,0 +1,135 @@
+/*
+ * jsTree django theme 1.0
+ */
+
+
+/* column layout */
+
+.jqtree-django .col-primary {
+  float: left;
+  width: auto;
+  z-index: 0;
+}
+
+.jqtree-django .col-metadata {
+  float: right;
+  width: auto;  /* all 3 columns combined is 393px */
+  border-right: 1px solid #ddd;
+  z-index: 1;
+}
+
+.jqtree-django .js-tree-header .action-checkbox-column { display: none; }
+.jqtree-django .js-tree-header .first-column { border-left: 0; padding-left: 15px; }
+
+
+/* Base setup */
+
+.jqtree-django li {
+  /* The "tr" */
+  clear: both;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  border-bottom: 1px solid #eee;
+}
+
+.jqtree-django li > div:after {
+  /* needed for toggler icon */
+  content:      ".";
+  font-size:    0;
+  line-height:  0;
+  display:      block;
+  height:       0;
+  clear:        both;
+  visibility:   hidden;
+}
+
+* html .jqtree-django li div { height:     1%; } /* 1% of nothing makes IE 6 do the right thing. */
+*+html .jqtree-django li > div { min-height: 0;  } /* and IE7 has new tricks to trigger hasLayout. */
+
+
+.jqtree-django .col-primary,
+.jqtree-django .col-metadata {
+  /* Fix height of columns, for zebra background.
+  Also masks subtle differences within various cells if they are there */
+  height: 26px;
+  overflow: hidden;
+}
+
+.jqtree-django ul {
+  clear: both;
+  /* reset django admin styles */
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.jqtree-django ul.tree {
+  margin: 0;
+  padding: 0 0 0 12px;
+  background-image: url(zebra.png);
+}
+
+
+/* column layout */
+
+#changelist table.js-tree-header thead th {
+  padding: 2px 5px;  /* restore Django 1.3 padding, in case Django 1.4 is used. */
+}
+
+.jqtree-django ul.tree a.toggler {
+  position: absolute;
+  left: -6px;
+  margin-top: -4px;
+  top: 50%;
+}
+
+.jqtree-django div.col {
+  /* the "td" cells */
+  float: left;
+  padding: 5px;
+
+  border-left: 1px solid #ddd;
+  line-height: 16px;  /* increase if a column is larger */
+  font-size: 11px;
+}
+
+.jqtree-django div.first-column {
+  border-left: 0;
+}
+
+.jqtree-django div.first-column a {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+ul.tree li img { vertical-align: baseline; }  /* keeps 3px space below, use 'bottom' to remove it */
+
+
+/* drag and drop */
+
+#js-result-list .tree-dragging {
+  color: #333;
+  border: 1px solid #ddd;
+  background: #eee;
+  opacity: 0.9;
+  cursor: pointer;
+  padding: 2px 8px;
+}
+
+#js-result-list .tree-dragging .first-column { min-width: 500px; }
+#js-result-list .tree-dragging .col-metadata { display: none; }
+
+
+/* resets */
+
+.jqtree-django ul.tree li.folder { margin-bottom: 0; }
+
+
+/* non-javascript buttons */
+
+ul.tree .no-js { display: none; }
+ul.tree li:first-child .move-up { visibility: hidden; }  /* Hiding in CSS is easy, the server-side urlnode.is_first_sibling call is expensive. */
+ul.tree li:last-child .move-down { visibility: hidden; }

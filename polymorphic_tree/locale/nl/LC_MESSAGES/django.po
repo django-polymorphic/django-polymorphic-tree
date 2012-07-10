@@ -1,0 +1,115 @@
+# Copyright (C) 2010-2012
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Diederik van der Boor <vdboor@edoburu.nl>, 2010-2011
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-10 17:12+0200\n"
+"PO-Revision-Date: 2011-01-10 23:54+0100\n"
+"Last-Translator: Diederik van der Boor <vdboor@edoburu.nl>\n"
+"Language-Team: Dutch <NL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.1\n"
+
+#: models.py:40
+#, fuzzy
+msgid "The selected node cannot have child nodes."
+msgstr "De gekozen pagina kan geen subpagina's bevatten."
+
+#: models.py:75
+msgid "parent"
+msgstr "ouder"
+
+#: models.py:75
+msgid "You can also change the parent by dragging the item in the list."
+msgstr ""
+
+#: admin/parentadmin.py:18
+#, fuzzy
+msgid "Node type"
+msgstr "Paginatype"
+
+#: admin/parentadmin.py:43
+#, fuzzy
+msgid "node type"
+msgstr "Paginatype"
+
+#: admin/parentadmin.py:104
+msgid "Actions"
+msgstr "Acties"
+
+#: admin/parentadmin.py:112
+#, fuzzy
+msgid "Add sub node"
+msgstr "Subpagina toevoegen"
+
+#: admin/parentadmin.py:120
+msgid "View on site"
+msgstr "Bekijk op website"
+
+#: templates/admin/polymorphic_tree/add_type_form.html:7
+#: templates/admin/polymorphic_tree/node/change_form.html:7
+#: templates/admin/polymorphic_tree/node/delete_confirmation.html:6
+msgid "Home"
+msgstr ""
+
+#: templates/admin/polymorphic_tree/add_type_form.html:10
+#: templates/admin/polymorphic_tree/node/change_form.html:13
+msgid "Add"
+msgstr ""
+
+#: templates/admin/polymorphic_tree/add_type_form.html:21
+#: templates/admin/polymorphic_tree/add_type_form.html:37
+msgid "Submit"
+msgstr ""
+
+#: templates/admin/polymorphic_tree/add_type_form.html:27
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Corrigeer a.u.b. de volgende fout:"
+msgstr[1] "Corrigeer a.u.b. de volgende fouten:"
+
+#: templates/admin/polymorphic_tree/node/delete_confirmation.html:13
+msgid "Delete"
+msgstr ""
+
+#: templates/admin/polymorphic_tree/node/jstree_list_results.html:98
+msgid ""
+"Unable to move the node, the current display is out-of-date.\\nThe current "
+"page now reloaded."
+msgstr ""
+
+#: templates/admin/polymorphic_tree/node/jstree_list_results.html:102
+msgid ""
+"It is not allowed to move a node to the last position.\\nThe current page "
+"will now reload."
+msgstr ""
+
+#: templates/admin/polymorphic_tree/node/jstree_list_results.html:106
+msgid ""
+"There was an error while moving the node, please reload the current page."
+msgstr ""
+
+#: templatetags/polymorphic_tree_admin_tags.py:110
+#, python-format
+msgid "%s tag requires an admin ChangeList"
+msgstr ""
+
+#: utils/polymorphicadmin.py:27
+msgid "Type"
+msgstr "Type"
+
+#: utils/polymorphicadmin.py:205
+#, python-format
+msgid "Add %s"
+msgstr "%s toevoegen"
+
+#: utils/polymorphicadmin.py:274
+msgid "Contents"
+msgstr "Inhoud"
