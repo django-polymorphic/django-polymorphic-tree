@@ -64,18 +64,13 @@ class RestrictedTreeForeignKey(TreeForeignKey):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
             base_model = _get_base_polymorphic_model(model_instance.__class__)
 
-            # Get parent
-            parent = base_model.objects.non_polymorphic().only('polymorphic_ctype',
-                'parent', 'title', 'lft',  # add fields read by MPTT, otherwise .only() causes infinite loop in django-mptt 0.5.2
-            ).get(pk=parent)
-
-            if parent.can_have_children:
-                return
-        elif isinstance(parent, PolymorphicMPTTModel):
-            if parent.can_have_children:
-                return
-        else:
+            # Get parent, TODO: needs to upcast here to read can_have_children.
+            parent = base_model.objects.get(pk=parent)
+        elif not isinstance(parent, PolymorphicMPTTModel):
             raise ValueError("Unknown parent value")
+
+        if parent.can_have_children:
+            return
 
         raise ValidationError(_("The selected node cannot have child nodes."))
 
