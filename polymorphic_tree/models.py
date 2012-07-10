@@ -20,26 +20,6 @@ def _get_base_polymorphic_model(ChildModel):
     return None
 
 
-def _validate_parent(parent):
-    from polymorphic_tree.extensions import node_type_pool
-    if not parent:
-        return
-    elif isinstance(parent, (int, long)):
-        # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
-        base_model = _get_base_polymorphic_model(node_type_pool.get_model_classes()[0])
-        parent = base_model.objects.non_polymorphic().values('polymorphic_ctype').get(pk=parent)
-        plugin = node_type_pool._get_plugin_by_content_type(parent['polymorphic_ctype'])
-        if plugin.can_have_children:
-            return
-    elif isinstance(parent, PolymorphicMPTTModel):
-        if parent.can_have_children:
-            return
-    else:
-        raise ValueError("Unknown parent value")
-
-    raise ValidationError(_("The selected node cannot have child nodes."))
-
-
 class PolymorphicMPTTModelBase(MPTTModelBase, PolymorphicModelBase):
     """
     Metaclass for all plugin models.
@@ -66,14 +46,53 @@ class PolymorphicMPTTModelBase(MPTTModelBase, PolymorphicModelBase):
         return new_class
 
 
+class RestrictedTreeForeignKey(TreeForeignKey):
+    """
+    A foreignkey that limits the node types the parent can be.
+    """
+
+    def clean(self, value, model_instance):
+        value = super(RestrictedTreeForeignKey, self).clean(value, model_instance)
+        self._validate_parent(value, model_instance)
+        return value
+
+
+    def _validate_parent(self, parent, model_instance):
+        if not parent:
+            return
+        elif isinstance(parent, (int, long)):
+            # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
+            base_model = _get_base_polymorphic_model(model_instance.__class__)
+
+            # Get parent
+            parent = base_model.objects.non_polymorphic().only('polymorphic_ctype',
+                'parent', 'title', 'lft',  # add fields read by MPTT, otherwise .only() causes infinite loop in django-mptt 0.5.2
+            ).get(pk=parent)
+
+            if parent.can_have_children:
+                return
+        elif isinstance(parent, PolymorphicMPTTModel):
+            if parent.can_have_children:
+                return
+        else:
+            raise ValueError("Unknown parent value")
+
+        raise ValidationError(_("The selected node cannot have child nodes."))
+
+
+
 class PolymorphicMPTTModel(MPTTModel, PolymorphicModel):
     """
     The base class for all nodes; a mapping of an URL to content (e.g. a HTML page, text file, blog, etc..)
     """
     __metaclass__ = PolymorphicMPTTModelBase
 
-    parent = TreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'), validators=[_validate_parent], help_text=_('You can also change the parent by dragging the item in the list.'))
+    #: Whether the node type allows to have children.
+    can_have_children = True
 
+
+    # Django fields
+    parent = RestrictedTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'), help_text=_('You can also change the parent by dragging the item in the list.'))
     objects = PolymorphicMPTTModelManager()
 
     class Meta:
@@ -94,18 +113,9 @@ class PolymorphicMPTTModel(MPTTModel, PolymorphicModel):
         return self.is_root_node() or (self.parent and (self.rght + 1 == self.parent.rght))
 
 
-    @property
-    def can_have_children(self):
-        return self.plugin.can_have_children
-
-
-    @property
-    def plugin(self):
-        """
-        Access the parent plugin which provides all metadata.
-        """
-        from polymorphic_tree.extensions import node_type_pool
-        # Also allow a non_polymorphic() queryset to resolve the plugin.
-        # Corresponding page_type_pool method is still private on purpose.
-        # Not sure the utility method should be public, or how it should be named.
-        return node_type_pool._get_plugin_by_content_type(self.polymorphic_ctype_id)
+# South integration
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^polymorphic_tree\.models\.RestrictedTreeForeignKey"])
+except ImportError:
+    pass

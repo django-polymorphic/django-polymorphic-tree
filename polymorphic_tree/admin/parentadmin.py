@@ -6,7 +6,6 @@ from django.db.models import signals
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.contenttypes.models import ContentType
 from polymorphic_tree.utils.polymorphicadmin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
@@ -16,20 +15,6 @@ class NodeTypeChoiceForm(PolymorphicModelChoiceForm):
     def __init__(self, *args, **kwargs):
         super(NodeTypeChoiceForm, self).__init__(*args, **kwargs)
         self.fields['ct_id'].label = _("Node type")
-
-
-def _get_polymorphic_type_choices():
-    from polymorphic_tree.extensions import node_type_pool
-
-    priorities = {}
-    choices = []
-    for plugin in node_type_pool.get_plugins():
-        ct = ContentType.objects.get_for_model(plugin.model)
-        choices.append((ct.id, plugin.verbose_name))
-        priorities[ct.id] = plugin.sort_priority
-
-    choices.sort(key=lambda choice: (priorities[choice[0]], choice[1]))
-    return choices
 
 
 try:
@@ -43,7 +28,7 @@ else:
         title = _('node type')
 
         def lookups(self, request, model_admin):
-            return _get_polymorphic_type_choices()
+            return model_admin.get_child_type_choices()
 
         def queryset(self, request, queryset):
             if self.value():
@@ -57,33 +42,18 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     """
     The parent admin, this renders the "list" page.
     It forwards the "edit" and "delete" views to the admin interface of the polymorphic models.
+
+    The :func:`get_admin_for_model` and :func:`get_child_model_classes` functions
+    of the base class should still be implemented.
     """
     base_model = PolymorphicMPTTModel
     add_type_form = NodeTypeChoiceForm
 
     # Config list page:
     list_filter = extra_list_filters
+    polymorphic_list = True
 
     EMPTY_ACTION_ICON = u'<span><img src="{static}polymorphic_tree/icons/blank.gif" width="16" height="16" alt=""/></span>'.format(static=settings.STATIC_URL)
-
-
-    # ---- Polymorphic code ----
-
-    def get_admin_for_model(self, model):
-        from polymorphic_tree.extensions import node_type_pool
-        return node_type_pool.get_model_admin(model)
-
-
-    def get_child_model_classes(self):
-        from polymorphic_tree.extensions import node_type_pool
-        return node_type_pool.get_model_classes()
-
-
-    def get_child_type_choices(self):
-        """
-        Return a list of polymorphic types which can be added.
-        """
-        return _get_polymorphic_type_choices()
 
 
     # ---- List code ----
@@ -105,8 +75,11 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
 
     def get_action_icons(self, node):
+        """
+        Return a list of all action icons in the :func:`actions_column`.
+        """
         actions = []
-        if node.can_have_children:
+        if node.can_have_children:   # Note: this needs the upcasted model currently.
             actions.append(
                 u'<a href="add/?{parent_attr}={id}" title="{title}"><img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     parent_attr=self.model._mptt_meta.parent_attr, id=node.pk, title=_('Add sub node'), static=settings.STATIC_URL)
@@ -130,6 +103,9 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     # ---- Custom views ----
 
     def get_urls(self):
+        """
+        Add custom URLs for moving nodes.
+        """
         base_urls = super(PolymorphicMPTTParentModelAdmin, self).get_urls()
         info = self.model._meta.app_label, self.model._meta.module_name
         extra_urls = [
