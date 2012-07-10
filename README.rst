@@ -30,7 +30,7 @@ which will be automatically installed.
 Configuration
 -------------
 
-Next, create a project which uses the CMS::
+Next, create a project which uses the application::
 
     cd ..
     django-admin.py startproject demo
@@ -49,56 +49,109 @@ The database can be created afterwards::
     ./manage.py runserver
 
 
-Custom node types
------------------
+Usage
+-----
 
-The main feature of this module is the support for custom node types.
+The main feature of this module is creating a tree of custom node types.
 It boils down to creating a package with 2 files:
 
 The ``models.py`` file should define the custom node type, and any fields it has::
 
     from django.db import models
     from django.utils.translation import ugettext_lazy as _
-    from fluent_pages.models import HtmlPage
-    from mysite.settings import RST_TEMPLATE_CHOICES
+    from polymorphic_tree.models import PolymorphicMPTTModel
 
 
-    class CategoryNode(PolymorphicMPTTModel):
-        """
-        A page that renders RST code.
-        """
+    # A base model for the tree:
+
+    class BaseTreeNode(PolymorphicMPTTModel):
         title = models.CharField(_("Title"), max_length=200)
 
         class Meta:
+            verbose_name = _("Tree node")
+            verbose_name_plural = _("Tree nodes")
+
+
+    # Create 3 derived models for the tree:
+
+    class CategoryNode(BaseTreeNode):
+        opening_title = models.CharField(_("Opening title"), max_length=200)
+        opening_image = models.ImageField(_("Opening image"), upload_to='images')
+
+        class Meta:
             verbose_name = _("Category node")
-            verbose_name_plural = _("Category node")
-
-A ``node_type_plugins.py`` file that defines the metadata, and additional methods (e.g. rendering)::
-
-    from polymorphic_tree.extensions import NodeTypePlugin, node_type_pool
-    from .models import CategoryNode
+            verbose_name_plural = _("Category nodes")
 
 
-    @node_type_pool.register
-    class CategoryNodePlugin(NodeTypePlugin):
-        model = CategoryNode
-        sort_priority = 10
+    class TextNode(BaseTreeNode):
+        extra_text = models.TextField()
 
-        def render(self, request, categorynode):
-            return 'demo'
+        # Extra settings:
+        can_have_children = False
 
-Optionally, a ``model_admin`` can also be defined, to have custom field layouts or extra functionality in the *edit* or *delete* page.
+        class Meta:
+            verbose_name = _("Text node")
+            verbose_name_plural = _("Text nodes")
 
-Plugin configuration
-~~~~~~~~~~~~~~~~~~~~
 
-The plugin can define the following attributes:
+    class ImageNode(BaseTreeNode):
+        image = models.ImageField(_("Image"), upload_to='images')
 
-* ``model`` - the model for the page type
-* ``model_admin`` - the custom admin to use (must inherit from ``PageAdmin``)
-* ``can_have_children`` - whether the node type allows to have child nodes.
-* ``urls`` - a custom set of URL patterns for sub pages (either a module name, or ``patterns()`` result).
-* ``sort_priority`` - a sorting order in the "add page" dialog.
+        class Meta:
+            verbose_name = _("Image node")
+            verbose_name_plural = _("Image nodes")
+
+
+The ``admin.py`` file should define the admin, both for the child nodes and parent::
+
+    from django.contrib import admin
+    from django.utils.translation import ugettext_lazy as _
+    from polymorphic_tree.admin import PolymorphicMPTTParentModelAdmin, PolymorphicMPTTChildModelAdmin
+    from . import models
+
+
+    # The common admin functionality for all derived models:
+
+    class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
+        BASE_GENERAL_FIELDSET = (None, {
+            'fields': ('parent', 'title'),
+        })
+
+        base_model = models.BaseTreeNode
+        base_fieldsets = (
+            BASE_GENERAL_FIELDSET,
+        )
+
+
+    # Optionally some custom admin code
+
+    class TextNodeAdmin(BaseChildAdmin):
+        pass
+
+
+    # Create the parent admin that combines it all:
+
+    class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
+        base_model = models.BaseTreeNode
+        child_models = (
+            (models.CategoryNode, BaseChildAdmin),
+            (models.TextNode, TextNodeAdmin),  # with custom edit/delete view.
+            (models.ImageNode, BaseChildAdmin),
+        )
+
+        list_display = ('title', 'actions_column',)
+
+        class Media:
+            css = {
+                'all': ('admin/treenode/admin.css',)
+            }
+
+
+    admin.site.register(models.BaseTreeNode, TreeNodeParentAdmin)
+
+
+The ``child_models`` attribute defines which admin interface is loaded for hte *edit* and *delete* page.
+The list view is still rendered by the parent admin.
 
 
 Contributing
