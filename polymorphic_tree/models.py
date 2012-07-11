@@ -20,30 +20,13 @@ def _get_base_polymorphic_model(ChildModel):
     return None
 
 
+
 class PolymorphicMPTTModelBase(MPTTModelBase, PolymorphicModelBase):
     """
-    Metaclass for all plugin models.
-
-    Set db_table if it has not been customized.
+    Metaclass for all polymorphic models.
+    Needed to support both MPTT and Polymorphic metaclasses.
     """
-    #: The table format to use, allow reuse with a different table style.
-    table_name_template = "nodetype_{app_label}_{model_name}"
-
-    def __new__(mcs, name, bases, attrs):
-        new_class = super(PolymorphicMPTTModelBase, mcs).__new__(mcs, name, bases, attrs)
-
-        if not any(isinstance(base, mcs) for base in bases):
-            # Don't apply to the PolymorphicMPTTModel
-            return new_class
-        else:
-            # Update the table name.
-            # Inspired by from Django-CMS, (c) , BSD licensed.
-            meta = new_class._meta
-            if meta.db_table.startswith(meta.app_label + '_') and not getattr(meta, 'abstract', False):
-                model_name = meta.db_table[len(meta.app_label)+1:]
-                meta.db_table = mcs.table_name_template.format(app_label=meta.app_label, model_name=model_name)
-
-        return new_class
+    pass
 
 
 class PolymorphicTreeForeignKey(TreeForeignKey):
