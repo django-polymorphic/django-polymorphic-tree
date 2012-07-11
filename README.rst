@@ -14,7 +14,7 @@ Origin
 ------
 
 This module was extracted out of django-fluent-pages_ because it turned out to serve a generic purpose.
-This was done during contact work at Leukeleu_ (also known for their involvement in django-fiber_).
+This was done during contract work at Leukeleu_ (also known for their involvement in django-fiber_).
 
 
 Installation
