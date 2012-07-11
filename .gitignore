@@ -2,10 +2,12 @@
 *.pyo
 *.mo
 *.db
+*.egg-info/
 .idea
 .project
 .pydevproject
 .idea/workspace.xml
 .DS_Store
+build/
 dist/
 docs/_build/

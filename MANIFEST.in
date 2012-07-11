@@ -1,0 +1,5 @@
+include AUTHORS
+include README.rst
+include LICENSE.rst
+recursive-include polymorphic_tree/templates/ *.html
+recursive-include polymorphic_tree/static/ *.css *.js *.png *.gif LICENSE README.rst

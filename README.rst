@@ -5,10 +5,12 @@ This is a stand alone module, which provides:
 
   " A polymorphic structure to display content in a tree. "
 
-In other words, this module provides a node tree, where each node type can be a different model.
-This allows you to structure your site tree as you see fit. For example:
+In other words, this module provides a node tree, where each node can be a different model type.
+This allows you to freely structure tree data. For example:
 
 * Build a tree of a root node, category nodes, leaf nodes, each with custom fields.
+* Build a todo list of projects, categories and items.
+* Build a book of chapters, sections, and pages.
 
 Origin
 ------
@@ -46,7 +48,6 @@ Add the following to ``settings.py``::
 The database can be created afterwards::
 
     ./manage.py syncdb
-    ./manage.py runserver
 
 
 Usage
