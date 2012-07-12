@@ -292,7 +292,7 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
             # Added:
             "admin/%s/%s/change_list.html" % (base_app_label, base_opts.object_name.lower()),
             "admin/%s/change_list.html" % base_app_label,
-            "admin/polymorphic_tree/nodetype/change_list.html",  # NOTE: added
+            "admin/polymorphic_tree/change_list.html",  # NOTE: added
             "admin/change_list.html"
         ]
 
@@ -345,7 +345,7 @@ class PolymorphicChildModelAdmin(admin.ModelAdmin):
             # Added:
             "admin/%s/%s/change_form.html" % (base_app_label, base_opts.object_name.lower()),
             "admin/%s/change_form.html" % base_app_label,
-            "admin/polymorphic_tree/nodetype/change_form.html",  # NOTE: added
+            "admin/polymorphic_tree/change_form.html",  # NOTE: added
             "admin/change_form.html"
         ]
 
@@ -365,7 +365,7 @@ class PolymorphicChildModelAdmin(admin.ModelAdmin):
             # Added:
             "admin/%s/%s/delete_confirmation.html" % (base_app_label, base_opts.object_name.lower()),
             "admin/%s/delete_confirmation.html" % base_app_label,
-            "admin/polymorphic_tree/nodetype/delete_confirmation.html",  # NOTE: added
+            "admin/polymorphic_tree/delete_confirmation.html",  # NOTE: added
             "admin/delete_confirmation.html"
         ]
 
