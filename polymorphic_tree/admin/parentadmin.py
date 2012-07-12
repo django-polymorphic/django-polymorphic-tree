@@ -51,7 +51,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
     # Config list page:
     list_filter = extra_list_filters
-    polymorphic_list = True
 
     EMPTY_ACTION_ICON = u'<span><img src="{static}polymorphic_tree/icons/blank.gif" width="16" height="16" alt=""/></span>'.format(static=settings.STATIC_URL)
 
@@ -79,7 +78,8 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Return a list of all action icons in the :func:`actions_column`.
         """
         actions = []
-        if node.can_have_children:   # Note: this needs the upcasted model currently.
+        NodeClass = node.get_real_instance_class()   # Avoid need for upcasted model.
+        if NodeClass.can_have_children:
             actions.append(
                 u'<a href="add/?{parent_attr}={id}" title="{title}"><img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     parent_attr=self.model._mptt_meta.parent_attr, id=node.pk, title=_('Add sub node'), static=settings.STATIC_URL)
@@ -139,7 +139,8 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         except self.model.DoesNotExist as e:
             return HttpResponseNotFound(simplejson.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
-        if not target.can_have_children and position == 'inside':
+        TargetClass = target.get_real_instance_class()
+        if not TargetClass.can_have_children and position == 'inside':
             return HttpResponse(simplejson.dumps({'action': 'reject', 'error': 'Cannot move inside target, does not allow children!'}), content_type='application/json', status=409)  # Conflict
         if moved.parent_id != previous_parent_id:
             return HttpResponse(simplejson.dumps({'action': 'reload', 'error': 'Client seems to be out-of-sync, please reload!'}), content_type='application/json', status=409)
