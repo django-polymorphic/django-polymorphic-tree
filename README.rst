@@ -156,6 +156,16 @@ The ``child_models`` attribute defines which admin interface is loaded for hte *
 The list view is still rendered by the parent admin.
 
 
+Todo
+----
+
+* Sphinx Documentation
+* Unit tests
+* Example app
+* A final review of class names (hence the alpha version tag, but we will provide aliases for the old names)
+* Getting the polymorphic-admin code merged upstream back into django-polymorphic_ (see `pull request #10 <https://github.com/chrisglass/django_polymorphic/pull/10>`_).
+
+
 Contributing
 ------------
 
