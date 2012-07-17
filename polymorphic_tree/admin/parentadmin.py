@@ -76,8 +76,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Return a list of all action icons in the :func:`actions_column`.
         """
         actions = []
-        NodeClass = node.get_real_instance_class()   # Avoid need for upcasted model.
-        if NodeClass.can_have_children:
+        if self.can_have_children(node):
             actions.append(
                 u'<a href="add/?{parent_attr}={id}" title="{title}"><img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     parent_attr=self.model._mptt_meta.parent_attr, id=node.pk, title=_('Add sub node'), static=settings.STATIC_URL)
@@ -103,6 +102,19 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Define whether a node can be previewed.
         """
         return hasattr(node, 'get_absolute_url')
+
+
+    def can_have_children(self, node):
+        """
+        Define whether a node can have children.
+        """
+        # Allow can_have_children to be either to be a property on the base class that always works.
+        if not node.can_have_children:
+            return False
+
+        # or a static variable declared on the class (avoids need for upcasted models).
+        NodeClass = node.get_real_instance_class()
+        return bool(NodeClass.can_have_children)
 
 
 
@@ -145,8 +157,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         except self.model.DoesNotExist as e:
             return HttpResponseNotFound(simplejson.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
-        TargetClass = target.get_real_instance_class()
-        if not TargetClass.can_have_children and position == 'inside':
+        if not self.can_have_children(target) and position == 'inside':
             return HttpResponse(simplejson.dumps({'action': 'reject', 'error': 'Cannot move inside target, does not allow children!'}), content_type='application/json', status=409)  # Conflict
         if moved.parent_id != previous_parent_id:
             return HttpResponse(simplejson.dumps({'action': 'reload', 'error': 'Client seems to be out-of-sync, please reload!'}), content_type='application/json', status=409)
