@@ -17,7 +17,6 @@ from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-import abc
 
 __all__ = ('PolymorphicModelChoiceForm', 'PolymorphicParentModelAdmin', 'PolymorphicChildModelAdmin')
 
@@ -87,7 +86,6 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
                 self.initialized_child_models[Model] = admin_instance
 
 
-    @abc.abstractmethod
     def get_admin_for_model(self, model):
         """
         Return the polymorphic admin interface for a given model.
@@ -98,7 +96,6 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
         return self.initialized_child_models[model]
 
 
-    @abc.abstractmethod
     def get_child_model_classes(self):
         """
         Return the derived model classes which this admin should handle.
@@ -280,7 +277,7 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
         return render_to_response(self.add_type_template or [
             "admin/%s/%s/add_type_form.html" % (app_label, opts.object_name.lower()),
             "admin/%s/add_type_form.html" % app_label,
-            "admin/polymorphic_tree/add_type_form.html",  # NOTE: added
+            "admin/polymorphic_tree/add_type_form.html",  # added default here
             "admin/add_type_form.html"
         ], context, context_instance=context_instance)
 
@@ -297,7 +294,7 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
         return [
             "admin/%s/%s/change_list.html" % (app_label, opts.object_name.lower()),
             "admin/%s/change_list.html" % app_label,
-            # Added:
+            # Added base class:
             "admin/%s/%s/change_list.html" % (base_app_label, base_opts.object_name.lower()),
             "admin/%s/change_list.html" % base_app_label,
             "admin/polymorphic_tree/change_list.html",  # NOTE: added
