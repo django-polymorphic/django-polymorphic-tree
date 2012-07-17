@@ -24,6 +24,10 @@ Installation
 
 First install the module, preferably in a virtual environment::
 
+    pip install django-polymorphic-tree
+
+Or install the current repository::
+
     pip install -e git+https://github.com/edoburu/django-polymorphic-tree.git#egg=django-polymorphic-tree
 
 The main dependencies are django-mptt_ and django-polymorphic_,
