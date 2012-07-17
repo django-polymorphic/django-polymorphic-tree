@@ -12,9 +12,7 @@ from mptt.admin import MPTTModelAdmin
 
 
 class NodeTypeChoiceForm(PolymorphicModelChoiceForm):
-    def __init__(self, *args, **kwargs):
-        super(NodeTypeChoiceForm, self).__init__(*args, **kwargs)
-        self.fields['ct_id'].label = _("Node type")
+    type_label = _("Node type")
 
 
 try:
