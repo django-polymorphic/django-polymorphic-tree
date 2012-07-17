@@ -33,6 +33,9 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
     """
     A foreignkey that limits the node types the parent can be.
     """
+    default_error_messages = {
+        'no_children_allowed': _("The selected node cannot have child nodes."),
+    }
 
     def clean(self, value, model_instance):
         value = super(PolymorphicTreeForeignKey, self).clean(value, model_instance)
@@ -55,7 +58,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
         if parent.can_have_children:
             return
 
-        raise ValidationError(_("The selected node cannot have child nodes."))
+        raise ValidationError(self.error_messages['no_children_allowed'])
 
 
 
