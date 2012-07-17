@@ -49,16 +49,12 @@ Add the following to ``settings.py``::
         'mptt',
     )
 
-The database can be created afterwards::
-
-    ./manage.py syncdb
-
 
 Usage
 -----
 
 The main feature of this module is creating a tree of custom node types.
-It boils down to creating a package with 2 files:
+It boils down to creating a application with 2 files:
 
 The ``models.py`` file should define the custom node type, and any fields it has::
 
@@ -119,13 +115,13 @@ The ``admin.py`` file should define the admin, both for the child nodes and pare
     # The common admin functionality for all derived models:
 
     class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
-        BASE_GENERAL_FIELDSET = (None, {
+        GENERAL_FIELDSET = (None, {
             'fields': ('parent', 'title'),
         })
 
         base_model = models.BaseTreeNode
         base_fieldsets = (
-            BASE_GENERAL_FIELDSET,
+            GENERAL_FIELDSET,
         )
 
 
@@ -141,7 +137,7 @@ The ``admin.py`` file should define the admin, both for the child nodes and pare
         base_model = models.BaseTreeNode
         child_models = (
             (models.CategoryNode, BaseChildAdmin),
-            (models.TextNode, TextNodeAdmin),  # with custom edit/delete view.
+            (models.TextNode, TextNodeAdmin),  # custom admin allows custom edit/delete view.
             (models.ImageNode, BaseChildAdmin),
         )
 
