@@ -41,8 +41,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     The parent admin, this renders the "list" page.
     It forwards the "edit" and "delete" views to the admin interface of the polymorphic models.
 
-    The :func:`get_admin_for_model` and :func:`get_child_model_classes` functions
-    of the base class should still be implemented.
+    The :func:`get_child_models` function or :attr:`child_models` attribute of the base class should still be implemented.
     """
     base_model = PolymorphicMPTTModel
     add_type_form = NodeTypeChoiceForm
