@@ -112,8 +112,11 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
         if self._is_setup:
             raise RegistrationClosed("The admin model can't be registered anymore at this point.")
 
-        assert issubclass(model, self.base_model), "{0} should be a subclass of {1}".format(model.__name__, self.base_model.__name__)
-        assert issubclass(model_admin, admin.ModelAdmin), "{0} should be a subclass of {1}".format(model_admin.__name__, admin.ModelAdmin.__name__)
+        if not issubclass(model, self.base_model):
+            raise TypeError("{0} should be a subclass of {1}".format(model.__name__, self.base_model.__name__))
+        if not issubclass(model_admin, admin.ModelAdmin):
+            raise TypeError("{0} should be a subclass of {1}".format(model_admin.__name__, admin.ModelAdmin.__name__))
+
         self._child_admin_site.register(model, model_admin)
 
 
