@@ -87,8 +87,10 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
 
         # By not having this in __init__() there is less stress on import dependencies as well,
         # considering an advanced use cases where a plugin system scans for the child models.
-        for Model, Admin in self.get_child_models():
+        child_models = self.get_child_models()
+        for Model, Admin in child_models:
             self.register_child(Model, Admin)
+        self._child_models = dict(child_models)
 
         # This is needed to deal with the improved ForeignKeyRawIdWidget in Django 1.4 and perhaps other widgets too.
         # The ForeignKeyRawIdWidget checks whether the referenced model is registered in the admin, otherwise it displays itself as a textfield.
@@ -161,8 +163,8 @@ class PolymorphicParentModelAdmin(admin.ModelAdmin):
     def _get_real_admin_by_model(self, model_class):
         # In case of a ?ct_id=### parameter, the view is already checked for permissions.
         # Hence, make sure this is a derived object, or risk exposing other admin interfaces.
-        if not issubclass(model_class, self.base_model):
-            raise PermissionDenied("Invalid model '{0}', must derive from {1}.".format(model_class, self.base_model.__name__))
+        if model_class not in self._child_models:
+            raise PermissionDenied("Invalid model '{0}', it must be registered as child model.".format(model_class))
 
         try:
             # HACK: the only way to get the instance of an model admin,
