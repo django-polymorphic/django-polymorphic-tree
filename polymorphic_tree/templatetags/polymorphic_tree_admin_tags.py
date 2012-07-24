@@ -82,7 +82,7 @@ class AdminListRecurseTreeNode(Node):
     def parse(cls, parser, token):
         bits = token.contents.split()
         if len(bits) != 2:
-            raise TemplateSyntaxError(_('%s tag requires an admin ChangeList') % bits[0])
+            raise TemplateSyntaxError('%s tag requires an admin ChangeList' % bits[0])
 
         cl_var = Variable(bits[1])
 
