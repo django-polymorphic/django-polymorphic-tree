@@ -10,6 +10,8 @@ Changes in version 0.8.2 (alpha release)
 * Fixed ``raw_id_fields`` for child admins.
 * Fixed accidental late registration of models, fixes the "Save and Continue" button.
 * Improved protection of custom subclass views.
+* Generate ``django.mo`` files during ``setup.py sdist``.
+* Added Dutch translation
 
 
 Changes in version 0.8.1 (alpha release)
