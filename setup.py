@@ -1,9 +1,20 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
+import sys, os
+
+# When creating the sdist, make sure the django.mo file also exists:
+if 'sdist' in sys.argv:
+    try:
+        os.chdir('polymorphic_tree')
+        from django.core.management.commands.compilemessages import compile_messages
+        compile_messages(sys.stderr)
+    finally:
+        os.chdir('..')
+
 
 setup(
     name='django-polymorphic-tree',
-    version='0.8.1',
+    version='0.8.2',
     license='Apache License, Version 2.0',
 
     install_requires=[
