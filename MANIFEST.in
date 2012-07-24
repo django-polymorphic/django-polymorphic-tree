@@ -1,5 +1,6 @@
 include AUTHORS
 include README.rst
+include CHANGES.rst
 include LICENSE.rst
 recursive-include polymorphic_tree/locale *.mo *.po
 recursive-include polymorphic_tree/templates *.html
