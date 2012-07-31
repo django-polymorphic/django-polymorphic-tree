@@ -57,7 +57,7 @@ def breadcrumb_scope(parser, token):
 
 @register.filter
 def real_model_name(node):
-    # Allow downcasted model to work.
+    # Allow upcasted model to work.
     # node.get_real_instance_class().__name__ would also work
     return ContentType.objects.get_for_id(node.polymorphic_ctype_id).model
 

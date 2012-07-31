@@ -111,7 +111,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         if not node.can_have_children:
             return False
 
-        # or a static variable declared on the class (avoids need for upcasted models).
+        # or a static variable declared on the class (avoids need for downcasted models).
         NodeClass = node.get_real_instance_class()
         return bool(NodeClass.can_have_children)
 
@@ -145,7 +145,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Update the position of a node, from a API request.
         """
         try:
-            # Not using .non_polymorphic() so all models are upcasted to the derived model.
+            # Not using .non_polymorphic() so all models are downcasted to the derived model.
             # This causes the signal below to be emitted from the proper class as well.
             moved = self.model.objects.get(pk=request.POST['moved_id'])
             target = self.model.objects.get(pk=request.POST['target_id'])

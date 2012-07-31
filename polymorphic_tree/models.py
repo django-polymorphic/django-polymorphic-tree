@@ -14,7 +14,6 @@ def _get_base_polymorphic_model(ChildModel):
     First model in the inheritance chain that inherited from the PolymorphicMPTTModel
     """
     for Model in reversed(ChildModel.mro()):
-        print Model
         if isinstance(Model, PolymorphicMPTTModelBase) and Model is not PolymorphicMPTTModel:
             return Model
     return None
@@ -50,7 +49,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
             base_model = _get_base_polymorphic_model(model_instance.__class__)
 
-            # Get parent, TODO: needs to upcast here to read can_have_children.
+            # Get parent, TODO: needs to downcast here to read can_have_children.
             parent = base_model.objects.get(pk=parent)
         elif not isinstance(parent, PolymorphicMPTTModel):
             raise ValueError("Unknown parent value")

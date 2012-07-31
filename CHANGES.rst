@@ -32,7 +32,7 @@ Changes in version 0.8.0 (alpha release)
 
 First alpha release, extracted from django-fluent-pages_.
 
-Simplified a lot of code to be tightly focussed on the MPTT + Polymorphic code,
+Simplified a lot of code to be tightly focused on the MPTT + Polymorphic code,
 and not bother with a plugin registration system.
 
 
