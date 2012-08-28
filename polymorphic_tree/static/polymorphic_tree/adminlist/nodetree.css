@@ -30,8 +30,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-
-  border-bottom: 1px solid #eee;
 }
 
 .jqtree-django li > div:after {
@@ -53,7 +51,7 @@
 .jqtree-django .col-metadata {
   /* Fix height of columns, for zebra background.
   Also masks subtle differences within various cells if they are there */
-  height: 26px;
+  height: 27px;
   overflow: hidden;
 }
 
