@@ -1,3 +1,10 @@
+Changes in version 0.8.3 (alpha release)
+----------------------------------------
+
+* Fix row alignment in the admin interface
+* Spelling and typoo fixes, print statement
+
+
 Changes in version 0.8.2 (alpha release)
 ----------------------------------------
 
