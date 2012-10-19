@@ -179,7 +179,7 @@ Pull requests are welcome too. :-)
 
 .. _Leukeleu: http://www.leukeleu.nl/
 .. _django-fiber: https://github.com/ridethepony/django-fiber
-.. _django-fluent-pages: https://github.com/edoburu/django-fluent-blogs
+.. _django-fluent-pages: https://github.com/edoburu/django-fluent-pages
 .. _django-mptt: https://github.com/django-mptt/django-mptt
 .. _django-polymorphic: https://github.com/chrisglass/django_polymorphic
 
