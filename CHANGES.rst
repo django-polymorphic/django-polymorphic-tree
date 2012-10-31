@@ -1,3 +1,9 @@
+Changes in version 0.8.4 (alpha release)
+----------------------------------------
+
+* Fix list appearance in combination with django-grapelli
+
+
 Changes in version 0.8.3 (alpha release)
 ----------------------------------------
 
