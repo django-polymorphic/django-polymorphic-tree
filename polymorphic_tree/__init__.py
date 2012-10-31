@@ -1,4 +1,4 @@
-VERSION = (0,8,3)
+VERSION = (0,8,4)
 
 # Do some sane version checking
 import django
