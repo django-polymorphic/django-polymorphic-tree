@@ -93,14 +93,14 @@
   });
 
   function onMoveError(xhr, status, exception) {
-    response = jQuery.parseJSON(xhr.response);
+    var response = jQuery.parseJSON(xhr.responseText);
     // TODO: it would be possible to stream new data from the server instead.
     if( response.action == 'reload' ) {
       alert('{% trans "Unable to move the node, the current display is out-of-date.\nThe current page now reloaded." %}');
       location.reload();
     }
     else if( response.action == 'reject' ) {
-      alert('{% trans "It is not allowed to move a node to the last position.\nThe current page will now reload." %}');
+      alert(response.error);
       location.reload();
     }
     else {

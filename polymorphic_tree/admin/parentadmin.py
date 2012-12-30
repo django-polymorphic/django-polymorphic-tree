@@ -157,9 +157,15 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             return HttpResponseNotFound(simplejson.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
         if not self.can_have_children(target) and position == 'inside':
-            return HttpResponse(simplejson.dumps({'action': 'reject', 'error': 'Cannot move inside target, does not allow children!'}), content_type='application/json', status=409)  # Conflict
+            return HttpResponse(simplejson.dumps({
+                'action': 'reject',
+                'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
+            }), content_type='application/json', status=409)  # Conflict
         if moved.parent_id != previous_parent_id:
-            return HttpResponse(simplejson.dumps({'action': 'reload', 'error': 'Client seems to be out-of-sync, please reload!'}), content_type='application/json', status=409)
+            return HttpResponse(simplejson.dumps({
+                'action': 'reload',
+                'error': 'Client seems to be out-of-sync, please reload!'
+            }), content_type='application/json', status=409)
 
         # TODO: with granular user permissions, check if user is allowed to edit both pages.
 
