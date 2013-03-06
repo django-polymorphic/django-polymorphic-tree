@@ -1,6 +1,6 @@
 from mptt.admin import MPTTModelAdmin
 from mptt.forms import MPTTAdminForm
-from polymorphic_tree.utils.polymorphicadmin import PolymorphicChildModelAdmin
+from polymorphic.admin import PolymorphicChildModelAdmin
 
 
 class PolymorpicMPTTAdminForm(MPTTAdminForm):
@@ -19,3 +19,18 @@ class PolymorphicMPTTChildModelAdmin(PolymorphicChildModelAdmin, MPTTModelAdmin)
     # NOTE: list page is configured in PolymorphicMPTTParentModelAdmin
     # as that class is used for the real admin screen in the edit/delete view.
     # This class is only a base class for the custom node type plugins.
+
+
+    @property
+    def change_form_template(self):
+        # Insert template before default admin/polymorphic to have the tree in the breadcrumb
+        templates = super(PolymorphicMPTTChildModelAdmin, self).change_form_template
+        templates.insert(-2, "admin/polymorphic_tree/change_form.html")
+        return templates
+
+    @property
+    def delete_confirmation_template(self):
+        # Insert template before default admin/polymorphic to have the tree in the breadcrumb
+        templates = super(PolymorphicMPTTChildModelAdmin, self).delete_confirmation_template
+        templates.insert(-2, "admin/polymorphic_tree/delete_confirmation.html")
+        return templates

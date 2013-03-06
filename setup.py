@@ -19,7 +19,7 @@ setup(
 
     install_requires=[
         'Django>=1.3.0',
-        'django-polymorphic>=0.2',
+        'django-polymorphic>=0.3.1',
         'django-mptt>=0.5.1',
     ],
     description="A polymorphic mptt structure to display content in a tree.",
@@ -36,7 +36,7 @@ setup(
 
     zip_safe=False,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',

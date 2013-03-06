@@ -1,3 +1,10 @@
+Changes in version 0.8.5 (beta release)
+---------------------------------------
+
+* Depend on django-polymorphic_ 0.3.1, which contains our ``PolymorphicParentAdmin`` now.
+* Marked as beta release, as the API of the polymorphic admin is now finalized.
+
+
 Changes in version 0.8.4 (alpha release)
 ----------------------------------------
 
@@ -51,4 +58,5 @@ and not bother with a plugin registration system.
 
 
 .. _django-fluent-pages: https://github.com/edoburu/django-fluent-pages
+.. _django-polymorphic: https://github.com/chrisglass/django_polymorphic
 

@@ -6,7 +6,7 @@ from django.db.models import signals
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
-from polymorphic_tree.utils.polymorphicadmin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
+from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
 
@@ -53,6 +53,13 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
 
     # ---- List code ----
+
+    @property
+    def change_list_template(self):
+        templates = super(PolymorphicMPTTParentModelAdmin, self).change_list_template
+        templates.insert(-1, 'admin/polymorphic_tree/change_list.html')  # Just before admin/change_list.html
+        return templates
+
 
     # NOTE: the regular results table is replaced client-side with a jqTree list.
     # When making changes to the list, test both the JavaScript and non-JavaScript variant.
