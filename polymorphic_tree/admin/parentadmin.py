@@ -154,13 +154,16 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Update the position of a node, from a API request.
         """
         try:
+            moved_id = long(request.POST['moved_id'])
+            target_id = long(request.POST['target_id'])
+            position = request.POST['position']
+            previous_parent_id = long(request.POST['previous_parent_id']) or None
+
             # Not using .non_polymorphic() so all models are downcasted to the derived model.
             # This causes the signal below to be emitted from the proper class as well.
-            moved = self.model.objects.get(pk=request.POST['moved_id'])
-            target = self.model.objects.get(pk=request.POST['target_id'])
-            previous_parent_id = int(request.POST['previous_parent_id']) or None
-            position = request.POST['position']
-        except KeyError as e:
+            moved = self.model.objects.get(pk=moved_id)
+            target = self.model.objects.get(pk=target_id)
+        except (ValueError, KeyError) as e:
             return HttpResponseBadRequest(simplejson.dumps({'action': 'foundbug', 'error': str(e[0])}), content_type='application/json')
         except self.model.DoesNotExist as e:
             return HttpResponseNotFound(simplejson.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
@@ -188,7 +191,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         # Some packages depend on calling .save() or post_save signal after updating a model.
         # This is required by django-fluent-pages for example to update the URL caches.
         # Make sure the updated version (with new parent_id/lft/rgt fields is fetched)
-        moved = self.model.objects.get(pk=request.POST['moved_id'])
+        moved = self.model.objects.get(pk=moved_id)
         moved.save()
 
         # Report back to client.
