@@ -1,3 +1,13 @@
+Changes in version 0.8.6 (beta release)
+---------------------------------------
+
+* Fixes for moving nodes in the admin:
+
+ * Call ``model.save()`` so post-save updates are executed.
+ * Update the preview URL in the "Actions" column.
+ * Perform database updates in a single transaction.
+
+
 Changes in version 0.8.5 (beta release)
 ---------------------------------------
 
