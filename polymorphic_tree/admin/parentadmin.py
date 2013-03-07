@@ -3,6 +3,7 @@ from django.conf.urls.defaults import url
 from django.core.urlresolvers import reverse
 from django.db import router
 from django.db.models import signals
+from django.db.transaction import commit_on_success
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
@@ -147,6 +148,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         return reverse('admin:{0}_{1}_moved'.format(*info))
 
 
+    @commit_on_success
     def api_node_moved_view(self, request):
         """
         Update the position of a node, from a API request.
