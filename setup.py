@@ -21,6 +21,7 @@ setup(
         'Django>=1.3.0',
         'django-polymorphic>=0.3.1',
         'django-mptt>=0.5.1',
+        'django-tag-parser>=1.0.0',
     ],
     description="A polymorphic mptt structure to display content in a tree.",
     long_description=open('README.rst').read(),

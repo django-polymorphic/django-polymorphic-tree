@@ -21,7 +21,7 @@ from django.utils.safestring import mark_safe
 from django.utils.encoding import smart_unicode, force_unicode
 from django.template import Library
 from django.contrib.admin.templatetags.admin_list import _boolean_icon, result_headers
-from polymorphic_tree.utils.basetags import ExtensibleInclusionNode
+from tag_parser.basetags import BaseInclusionNode
 
 
 # While this is based on mptt/templatetags/mptt_admin.py,
@@ -39,7 +39,7 @@ MPTT_ADMIN_LEVEL_INDENT = getattr(settings, 'MPTT_ADMIN_LEVEL_INDENT', 10)
 
 # Ideally the template name should be configurable too, provide a function instead of filename.
 # For now, just reuse the existing admin template for the list contents.
-class StylableResultList(ExtensibleInclusionNode):
+class StylableResultList(BaseInclusionNode):
     min_args = 1
     max_args = 1
     template_name = "admin/change_list_results.html"
