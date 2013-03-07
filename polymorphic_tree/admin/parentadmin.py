@@ -183,10 +183,11 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         }[position]
         moved.move_to(target, mptt_position)
 
-        # Fire post_save signal manually, because django-mptt doesn't do that.
-        # Allow models to be notified about a move, so django-fluent-contents can update caches.
-        using = router.db_for_write(moved.__class__, instance=moved)
-        signals.post_save.send(sender=moved.__class__, instance=moved, created=False, raw=False, using=using)
+        # Some packages depend on calling .save() or post_save signal after updating a model.
+        # This is required by django-fluent-pages for example to update the URL caches.
+        # Make sure the updated version (with new parent_id/lft/rgt fields is fetched)
+        moved = self.model.objects.get(pk=request.POST['moved_id'])
+        moved.save()
 
         # Report back to client.
         return HttpResponse(simplejson.dumps({'action': 'success', 'error': ''}), content_type='application/json')
