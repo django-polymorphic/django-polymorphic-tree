@@ -198,7 +198,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         # Report back to client.
         return HttpResponse(simplejson.dumps({
             'action': 'success',
-            'error': '',
+            'error': None,
             'moved_id': moved_id,
             'action_column': self.actions_column(moved),
         }), content_type='application/json')
