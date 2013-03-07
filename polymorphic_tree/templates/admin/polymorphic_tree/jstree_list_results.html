@@ -77,16 +77,24 @@
 
   tree.before('<table class="js-tree-header"><thead><tr>{% for header in result_headers %}<th{{ header.class_attrib }}><div>{{ header.text|capfirst }}</div></th>{% endfor %}</tr></thead></table>');
   tree.bind('tree.move', function(e) {
+    var move_info = e.move_info;
+
     jQuery.ajax({
       type: 'POST',
       url: '{{ cl.model_admin.api_node_moved_view_url }}',
       dataType: 'json',
       data: {
-        'moved_id': parseInt(e.move_info.moved_node.id),
-        'target_id': parseInt(e.move_info.target_node.id),
-        'previous_parent_id': parseInt(e.move_info.previous_parent.id || 0),
-        'position': e.move_info.position,
+        'moved_id': parseInt(move_info.moved_node.id),
+        'target_id': parseInt(move_info.target_node.id),
+        'previous_parent_id': parseInt(move_info.previous_parent.id || 0),
+        'position': move_info.position,
         'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function onMoveSuccess(data, status, xhr) {
+        // Replace the action column, the preview URL changed.
+        if( data.action_column && data.moved_id == move_info.moved_node.id ) {
+          $(".col-actions_column", move_info.moved_node.element).html(data.action_column);
+        }
       },
       error: onMoveError
     });

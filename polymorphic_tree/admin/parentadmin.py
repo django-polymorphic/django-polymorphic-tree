@@ -171,6 +171,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         if not self.can_have_children(target) and position == 'inside':
             return HttpResponse(simplejson.dumps({
                 'action': 'reject',
+                'moved_id': moved_id,
                 'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
             }), content_type='application/json', status=409)  # Conflict
         if moved.parent_id != previous_parent_id:
@@ -195,7 +196,12 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         moved.save()
 
         # Report back to client.
-        return HttpResponse(simplejson.dumps({'action': 'success', 'error': ''}), content_type='application/json')
+        return HttpResponse(simplejson.dumps({
+            'action': 'success',
+            'error': '',
+            'moved_id': moved_id,
+            'action_column': self.actions_column(moved),
+        }), content_type='application/json')
 
 
     def move_up_view(self, request, object_id):
