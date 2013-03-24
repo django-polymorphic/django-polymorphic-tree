@@ -1,5 +1,5 @@
 {% extends "admin/change_form.html" %}
-{% load i18n admin_modify adminmedia polymorphic_admin_tags polymorphic_tree_admin_tags %}
+{% load i18n admin_modify polymorphic_admin_tags polymorphic_tree_admin_tags %}
 
 {# Add tree levels to polymorphic breadcrumb #}
 {% block breadcrumbs %}{% if not is_popup %}{% breadcrumb_scope base_opts %}
