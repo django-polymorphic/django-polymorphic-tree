@@ -15,7 +15,7 @@ if 'sdist' in sys.argv:
 
 setup(
     name='django-polymorphic-tree',
-    version='0.8.6',
+    version='0.8.7',
     license='Apache License, Version 2.0',
 
     install_requires=[
