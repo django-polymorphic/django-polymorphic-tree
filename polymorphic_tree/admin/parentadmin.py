@@ -1,8 +1,6 @@
 from django.conf import settings
-from django.conf.urls.defaults import url
+from django.conf.urls import url
 from django.core.urlresolvers import reverse
-from django.db import router
-from django.db.models import signals
 from django.db.transaction import commit_on_success
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils import simplejson
@@ -10,6 +8,13 @@ from django.utils.translation import ugettext_lazy as _
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
+
+try:
+    # Django 1.6 requires this
+    from django.conf.urls import url
+except ImportError:
+    # Django 1.3 compatibility
+    from django.conf.urls.defaults import url
 
 
 class NodeTypeChoiceForm(PolymorphicModelChoiceForm):

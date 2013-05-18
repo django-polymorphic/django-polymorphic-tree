@@ -2,6 +2,7 @@ Changes in version 0.8.7 (beta release)
 ---------------------------------------
 
 * Fix Django 1.5 support in the templates
+* Fix Django 1.6 support, use new ``django.conf.urls`` import path.
 
 
 Changes in version 0.8.6 (beta release)
