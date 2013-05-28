@@ -3,6 +3,7 @@ Changes in version 0.8.7 (beta release)
 
 * Fix Django 1.5 support in the templates
 * Fix Django 1.6 support, use new ``django.conf.urls`` import path.
+  Note you need to use django-polymorphic_ >= 0.5.1 as well with Django 1.6.
 
 
 Changes in version 0.8.6 (beta release)
