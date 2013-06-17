@@ -25,10 +25,6 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
     queryset_class = PolymorphicMPTTQuerySet
 
 
-    def __init__(self, *args, **kwargs):
-        PolymorphicManager.__init__(self, self.queryset_class, *args, **kwargs)
-
-
     def toplevel(self):
         """
         Return all nodes which have no parent.
