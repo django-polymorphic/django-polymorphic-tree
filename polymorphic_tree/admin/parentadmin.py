@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.conf.urls import url
 from django.core.urlresolvers import reverse
 from django.db.transaction import commit_on_success
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
