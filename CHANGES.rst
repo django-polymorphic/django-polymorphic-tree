@@ -1,7 +1,8 @@
-Changes in version 0.8.8 (not released yet)
+Changes in version 0.8.8 (beta release)
 -------------------------------------------
 
 * Fix deprecation warning from django-polymorphic_.
+* Fix Django 1.3 support by 0.8.7 (will only bump app requirements on major releases, e.g. 0.9).
 
 
 Changes in version 0.8.7 (beta release)
