@@ -1,3 +1,10 @@
+Changes in version 0.8.9 (beta release)
+-------------------------------------------
+
+* Added workaround for large data sets, temporarily disabled pagination.
+  NOTE: this issue needs to be looked at in more depth, and is a quick fix only.
+
+
 Changes in version 0.8.8 (beta release)
 -------------------------------------------
 

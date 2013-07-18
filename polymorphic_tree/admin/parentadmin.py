@@ -54,6 +54,11 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     # Config list page:
     list_filter = extra_list_filters
 
+    # TODO: disable the pagination in the admin, because it doesn't work with the current template code.
+    # This is a workaround for https://github.com/edoburu/django-polymorphic-tree/issues/2 until
+    # proper pagination code (or a different JavaScript frontend) is included to deal with the interrupted tree levels.
+    list_per_page = 10000
+
     EMPTY_ACTION_ICON = u'<span><img src="{static}polymorphic_tree/icons/blank.gif" width="16" height="16" alt=""/></span>'.format(static=settings.STATIC_URL)
 
 
