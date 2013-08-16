@@ -2,11 +2,11 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.transaction import commit_on_success
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
-from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
+import json
 
 try:
     # Django 1.6 requires this
@@ -173,18 +173,18 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             moved = self.model.objects.get(pk=moved_id)
             target = self.model.objects.get(pk=target_id)
         except (ValueError, KeyError) as e:
-            return HttpResponseBadRequest(simplejson.dumps({'action': 'foundbug', 'error': str(e[0])}), content_type='application/json')
+            return HttpResponseBadRequest(json.dumps({'action': 'foundbug', 'error': str(e[0])}), content_type='application/json')
         except self.model.DoesNotExist as e:
-            return HttpResponseNotFound(simplejson.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
+            return HttpResponseNotFound(json.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
         if not self.can_have_children(target) and position == 'inside':
-            return HttpResponse(simplejson.dumps({
+            return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
                 'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
             }), content_type='application/json', status=409)  # Conflict
         if moved.parent_id != previous_parent_id:
-            return HttpResponse(simplejson.dumps({
+            return HttpResponse(json.dumps({
                 'action': 'reload',
                 'error': 'Client seems to be out-of-sync, please reload!'
             }), content_type='application/json', status=409)
@@ -205,7 +205,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         moved.save()
 
         # Report back to client.
-        return HttpResponse(simplejson.dumps({
+        return HttpResponse(json.dumps({
             'action': 'success',
             'error': None,
             'moved_id': moved_id,
