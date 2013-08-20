@@ -59,8 +59,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     # proper pagination code (or a different JavaScript frontend) is included to deal with the interrupted tree levels.
     list_per_page = 10000
 
-    EMPTY_ACTION_ICON = u'<span><img src="{static}polymorphic_tree/icons/blank.gif" width="16" height="16" alt=""/></span>'.format(static=settings.STATIC_URL)
-
+    EMPTY_ACTION_ICON = u'<span><img src="{STATIC_URL}polymorphic_tree/icons/blank.gif" width="16" height="16" alt="" class="{css_class}"/></span>'
 
     # ---- List code ----
 
@@ -94,11 +93,11 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         actions = []
         if self.can_have_children(node):
             actions.append(
-                u'<a href="add/?{parent_attr}={id}" title="{title}"><img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
+                u'<a href="add/?{parent_attr}={id}" title="{title}" class="add-child-object"><img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     parent_attr=self.model._mptt_meta.parent_attr, id=node.pk, title=_('Add sub node'), static=settings.STATIC_URL)
             )
         else:
-            actions.append(self.EMPTY_ACTION_ICON)
+            actions.append(self.EMPTY_ACTION_ICON.format(STATIC_URL=settings.STATIC_URL, css_class='add-child-object'))
 
         if self.can_preview_object(node):
             actions.append(

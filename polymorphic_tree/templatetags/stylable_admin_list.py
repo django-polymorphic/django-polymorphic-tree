@@ -49,7 +49,10 @@ class StylableResultList(BaseInclusionNode):
         return {
             'cl': cl,
             'result_headers': list(stylable_result_headers(cl)),
-            'results': list(stylable_results(cl))
+            'results': list(stylable_results(cl)),
+
+            # added for frontend
+            'has_add_permission': parent_context['has_add_permission'],
         }
 
 

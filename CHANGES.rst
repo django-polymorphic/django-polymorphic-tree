@@ -1,3 +1,9 @@
+Changes in version 0.8.10 (beta release)
+-------------------------------------------
+
+* Hide "add" icon when there is no permission.
+
+
 Changes in version 0.8.9 (beta release)
 -------------------------------------------
 

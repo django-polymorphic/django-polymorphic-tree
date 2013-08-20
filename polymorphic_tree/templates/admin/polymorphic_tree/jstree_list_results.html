@@ -30,6 +30,9 @@
 
 <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}polymorphic_tree/jqtree/jqtree.css"/>
 <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}polymorphic_tree/adminlist/nodetree.css"/>
+{% if not has_add_permission %}<style type="text/css">
+  .add-child-object { display: inline-block; visibility: hidden; width: 0px; }{# preserves the column height. #}
+</style>{% endif %}
 <script type="text/javascript">
   if(! window.jQuery && window.django )
     window.jQuery = window.django.jQuery;
