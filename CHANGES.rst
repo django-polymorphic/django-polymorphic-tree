@@ -2,6 +2,7 @@ Changes in version 0.8.10 (beta release)
 -------------------------------------------
 
 * Hide "add" icon when there is no permission.
+* Fix Django 1.6 deprecation warnings for simplejson module.
 
 
 Changes in version 0.8.9 (beta release)
