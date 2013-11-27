@@ -8,7 +8,7 @@
      <a href="../../">{{ app_label|capfirst|escape }}</a> &rsaquo;
      {% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} &rsaquo;
      {% for p in original|mptt_breadcrumb %}
-       <a href="../{{ p.id }}/">{{ p.title }}</a> &rsaquo;
+       <a href="../{{ p.id }}/">{{ p }}</a> &rsaquo;
      {% endfor %}
      {% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
 </div>
