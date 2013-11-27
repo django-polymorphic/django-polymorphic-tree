@@ -1,3 +1,9 @@
+Changes in version 0.8.11 (beta release)
+-------------------------------------------
+
+* Fix breadcrumbs, used `title`` attribute instead of ``__unicode__()``.
+
+
 Changes in version 0.8.10 (beta release)
 -------------------------------------------
 
