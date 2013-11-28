@@ -1,0 +1,3 @@
+[submodule "polymorphic_tree/static/polymorphic_tree/jqtree"]
+	path = polymorphic_tree/static/polymorphic_tree/jqtree
+	url = https://github.com/mbraak/jqTree
