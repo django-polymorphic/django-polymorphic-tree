@@ -1,2 +1,0 @@
-# Build and watch coffeescript
-coffee -w -j tree.jquery.js -c simple.widget.coffee mouse.widget.coffee tree.jquery.coffee
