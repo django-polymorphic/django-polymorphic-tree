@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.db.transaction import commit_on_success
+from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
@@ -14,6 +14,12 @@ try:
 except ImportError:
     # Django 1.3 compatibility
     from django.conf.urls.defaults import url
+
+
+try:
+    transaction_atomic = transaction.atomic
+except AttributeError:
+    transaction_atomic = transaction.commit_on_success
 
 
 class NodeTypeChoiceForm(PolymorphicModelChoiceForm):
@@ -156,7 +162,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         return reverse('admin:{0}_{1}_moved'.format(*info))
 
 
-    @commit_on_success
+    @transaction_atomic
     def api_node_moved_view(self, request):
         """
         Update the position of a node, from a API request.
