@@ -82,6 +82,10 @@ class PolymorphicMPTTModel(MPTTModel, PolymorphicModel):
     # class MPTTMeta:
     #     order_insertion_by = 'title'
 
+    def save(self, *args, **kwargs):
+        # from parentadmin.PolymorphicMPTTParentModelAdmin.api_node_moved_view()
+        kwargs.pop('previous_parent_id', None)
+        return super(PolymorphicMPTTModel, self).save(*args, **kwargs)
 
 # South integration
 try:
