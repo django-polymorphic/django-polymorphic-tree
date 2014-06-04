@@ -207,6 +207,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         # This is required by django-fluent-pages for example to update the URL caches.
         # Make sure the updated version (with new parent_id/lft/rgt fields is fetched)
         moved = self.model.objects.get(pk=moved_id)
+        moved._original_parent = previous_parent_id
         moved.save()
 
         # Report back to client.
