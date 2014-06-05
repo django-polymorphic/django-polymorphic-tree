@@ -205,8 +205,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
         # Some packages depend on calling .save() or post_save signal after updating a model.
         # This is required by django-fluent-pages for example to update the URL caches.
-        # Make sure the updated version (with new parent_id/lft/rgt fields is fetched)
-        moved = self.model.objects.get(pk=moved_id)
         moved.save()
 
         # Report back to client.
