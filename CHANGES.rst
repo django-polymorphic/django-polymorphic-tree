@@ -1,5 +1,5 @@
-Changes in version 0.8.12 (beta release)
--------------------------------------------
+Changes in version 0.9
+----------------------
 
 * Upgraded jqTree to latest version, and converted to a Git submodule
 * Fix Django 1.6 transaction support
