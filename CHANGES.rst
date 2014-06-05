@@ -1,15 +1,10 @@
-Changes in version 0.8.13 (beta release)
--------------------------------------------
-
-* Fix object ``.save()`` calls when moving items in the tree.
-  There is no need to refetch the object, so the object ``.save()`` method can detect changes in it's parent.
-
-
 Changes in version 0.8.12 (beta release)
 -------------------------------------------
 
 * Upgraded jqTree to latest version, and converted to a Git submodule
 * Fix Django 1.6 transaction support
+* Fix object ``.save()`` calls when moving items in the tree.
+  There is no need to refetch the object, so the object ``.save()`` method can detect changes in it's parent.
 
 
 Changes in version 0.8.11 (beta release)
