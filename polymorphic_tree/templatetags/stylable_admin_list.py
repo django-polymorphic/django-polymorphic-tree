@@ -11,6 +11,7 @@ to the class, to define custom classes for a column.
 
 This feature can be activated by simply extending the template stylable/admin/change_list.html
 """
+from future.builtins import zip, str
 from django.conf import settings
 from django.contrib.admin.views.main import EMPTY_CHANGELIST_VALUE
 from django.core.exceptions import ObjectDoesNotExist
@@ -83,7 +84,7 @@ def stylable_result_headers(cl):
         else:
             header['class_attrib'] = mark_safe(' class="col-%s"' % field_name)
 
-        if header.has_key('url_primary') and not header.has_key('url'):
+        if 'url_primary' in header and 'url' not in header:
             header['url'] = header['url_primary']  # Django 1.3 template compatibility.
 
         yield header

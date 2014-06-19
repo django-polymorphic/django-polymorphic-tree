@@ -39,9 +39,10 @@ setup(
         'django-polymorphic>=0.4.2',
         'django-mptt>=0.5.1',
         'django-tag-parser>=1.0.0',
+        'future>=0.12.2',
     ],
     requires=[
-        'Django (>=1.3)',   # Using staticfiles
+        'Django (>=1.4)',   # Using staticfiles
     ],
     description="A polymorphic mptt structure to display content in a tree.",
     long_description=read('README.rst'),
@@ -66,6 +67,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
