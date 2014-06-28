@@ -1,3 +1,9 @@
+Changes in version 1.0
+----------------------
+
+* Added Python 3 support
+
+
 Changes in version 0.9
 ----------------------
 
