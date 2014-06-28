@@ -1,14 +1,14 @@
 """
 Model that inherits from both Polymorphic and MPTT.
 """
+from future.utils import with_metaclass
+from future.utils.six import integer_types
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from django.utils.six import integer_types
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey
 from polymorphic import PolymorphicModel
 from polymorphic.base import PolymorphicModelBase
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
-from future.utils import with_metaclass
 
 def _get_base_polymorphic_model(ChildModel):
     """
