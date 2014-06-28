@@ -36,9 +36,9 @@ setup(
     license='Apache License, Version 2.0',
 
     install_requires=[
-        'django-polymorphic>=0.4.2',
-        'django-mptt>=0.5.1',
-        'django-tag-parser>=1.0.0',
+        'django-polymorphic>=0.5.5',
+        'django-mptt>=0.6.0',
+        'django-tag-parser>=2.0b1',
         'future>=0.12.2',
     ],
     requires=[
