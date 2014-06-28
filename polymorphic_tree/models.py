@@ -3,11 +3,12 @@ Model that inherits from both Polymorphic and MPTT.
 """
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.utils.six import integer_types
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey
 from polymorphic import PolymorphicModel
 from polymorphic.base import PolymorphicModelBase
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
-
+from future.utils import with_metaclass
 
 def _get_base_polymorphic_model(ChildModel):
     """
@@ -45,7 +46,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
     def _validate_parent(self, parent, model_instance):
         if not parent:
             return
-        elif isinstance(parent, (int, long)):
+        elif isinstance(parent, integer_types):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
             base_model = _get_base_polymorphic_model(model_instance.__class__)
 
@@ -61,11 +62,10 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
 
 
 
-class PolymorphicMPTTModel(MPTTModel, PolymorphicModel):
+class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, PolymorphicModel)):
     """
     The base class for all nodes; a mapping of an URL to content (e.g. a HTML page, text file, blog, etc..)
     """
-    __metaclass__ = PolymorphicMPTTModelBase
 
     #: Whether the node type allows to have children.
     can_have_children = True

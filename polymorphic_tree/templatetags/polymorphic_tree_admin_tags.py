@@ -1,3 +1,4 @@
+from future.builtins import next
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.contenttypes.models import ContentType
 from django.template import Library, Node, TemplateSyntaxError, Variable
@@ -53,7 +54,7 @@ class AdminListRecurseTreeNode(Node):
             bits.append(self._render_node(context, cl, child))
 
         columns = self._get_column_repr(cl, node)  # list(tuple(name, html), ..)
-        first_real_column = (col for col in columns if col[0] != 'action_checkbox').next()
+        first_real_column = next(col for col in columns if col[0] != 'action_checkbox')
 
         context['columns'] = columns
         context['other_columns'] = [col for col in columns if col[0] not in ('action_checkbox', first_real_column[0])]

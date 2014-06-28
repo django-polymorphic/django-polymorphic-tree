@@ -1,3 +1,4 @@
+from future.builtins import str, int
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -168,10 +169,10 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Update the position of a node, from a API request.
         """
         try:
-            moved_id = long(request.POST['moved_id'])
-            target_id = long(request.POST['target_id'])
+            moved_id = int(request.POST['moved_id'])
+            target_id = int(request.POST['target_id'])
             position = request.POST['position']
-            previous_parent_id = long(request.POST['previous_parent_id']) or None
+            previous_parent_id = int(request.POST['previous_parent_id']) or None
 
             # Not using .non_polymorphic() so all models are downcasted to the derived model.
             # This causes the signal below to be emitted from the proper class as well.
