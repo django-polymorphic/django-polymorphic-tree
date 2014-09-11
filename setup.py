@@ -11,6 +11,12 @@ import sys
 if 'sdist' in sys.argv or 'develop' in sys.argv:
     try:
         os.chdir('polymorphic_tree')
+
+        from django.core.management.commands.compilemessages import Command
+        command = Command()
+        command.execute(stdout=sys.stderr, verbosity=1)
+    except:
+        # < Django 1.7
         from django.core.management.commands.compilemessages import compile_messages
         compile_messages(sys.stderr)
     finally:
