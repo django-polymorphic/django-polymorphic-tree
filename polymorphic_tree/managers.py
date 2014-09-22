@@ -29,8 +29,10 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
         """
         Return all nodes which have no parent.
         """
-        try:
-            return self.get_queryset().toplevel()
-        except:
-            pass
-        return self.get_query_set().toplevel()
+        if hasattr(PolymorphicManager, 'get_queryset'):
+            # Latest django-polymorphic for Django 1.7
+            qs = self.get_queryset()
+        else:
+            qs = self.get_query_set()
+
+        return qs.toplevel()
