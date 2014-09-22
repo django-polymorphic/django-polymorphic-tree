@@ -29,4 +29,8 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
         """
         Return all nodes which have no parent.
         """
+        try:
+            return self.get_queryset().toplevel()
+        except:
+            pass
         return self.get_query_set().toplevel()

@@ -1,3 +1,4 @@
+import json, django
 from future.builtins import str, int
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -7,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
-import json
 
 try:
     # Django 1.6 requires this
@@ -32,12 +32,14 @@ try:
 except ImportError:
     extra_list_filters = ()
 else:
-    # Django 1.4:
+    # Django 1.4+:
     class NodeTypeListFilter(SimpleListFilter):
         parameter_name = 'ct_id'
         title = _('node type')
 
         def lookups(self, request, model_admin):
+            if django.VERSION[:2] > (1, 6):
+                return model_admin.get_child_type_choices(request, 'list')
             return model_admin.get_child_type_choices()
 
         def queryset(self, request, queryset):
@@ -147,7 +149,10 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Add custom URLs for moving nodes.
         """
         base_urls = super(PolymorphicMPTTParentModelAdmin, self).get_urls()
-        info = self.model._meta.app_label, self.model._meta.module_name
+        try:
+            info = self.model._meta.app_label, self.model._meta.model_name
+        except:
+            info = self.model._meta.app_label, self.model._meta.module_name
         extra_urls = [
             url(r'^api/node-moved/$', self.admin_site.admin_view(self.api_node_moved_view), name='{0}_{1}_moved'.format(*info)),
             url(r'^(\d+)/move_up/$', self.admin_site.admin_view(self.move_up_view)),
