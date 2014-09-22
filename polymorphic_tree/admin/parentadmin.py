@@ -38,8 +38,8 @@ else:
         title = _('node type')
 
         def lookups(self, request, model_admin):
-            if django.VERSION[:2] > (1, 6):
-                return model_admin.get_child_type_choices(request, 'list')
+            if django.VERSION >= (1, 6):
+                return model_admin.get_child_type_choices(request, 'change')
             return model_admin.get_child_type_choices()
 
         def queryset(self, request, queryset):
