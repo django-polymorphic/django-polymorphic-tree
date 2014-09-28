@@ -42,6 +42,7 @@ else:
                 return model_admin.get_child_type_choices(request, 'change')
             return model_admin.get_child_type_choices()
 
+        # Whoops: Django 1.6 didn't rename this one!
         def queryset(self, request, queryset):
             if self.value():
                 queryset = queryset.filter(polymorphic_ctype_id=self.value())
