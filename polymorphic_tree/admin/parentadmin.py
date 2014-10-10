@@ -134,20 +134,21 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Define whether a node can have children.
         """
         # Allow can_have_children to be either to be a property on the base class that always works.
-        if not node.can_have_children:
+        can_have_children = node.can_have_children
+        if not can_have_children:
             return False
 
         # or an instance variable
         Node = node if is_real else node.get_real_instance()
-        if Node.can_have_children:
+        if can_have_children:
             if child is None:
                 return True # just interested in boolean
             # if we have a child we should check if it is allowed
             try:
-                iter(Node.can_have_children)
+                iter(can_have_children)
             except TypeError:
                 return True # not a list, boolean true
-            return child.polymorphic_ctype_id in Node.can_have_children
+            return child.polymorphic_ctype_id in can_have_children
         return False
 
     # ---- Custom views ----

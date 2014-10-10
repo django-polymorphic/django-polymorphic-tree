@@ -59,12 +59,13 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
         elif not isinstance(parent, PolymorphicMPTTModel):
             raise ValueError("Unknown parent value")
 
-        if parent.can_have_children:
+        can_have_children = parent.can_have_children
+        if can_have_children:
             try:
-                iter(parent.can_have_children)
+                iter(can_have_children)
             except TypeError:
                 return # boolean True
-            if model_instance.polymorphic_ctype_id in parent.can_have_children:
+            if model_instance.polymorphic_ctype_id in can_have_children:
                 return # child is allowed
             raise ValidationError(
                 self.error_messages['child_not_allowed'].format(parent,
