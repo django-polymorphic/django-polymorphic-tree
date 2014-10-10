@@ -1,8 +1,11 @@
 """
 Model that inherits from both Polymorphic and MPTT.
 """
+from __future__ import unicode_literals
 from future.utils import with_metaclass
 from future.utils.six import integer_types
+from future.builtins import str
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey
@@ -34,7 +37,9 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
     A foreignkey that limits the node types the parent can be.
     """
     default_error_messages = {
-        'no_children_allowed': _("The selected node cannot have child nodes."),
+        'no_children_allowed': _('The selected node cannot have child nodes.'),
+        'child_not_allowed': _('Cannot place this page below '
+            '\u2018{0}\u2019; a {1} does not allow {2} as a child!')
     }
 
     def clean(self, value, model_instance):
@@ -50,13 +55,21 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
             base_model = _get_base_polymorphic_model(model_instance.__class__)
 
-            # Get parent, TODO: needs to downcast here to read can_have_children.
-            parent = base_model.objects.get(pk=parent)
+            parent = base_model.objects.get(pk=parent).get_real_instance()
         elif not isinstance(parent, PolymorphicMPTTModel):
             raise ValueError("Unknown parent value")
 
         if parent.can_have_children:
-            return
+            try:
+                iter(parent.can_have_children)
+            except TypeError:
+                return # boolean True
+            if model_instance.polymorphic_ctype_id in parent.can_have_children:
+                return # child is allowed
+            raise ValidationError(
+                self.error_messages['child_not_allowed'].format(parent,
+                    parent._meta.verbose_name,
+                    model_instance._meta.verbose_name))
 
         raise ValidationError(self.error_messages['no_children_allowed'])
 
@@ -72,6 +85,37 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
 
     # Django fields
     _default_manager = PolymorphicMPTTModelManager()
+
+    def __init__(self, *args, **kwargs):
+        super(PolymorphicMPTTModel, self).__init__(*args, **kwargs)
+        try:
+            iterator = iter(self.can_have_children)
+        except TypeError:
+            pass # can_have_children is not an iterable
+        else:
+            new_children = []
+            for child in iterator:
+                if isinstance(unicode(child), str):
+                    child = unicode(child).lower()
+                    # write self to refer to self
+                    if child == 'self':
+                        ct_id = self.polymorphic_ctype_id
+                    else:
+                        # either the name of a model in this app
+                        # or the full app.model dot string
+                        # just like a foreign key
+                        try:
+                            app_label, model = child.rsplit('.', 1)
+                        except ValueError:
+                            app_label = self._meta.app_label
+                            model = child
+                        ct_id = ContentType.objects.get(app_label=app_label,
+                            model=model).id
+                else:
+                    # pass in a model class
+                    ct_id = ContentType.objects.get_for_model(child).id
+                new_children.append(ct_id)
+            self.can_have_children = new_children
 
     class Meta:
         abstract = True
