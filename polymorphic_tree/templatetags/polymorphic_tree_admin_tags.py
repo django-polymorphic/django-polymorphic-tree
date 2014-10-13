@@ -2,12 +2,21 @@ from future.builtins import next
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.contenttypes.models import ContentType
 from django.template import Library, Node, TemplateSyntaxError, Variable
+from django.template.defaultfilters import yesno
 from django.utils.safestring import mark_safe
 from mptt.templatetags.mptt_tags import cache_tree_children
 from polymorphic_tree.templatetags.stylable_admin_list import stylable_column_repr
 
 
 register = Library()
+
+@register.filter
+def yesnolist(value, arg=None):
+    try:
+        iter(value)
+    except TypeError:
+        return yesno(value, arg)
+    return value
 
 
 @register.filter

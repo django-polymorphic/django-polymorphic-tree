@@ -129,19 +129,28 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         return hasattr(node, 'get_absolute_url')
 
 
-    def can_have_children(self, node):
+    def can_have_children(self, node, child=None, is_real=False):
         """
         Define whether a node can have children.
         """
         # Allow can_have_children to be either to be a property on the base class that always works.
-        if not node.can_have_children:
+        can_have_children = node.can_have_children
+        if not can_have_children:
             return False
 
-        # or a static variable declared on the class (avoids need for downcasted models).
-        NodeClass = node.get_real_instance_class()
-        return bool(NodeClass.can_have_children)
-
-
+        # or an instance variable
+        if not is_real:
+            can_have_children = node.get_real_instance().can_have_children
+        if can_have_children:
+            if child is None:
+                return True # just interested in boolean
+            # if we have a child we should check if it is allowed
+            try:
+                iter(can_have_children)
+            except TypeError:
+                return True # not a list, boolean true
+            return child.polymorphic_ctype_id in can_have_children
+        return False
 
     # ---- Custom views ----
 
@@ -189,12 +198,23 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         except self.model.DoesNotExist as e:
             return HttpResponseNotFound(json.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
-        if not self.can_have_children(target) and position == 'inside':
-            return HttpResponse(json.dumps({
-                'action': 'reject',
-                'moved_id': moved_id,
-                'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
-            }), content_type='application/json', status=409)  # Conflict
+        if position == 'inside':
+            error = None
+            real_target = target.get_real_instance()
+            if not self.can_have_children(real_target, is_real=True):
+                error = _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019;'
+                    u' a {2} does not allow children!').format(moved, target,
+                    target._meta.verbose_name)
+            if not self.can_have_children(real_target, moved, is_real=True):
+                error = _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019;'
+                    u' a {2} does not allow {3} as a child!').format(moved,
+                    target, target._meta.verbose_name, moved._meta.verbose_name)
+            if error is not None:
+                return HttpResponse(json.dumps({
+                    'action': 'reject',
+                    'moved_id': moved_id,
+                    'error': error
+                }), content_type='application/json', status=409)  # Conflict
         if moved.parent_id != previous_parent_id:
             return HttpResponse(json.dumps({
                 'action': 'reload',

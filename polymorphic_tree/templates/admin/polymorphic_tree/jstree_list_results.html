@@ -44,9 +44,8 @@
   /*
    * This code is currently inline because it is generated using various template variables and translation messages.
    */
-
   var data = [{% adminlist_recursetree cl %}{% with is_leaf=node.is_leaf_node %}
-    {id: {{ node.pk }}, classes: 'nodetype-{{ node|real_model_name|lower }}', can_have_children: {{ node.can_have_children|yesno:'true,false' }}, label: '<div class="col-primary{% if is_leaf %} leaf{% endif %}"><div class="col first-column"><a href="{{ change_url }}"{% if cl.is_popup %} onclick="opener.dismissRelatedLookupPopup(window, {{ node.pk }}); return false;"{% endif %}>{{ first_column|escapejs }}</a></div></div>{% if other_columns %}<div class="col-metadata">{% for name, repr in other_columns %}<div class="col col-{{ name }}">{{ repr|escapejs }}</div>{% endfor %}</div>{% endif %}'{% if not is_leaf %},
+    {id: {{ node.pk }}, ct: {{ node.polymorphic_ctype_id }}, classes: 'nodetype-{{ ct.model|lower }}', can_have_children: {{ node.get_real_instance.can_have_children|yesnolist:"true,false" }}, label: '<div class="col-primary{% if is_leaf %} leaf{% endif %}"><div class="col first-column"><a href="{{ change_url }}"{% if cl.is_popup %} onclick="opener.dismissRelatedLookupPopup(window, {{ node.pk }}); return false;"{% endif %}>{{ first_column|escapejs }}</a></div></div>{% if other_columns %}<div class="col-metadata">{% for name, repr in other_columns %}<div class="col col-{{ name }}">{{ repr|escapejs }}</div>{% endfor %}</div>{% endif %}'{% if not is_leaf %},
      children: [ {{ children }}
      ]{% endif %}},{% endwith %}{% endadminlist_recursetree %}
     null  // for MSIE
@@ -64,9 +63,12 @@
     $div.append(contents);
   }
 
-  function onCanMoveTo(moved_node, target_node, position)
-  {
-    return ( target_node.can_have_children || position != 'inside' );
+  function onCanMoveTo(moved_node, target_node, position) {
+    var can_have_children = target_node.can_have_children;
+    if (Object.prototype.toString.call(can_have_children) === '[object Array]'){
+      can_have_children = jQuery.inArray(moved_node.ct, can_have_children) > -1;
+    }
+    return ( can_have_children || position != 'inside' );
   }
 
   var tree = jQuery("#js-result-list").tree({
