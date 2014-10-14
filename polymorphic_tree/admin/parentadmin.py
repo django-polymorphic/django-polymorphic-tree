@@ -150,10 +150,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Add custom URLs for moving nodes.
         """
         base_urls = super(PolymorphicMPTTParentModelAdmin, self).get_urls()
-        try:
-            info = self.model._meta.app_label, self.model._meta.model_name
-        except:
-            info = self.model._meta.app_label, self.model._meta.module_name
+        info = _get_opt(self.model)
         extra_urls = [
             url(r'^api/node-moved/$', self.admin_site.admin_view(self.api_node_moved_view), name='{0}_{1}_moved'.format(*info)),
             url(r'^(\d+)/move_up/$', self.admin_site.admin_view(self.move_up_view)),
@@ -165,7 +162,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     @property
     def api_node_moved_view_url(self):
         # Provided for result list template
-        info = self.model._meta.app_label, self.model._meta.module_name
+        info = _get_opt(self.model)
         return reverse('admin:{0}_{1}_moved'.format(*info))
 
 
@@ -243,3 +240,11 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 node.move_to(next_sibling_category, position='right')
 
         return HttpResponseRedirect('../../')
+
+
+def _get_opt(model):
+    try:
+        return model._meta.app_label, model._meta.model_name  # Django 1.7 format
+    except AttributeError:
+        return model._meta.app_label, model._meta.module_name
+
