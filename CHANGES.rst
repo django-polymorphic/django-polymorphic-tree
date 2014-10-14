@@ -1,3 +1,10 @@
+Changes in version 1.0.1
+------------------------
+
+* Fixed Django 1.7 deprecation warnings
+* Fix support for future 0.14, which removed ``future.utils.six``.
+
+
 Changes in version 1.0
 ----------------------
 
