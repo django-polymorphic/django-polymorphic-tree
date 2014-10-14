@@ -42,9 +42,9 @@ setup(
     license='Apache 2.0',
 
     install_requires=[
-        'django-polymorphic>=0.5.5',
+        'django-polymorphic>=0.6',  # ensure Django 1.7 compatibility
         'django-mptt>=0.6.0',
-        'django-tag-parser>=2.0b1',
+        'django-tag-parser>=2.0',
         'future>=0.12.2',
     ],
     requires=[
