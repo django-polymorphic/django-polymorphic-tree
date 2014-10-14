@@ -39,7 +39,7 @@ def find_version(*parts):
 setup(
     name='django-polymorphic-tree',
     version=find_version('polymorphic_tree', '__init__.py'),
-    license='Apache License, Version 2.0',
+    license='Apache 2.0',
 
     install_requires=[
         'django-polymorphic>=0.5.5',
@@ -64,7 +64,7 @@ setup(
 
     zip_safe=False,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
