@@ -152,7 +152,7 @@ The ``admin.py`` file should define the admin, both for the child nodes and pare
     admin.site.register(models.BaseTreeNode, TreeNodeParentAdmin)
 
 
-The ``child_models`` attribute defines which admin interface is loaded for hte *edit* and *delete* page.
+The ``child_models`` attribute defines which admin interface is loaded for the *edit* and *delete* page.
 The list view is still rendered by the parent admin.
 
 
