@@ -1,9 +1,7 @@
 django-polymorphic-tree
 =======================
 
-This is a stand alone module, which provides:
-
-  " A polymorphic structure to display content in a tree. "
+This package combines django-mptt_ with django-polymorphic_.
 
 In other words, this module provides a node tree, where each node can be a different model type.
 This allows you to freely structure tree data. For example:
@@ -161,9 +159,6 @@ Todo
 
 * Sphinx Documentation
 * Unit tests
-* Example app
-* A final review of class names (hence the alpha version tag, but we will provide aliases for the old names)
-* Getting the polymorphic-admin code merged upstream back into django-polymorphic_ (see `pull request #10 <https://github.com/chrisglass/django_polymorphic/pull/10>`_).
 
 
 Contributing
