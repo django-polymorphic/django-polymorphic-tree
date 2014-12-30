@@ -1,3 +1,9 @@
+Changes in version 1.0.2
+------------------------
+
+* Test ``polymorphic.__version__`` to determine the api of ``get_child_type_choice()``.
+
+
 Changes in version 1.0.1
 ------------------------
 
