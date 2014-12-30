@@ -1,10 +1,12 @@
 import json, django
 from future.builtins import str, int
+from distutils.version import StrictVersion
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
+from polymorphic.__version__ import __version__ as polymorphic_version
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
@@ -38,7 +40,7 @@ else:
         title = _('node type')
 
         def lookups(self, request, model_admin):
-            if django.VERSION >= (1, 6):
+            if StrictVersion(polymorphic_version) >= StrictVersion('0.6'):
                 return model_admin.get_child_type_choices(request, 'change')
             return model_admin.get_child_type_choices()
 
