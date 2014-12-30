@@ -31,4 +31,4 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
         """
         # By using .all(), the proper get_query_set()/get_queryset() will be used for each Django version.
         # Django 1.4/1.5 need to use get_query_set(), because the RelatedManager overrides that.
-        return qs.all().toplevel()
+        return self.all().toplevel()
