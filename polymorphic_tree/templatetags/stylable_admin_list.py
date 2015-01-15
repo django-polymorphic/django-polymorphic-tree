@@ -19,7 +19,7 @@ from django.db import models
 from django.utils import formats
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
-from django.utils.encoding import smart_unicode, force_unicode
+from django.utils.encoding import smart_text, force_text
 from django.template import Library
 from django.contrib.admin.templatetags.admin_list import _boolean_icon, result_headers
 from tag_parser.basetags import BaseInclusionNode
