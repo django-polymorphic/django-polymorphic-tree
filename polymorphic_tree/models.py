@@ -76,7 +76,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
 
     class Meta:
         abstract = True
-        ordering = ('lft',)
+        ordering = ('tree_id', 'lft',)
 
     # Define:
     # parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'), help_text=_('You can also change the parent by dragging the item in the list.'))

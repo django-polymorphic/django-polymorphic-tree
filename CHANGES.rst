@@ -3,6 +3,7 @@ Changes in version 1.1 (git)
 
 * Fixed Python 3 issue in the admin code
 * Fixed attempting to import south in Django 1.7/1.8 environments
+* Fixed default MPTT model ordering, using tree_id, lft now
 * Test ``polymorphic.__version__`` to determine the api of ``get_child_type_choice()``.
 
 
