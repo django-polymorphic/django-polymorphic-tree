@@ -1,6 +1,7 @@
 """
 Model that inherits from both Polymorphic and MPTT.
 """
+import django
 from future.utils import with_metaclass
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -83,9 +84,10 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
     #     order_insertion_by = 'title'
 
 
-# South integration
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^polymorphic_tree\.models\.PolymorphicTreeForeignKey"])
-except ImportError:
-    pass
+if django.VERSION < (1,7):
+    # South integration
+    try:
+        from south.modelsinspector import add_introspection_rules
+        add_introspection_rules([], ["^polymorphic_tree\.models\.PolymorphicTreeForeignKey"])
+    except ImportError:
+        pass
