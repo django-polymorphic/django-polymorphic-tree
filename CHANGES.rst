@@ -1,6 +1,7 @@
-Changes in version 1.0.2
-------------------------
+Changes in version 1.1 (git)
+----------------------------
 
+* Fixed Python 3 issue in the admin code
 * Test ``polymorphic.__version__`` to determine the api of ``get_child_type_choice()``.
 
 
