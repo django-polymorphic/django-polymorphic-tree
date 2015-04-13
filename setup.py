@@ -9,16 +9,10 @@ import sys
 
 # When creating the sdist, make sure the django.mo file also exists:
 if 'sdist' in sys.argv or 'develop' in sys.argv:
+    os.chdir('polymorphic_tree')
     try:
-        os.chdir('polymorphic_tree')
-
-        from django.core.management.commands.compilemessages import Command
-        command = Command()
-        command.execute(stdout=sys.stderr, verbosity=1)
-    except:
-        # < Django 1.7
-        from django.core.management.commands.compilemessages import compile_messages
-        compile_messages(sys.stderr)
+        from django.core import management
+        management.call_command('compilemessages')
     finally:
         os.chdir('..')
 
