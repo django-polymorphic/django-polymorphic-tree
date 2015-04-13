@@ -42,9 +42,9 @@ setup(
     license='Apache 2.0',
 
     install_requires=[
-        'django-polymorphic>=0.6',  # ensure Django 1.7 compatibility
+        'django-polymorphic>=0.7',  # ensure Django 1.8 compatibility
         'django-mptt>=0.6.0',
-        'django-tag-parser>=2.0',
+        'django-tag-parser>=2.1',   # ensure Django 1.8 compatibility
         'future>=0.12.2',
     ],
     requires=[
@@ -74,6 +74,12 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
+        'Framework :: Django',
+        'Framework :: Django :: 1.4',
+        'Framework :: Django :: 1.5',
+        'Framework :: Django :: 1.6',
+        'Framework :: Django :: 1.7',
+        'Framework :: Django :: 1.8',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
