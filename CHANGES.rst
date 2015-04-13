@@ -1,7 +1,8 @@
-Changes in version 1.1 (git)
-----------------------------
+Changes in version 1.1
+----------------------
 
-* Added django-mptt 0.7 support (which also has Django 1.8 compatibility)
+* Added Django 1.8 compatibility
+* Added django-mptt 0.7 support
 * Fixed Python 3 issue in the admin code
 * Fixed attempting to import south in Django 1.7/1.8 environments
 * Fixed default MPTT model ordering, using tree_id, lft now
