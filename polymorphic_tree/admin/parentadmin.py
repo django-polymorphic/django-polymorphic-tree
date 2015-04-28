@@ -165,7 +165,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     def api_node_moved_view_url(self):
         # Provided for result list template
         info = _get_opt(self.model)
-        return reverse('admin:{0}_{1}_moved'.format(*info))
+        return reverse('admin:{0}_{1}_moved'.format(*info), current_app=self.admin_site.name)
 
 
     @transaction_atomic
