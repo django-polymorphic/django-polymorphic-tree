@@ -199,6 +199,9 @@ class RegressionTests(TestCase):
         sibling_b = ModelX.objects.create(field_b='second', field_x='ModelX', parent=root_node)
         sibling_c = ModelY.objects.create(field_b='third', field_y='ModelY', parent=root_node)
 
+        # sanity check
+        self.assertEqual(list(root_node.get_descendants()), [sibling_a, sibling_b, sibling_c])
+
         self.assertEqual(sibling_a.get_siblings().count(), 2)
         self.assertEqual(sibling_b.get_siblings().count(), 2)
         self.assertEqual(sibling_c.get_siblings().count(), 2)
