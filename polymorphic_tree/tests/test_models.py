@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import Q
 from django.test import TestCase
 
-from polymorphic import ShowFieldContent, ShowFieldType, ShowFieldTypeAndContent
+from .utils import ShowFieldType
 
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 
@@ -42,9 +42,44 @@ class One2OneRelatingModelDerived(One2OneRelatingModel):
     field2 = models.CharField(max_length=10)
 
 
+class Base(ShowFieldType, PolymorphicMPTTModel):
+    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent')
+    field_b = models.CharField(max_length=10)
+
+class ModelX(Base):
+    field_x = models.CharField(max_length=10)
+
+class ModelY(Base):
+    field_y = models.CharField(max_length=10)
+
+
 class PolymorphicTreeTests(TestCase):
     """
     Test Suite, largely derived from django-polymorphic tests
+
+    TODO: potentially port these tests from django_polymorphic.tests
+
+        test_foreignkey_field()
+        test_onetoone_field()
+        test_manytomany_field()
+        test_extra_method()
+        test_instance_of_filter()
+        test_polymorphic___filter()
+        test_delete()
+        test_combine_querysets()
+        test_multiple_inheritance()
+        test_relation_base()
+        test_user_defined_manager()
+        test_manager_inheritance()
+        test_queryset_assignment()
+        test_proxy_models()
+        test_proxy_get_real_instance_class()
+        test_content_types_for_proxy_models()
+        test_proxy_model_inheritance()
+        test_custom_pk()
+        test_fix_getattribute()
+        test_parent_link_and_related_name()
+
     """
 
     def create_model2abcd(self):
@@ -124,3 +159,26 @@ class PolymorphicTreeTests(TestCase):
 
         self.assertEqual(show_base_manager(One2OneRelatingModel), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.One2OneRelatingModel'>")
         self.assertEqual(show_base_manager(One2OneRelatingModelDerived), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.test_models.One2OneRelatingModelDerived'>")
+
+    def test_instance_default_manager(self):
+        def show_default_manager(instance):
+            return "{0} {1}".format(
+                repr(type(instance._default_manager)),
+                repr(instance._default_manager.model)
+            )
+
+        plain_a = PlainA(field1='C1')
+        plain_b = PlainB(field2='C1')
+        plain_c = PlainC(field3='C1')
+
+        model_2a = Model2A(field1='C1')
+        model_2b = Model2B(field2='C1')
+        model_2c = Model2C(field3='C1')
+
+        self.assertEqual(show_default_manager(plain_a), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.test_models.PlainA'>")
+        self.assertEqual(show_default_manager(plain_b), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.test_models.PlainB'>")
+        self.assertEqual(show_default_manager(plain_c), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.test_models.PlainC'>")
+
+        self.assertEqual(show_default_manager(model_2a), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2A'>")
+        self.assertEqual(show_default_manager(model_2b), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2B'>")
+        self.assertEqual(show_default_manager(model_2c), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2C'>")
