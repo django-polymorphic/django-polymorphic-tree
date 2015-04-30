@@ -185,12 +185,11 @@ class PolymorphicTests(TestCase):
 
 
 class MPTTTests(TestCase):
-    """ TODO: port some tests from https://github.com/django-mptt/django-mptt/blob/master/tests/myapp/tests.py
     """
-    pass
+    Tests relating to tree structure of polymorphic objects
 
-
-class RegressionTests(TestCase):
+    TODO: port some tests from https://github.com/django-mptt/django-mptt/blob/master/tests/myapp/tests.py
+    """
 
     def test_sibling_methods(self):
         """ https://github.com/edoburu/django-polymorphic-tree/issues/37 """
@@ -214,3 +213,50 @@ class RegressionTests(TestCase):
 
         self.assertEqual(sibling_c.get_previous_sibling(), sibling_b)
         self.assertEqual(sibling_c.get_next_sibling(), None)
+
+    def test_get_ancestors(self):
+        """ https://github.com/edoburu/django-polymorphic-tree/issues/32 """
+        root_node = Base.objects.create(field_b='root')
+        child = ModelX.objects.create(field_b='child', field_x='ModelX', parent=root_node)
+        grandchild = ModelY.objects.create(field_b='grandchild', field_y='ModelY', parent=child)
+
+        self.assertEqual(list(root_node.get_ancestors()), [])
+        self.assertEqual(list(child.get_ancestors()), [root_node])
+        self.assertEqual(list(grandchild.get_ancestors()), [root_node, child])
+
+        self.assertEqual(list(root_node.get_ancestors(include_self=True)), [root_node])
+        self.assertEqual(list(child.get_ancestors(include_self=True)), [root_node, child])
+        self.assertEqual(list(grandchild.get_ancestors(include_self=True)), [root_node, child, grandchild])
+
+        self.assertEqual(list(root_node.get_ancestors(ascending=True)), [])
+        self.assertEqual(list(child.get_ancestors(ascending=True)), [root_node])
+        self.assertEqual(list(grandchild.get_ancestors(ascending=True)), [child, root_node])
+
+    def test_is_ancestor_of(self):
+        root_node = Base.objects.create(field_b='root')
+        child = ModelX.objects.create(field_b='child', field_x='ModelX', parent=root_node)
+        grandchild = ModelY.objects.create(field_b='grandchild', field_y='ModelY', parent=child)
+
+        self.assertTrue(root_node.is_ancestor_of(child))
+        self.assertTrue(root_node.is_ancestor_of(grandchild))
+        self.assertFalse(child.is_ancestor_of(root_node))
+        self.assertTrue(child.is_ancestor_of(grandchild))
+        self.assertFalse(grandchild.is_ancestor_of(child))
+        self.assertFalse(grandchild.is_ancestor_of(root_node))
+
+    def test_node_type_checking(self):
+        root_node = Base.objects.create(field_b='root')
+        child = ModelX.objects.create(field_b='child', field_x='ModelX', parent=root_node)
+        grandchild = ModelY.objects.create(field_b='grandchild', field_y='ModelY', parent=child)
+
+        self.assertFalse(root_node.is_child_node())
+        self.assertFalse(root_node.is_leaf_node())
+        self.assertTrue(root_node.is_root_node())
+
+        self.assertTrue(child.is_child_node())
+        self.assertFalse(child.is_leaf_node())
+        self.assertFalse(child.is_root_node())
+
+        self.assertTrue(grandchild.is_child_node())
+        self.assertTrue(grandchild.is_leaf_node())
+        self.assertFalse(grandchild.is_root_node())
