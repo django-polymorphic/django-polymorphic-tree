@@ -202,9 +202,9 @@ class RegressionTests(TestCase):
         # sanity check
         self.assertEqual(list(root_node.get_descendants()), [sibling_a, sibling_b, sibling_c])
 
-        self.assertEqual(sibling_a.get_siblings().count(), 2)
-        self.assertEqual(sibling_b.get_siblings().count(), 2)
-        self.assertEqual(sibling_c.get_siblings().count(), 2)
+        self.assertEqual(list(sibling_a.get_siblings()), [sibling_b, sibling_c])
+        self.assertEqual(list(sibling_b.get_siblings()), [sibling_a, sibling_c])
+        self.assertEqual(list(sibling_c.get_siblings()), [sibling_a, sibling_b])
 
         self.assertEqual(sibling_a.get_previous_sibling(), None)
         self.assertEqual(sibling_a.get_next_sibling(), sibling_b)
