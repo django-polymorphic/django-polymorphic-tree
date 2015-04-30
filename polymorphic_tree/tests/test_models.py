@@ -53,7 +53,7 @@ class ModelY(Base):
     field_y = models.CharField(max_length=10)
 
 
-class PolymorphicTreeTests(TestCase):
+class PolymorphicTests(TestCase):
     """
     Test Suite, largely derived from django-polymorphic tests
 
@@ -182,6 +182,12 @@ class PolymorphicTreeTests(TestCase):
         self.assertEqual(show_default_manager(model_2a), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2A'>")
         self.assertEqual(show_default_manager(model_2b), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2B'>")
         self.assertEqual(show_default_manager(model_2c), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2C'>")
+
+
+class MPTTTests(TestCase):
+    """ TODO: port some tests from https://github.com/django-mptt/django-mptt/blob/master/tests/myapp/tests.py
+    """
+    pass
 
 
 class RegressionTests(TestCase):
