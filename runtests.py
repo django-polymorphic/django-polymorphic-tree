@@ -40,6 +40,7 @@ if not settings.configured:
             'polymorphic_tree',
             'polymorphic',
             'mptt',
+            'polymorphic_tree.tests'
         ),
         MIDDLEWARE_CLASSES=(),
         SITE_ID=3,
