@@ -182,3 +182,26 @@ class PolymorphicTreeTests(TestCase):
         self.assertEqual(show_default_manager(model_2a), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2A'>")
         self.assertEqual(show_default_manager(model_2b), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2B'>")
         self.assertEqual(show_default_manager(model_2c), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.test_models.Model2C'>")
+
+
+class RegressionTests(TestCase):
+
+    def test_sibling_methods(self):
+        """ https://github.com/edoburu/django-polymorphic-tree/issues/37 """
+        root_node = Base.objects.create(field_b='root')
+        sibling_a = Base.objects.create(field_b='first', parent=root_node)
+        sibling_b = ModelX.objects.create(field_b='second', field_x='ModelX', parent=root_node)
+        sibling_c = ModelY.objects.create(field_b='third', field_y='ModelY', parent=root_node)
+
+        self.assertEqual(sibling_a.get_siblings().count(), 2)
+        self.assertEqual(sibling_b.get_siblings().count(), 2)
+        self.assertEqual(sibling_c.get_siblings().count(), 2)
+
+        self.assertEqual(sibling_a.get_previous_sibling(), None)
+        self.assertEqual(sibling_a.get_next_sibling(), sibling_b)
+
+        self.assertEqual(sibling_b.get_previous_sibling(), sibling_a)
+        self.assertEqual(sibling_b.get_next_sibling(), sibling_c)
+
+        self.assertEqual(sibling_c.get_previous_sibling(), sibling_b)
+        self.assertEqual(sibling_c.get_next_sibling(), None)
