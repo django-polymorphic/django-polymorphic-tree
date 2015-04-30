@@ -1,3 +1,10 @@
+Changes in git
+--------------
+
+* Fixed URL resolving for for multi admin sites.
+* Enforcing at least django-polymorphic_ 0.7.1 for Django 1.8 compatibility.
+
+
 Changes in version 1.1
 ----------------------
 
