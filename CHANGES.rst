@@ -1,3 +1,11 @@
+Changes in git
+--------------
+
+* Fixed URL resolving for for multi admin sites.
+* Fixed URL breadcrumbs for delete page, visible when using non-standard delete URLs (e.g. django-parler_'s delete translation page).
+* Enforcing at least django-polymorphic_ 0.7.1 for Django 1.8 compatibility.
+
+
 Changes in version 1.1
 ----------------------
 
@@ -138,6 +146,7 @@ and not bother with a plugin registration system.
 
 
 .. _django-fluent-pages: https://github.com/edoburu/django-fluent-pages
+.. _django-parler: https://github.com/edoburu/django-parler
 .. _django-polymorphic: https://github.com/chrisglass/django_polymorphic
 .. _django-tag-parser: https://github.com/edoburu/django-tag-parser
 

@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='basetreenode',
             name='polymorphic_ctype',
-            field=models.ForeignKey(related_name=b'polymorphic_tree.basetreenode_set', editable=False, to='contenttypes.ContentType', null=True),
+            field=models.ForeignKey(related_name=b'polymorphic_tree.basetreenode_set+', editable=False, to='contenttypes.ContentType', null=True),
             preserve_default=True,
         ),
     ]
