@@ -49,25 +49,25 @@ class PolymorphicTests(TestCase):
         self.create_model2abcd()
 
         objects = list(Model2A.objects.all())
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField)>')
-        self.assertEqual(repr(objects[1]), '<Model2B: id 2, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField)>')
-        self.assertEqual(repr(objects[2]), '<Model2C: id 3, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField)>')
-        self.assertEqual(repr(objects[3]), '<Model2D: id 4, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField), field4 (CharField)>')
+        self.assertEqual(repr(objects[0]), '<Model2A: id 1, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField)>')
+        self.assertEqual(repr(objects[1]), '<Model2B: id 2, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField)>')
+        self.assertEqual(repr(objects[2]), '<Model2C: id 3, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField)>')
+        self.assertEqual(repr(objects[3]), '<Model2D: id 4, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField), field4 (CharField)>')
 
     def test_manual_get_real_instance(self):
         self.create_model2abcd()
 
         o = Model2A.objects.non_polymorphic().get(field1='C1')
-        self.assertEqual(repr(o.get_real_instance()), '<Model2C: id 3, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField)>')
+        self.assertEqual(repr(o.get_real_instance()), '<Model2C: id 3, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField)>')
 
     def test_non_polymorphic(self):
         self.create_model2abcd()
 
         objects = list(Model2A.objects.all().non_polymorphic())
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField)>')
-        self.assertEqual(repr(objects[1]), '<Model2A: id 2, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField)>')
-        self.assertEqual(repr(objects[2]), '<Model2A: id 3, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField)>')
-        self.assertEqual(repr(objects[3]), '<Model2A: id 4, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField)>')
+        self.assertEqual(repr(objects[0]), '<Model2A: id 1, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField)>')
+        self.assertEqual(repr(objects[1]), '<Model2A: id 2, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField)>')
+        self.assertEqual(repr(objects[2]), '<Model2A: id 3, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField)>')
+        self.assertEqual(repr(objects[3]), '<Model2A: id 4, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField)>')
 
     def test_get_real_instances(self):
         self.create_model2abcd()
@@ -75,25 +75,25 @@ class PolymorphicTests(TestCase):
 
         # from queryset
         objects = qs.get_real_instances()
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField)>')
-        self.assertEqual(repr(objects[1]), '<Model2B: id 2, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField)>')
-        self.assertEqual(repr(objects[2]), '<Model2C: id 3, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField)>')
-        self.assertEqual(repr(objects[3]), '<Model2D: id 4, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField), field4 (CharField)>')
+        self.assertEqual(repr(objects[0]), '<Model2A: id 1, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField)>')
+        self.assertEqual(repr(objects[1]), '<Model2B: id 2, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField)>')
+        self.assertEqual(repr(objects[2]), '<Model2C: id 3, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField)>')
+        self.assertEqual(repr(objects[3]), '<Model2D: id 4, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField), field4 (CharField)>')
 
         # from a manual list
         objects = Model2A.objects.get_real_instances(list(qs))
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField)>')
-        self.assertEqual(repr(objects[1]), '<Model2B: id 2, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField)>')
-        self.assertEqual(repr(objects[2]), '<Model2C: id 3, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField)>')
-        self.assertEqual(repr(objects[3]), '<Model2D: id 4, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField), field4 (CharField)>')
+        self.assertEqual(repr(objects[0]), '<Model2A: id 1, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField)>')
+        self.assertEqual(repr(objects[1]), '<Model2B: id 2, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField)>')
+        self.assertEqual(repr(objects[2]), '<Model2C: id 3, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField)>')
+        self.assertEqual(repr(objects[3]), '<Model2D: id 4, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField), field4 (CharField)>')
 
     def test_translate_polymorphic_q_object(self):
         self.create_model2abcd()
 
         q = Model2A.translate_polymorphic_Q_object(Q(instance_of=Model2C))
         objects = Model2A.objects.filter(q)
-        self.assertEqual(repr(objects[0]), '<Model2C: id 3, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField)>')
-        self.assertEqual(repr(objects[1]), '<Model2D: id 4, parent (PolymorphicTreeForeignKey), field1 (CharField), lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), field2 (CharField), field3 (CharField), field4 (CharField)>')
+        self.assertEqual(repr(objects[0]), '<Model2C: id 3, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField)>')
+        self.assertEqual(repr(objects[1]), '<Model2D: id 4, lft (PositiveIntegerField), rght (PositiveIntegerField), tree_id (PositiveIntegerField), level (PositiveIntegerField), parent (PolymorphicTreeForeignKey), field1 (CharField), field2 (CharField), field3 (CharField), field4 (CharField)>')
 
     def test_base_manager(self):
         def show_base_manager(model):
