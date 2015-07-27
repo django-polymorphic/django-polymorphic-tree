@@ -16,7 +16,7 @@ from django.conf import settings
 from django.contrib.admin.views.main import EMPTY_CHANGELIST_VALUE
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils import formats
+from django.utils import formats, timezone
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.encoding import smart_text, force_text
@@ -282,6 +282,8 @@ def display_for_field(value, field):
     elif value is None:
         return EMPTY_CHANGELIST_VALUE
     elif isinstance(field, models.DateField) or isinstance(field, models.TimeField):
+        if isinstance(field, models.DateTimeField):
+            value = timezone.localtime(value)
         return formats.localize(value)
     elif isinstance(field, models.DecimalField):
         return formats.number_format(value, field.decimal_places)
