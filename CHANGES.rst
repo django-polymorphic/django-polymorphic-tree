@@ -1,8 +1,9 @@
-Changes in git
---------------
+Changes in 1.1.1
+----------------
 
 * Fixed URL resolving for for multi admin sites.
 * Fixed URL breadcrumbs for delete page, visible when using non-standard delete URLs (e.g. django-parler_'s delete translation page).
+* Fixed showing ``DateTimeField`` in local time.
 * Enforcing at least django-polymorphic_ 0.7.1 for Django 1.8 compatibility.
 
 
