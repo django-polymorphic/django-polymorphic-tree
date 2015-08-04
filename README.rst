@@ -67,7 +67,7 @@ The ``models.py`` file should define the custom node type, and any fields it has
         parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'))
         title = models.CharField(_("Title"), max_length=200)
 
-        class Meta:
+        class Meta(PolymorphicMPTTModel.Meta):
             verbose_name = _("Tree node")
             verbose_name_plural = _("Tree nodes")
 
