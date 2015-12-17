@@ -1,3 +1,9 @@
+Changes in 1.1.2
+----------------
+
+* Fix compatibility with django-polymorphic_ 0.8
+
+
 Changes in 1.1.1
 ----------------
 
