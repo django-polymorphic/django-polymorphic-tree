@@ -7,9 +7,14 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.six import integer_types
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey
-from polymorphic import PolymorphicModel
 from polymorphic.base import PolymorphicModelBase
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
+
+try:
+    from polymorphic.models import PolymorphicModel  # django-polymorphic 0.8
+except ImportError:
+    from polymorphic import PolymorphicModel
+
 
 def _get_base_polymorphic_model(ChildModel):
     """

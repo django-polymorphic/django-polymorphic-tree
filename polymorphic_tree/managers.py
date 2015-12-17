@@ -4,7 +4,7 @@ The manager class for the CMS models
 import django
 from django.db.models.query import QuerySet
 from mptt.managers import TreeManager
-from polymorphic import PolymorphicManager
+from polymorphic.manager import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
 
 try:
