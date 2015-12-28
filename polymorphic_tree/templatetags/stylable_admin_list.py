@@ -13,7 +13,6 @@ This feature can be activated by simply extending the template stylable/admin/ch
 """
 from future.builtins import zip, str
 from django.conf import settings
-from django.contrib.admin.views.main import EMPTY_CHANGELIST_VALUE
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import formats, timezone
@@ -217,7 +216,7 @@ def stylable_column_repr(cl, result, field_name):
         return _get_non_field_repr(cl, result, field_name)  # Field not found (maybe a function)
     else:
         row_classes = None
-        value = display_for_field(getattr(result, f.attname), f)  # Standard field
+        value = display_for_field(getattr(result, f.attname), f, get_empty_value_display(cl))  # Standard field
         if isinstance(f, models.DateField) or isinstance(f, models.TimeField):
             row_classes = ['nowrap']
         return value, row_classes
@@ -269,18 +268,17 @@ def _get_non_field_repr(cl, result, field_name):
 
 
 # from Django 1.4:
-def display_for_field(value, field):
+def display_for_field(value, field, empty_value_display):
     from django.contrib.admin.templatetags.admin_list import _boolean_icon
-    from django.contrib.admin.views.main import EMPTY_CHANGELIST_VALUE
 
     if field.flatchoices:
-        return dict(field.flatchoices).get(value, EMPTY_CHANGELIST_VALUE)
+        return dict(field.flatchoices).get(value, empty_value_display)
     # NullBooleanField needs special-case null-handling, so it comes
     # before the general null test.
     elif isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
         return _boolean_icon(value)
     elif value is None:
-        return EMPTY_CHANGELIST_VALUE
+        return empty_value_display
     elif isinstance(field, models.DateField) or isinstance(field, models.TimeField):
         if isinstance(field, models.DateTimeField):
             value = timezone.localtime(value)
@@ -291,3 +289,13 @@ def display_for_field(value, field):
         return formats.number_format(value)
     else:
         return smart_text(value)
+
+
+try:
+    from django.contrib.admin.views.main import EMPTY_CHANGELIST_VALUE  # Django 1.8 and lower.
+except ImportError:
+    def get_empty_value_display(cl):
+        return cl.model_admin.get_empty_value_display()
+else:
+    def get_empty_value_display(cl):
+        return EMPTY_CHANGELIST_VALUE
