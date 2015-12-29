@@ -153,13 +153,14 @@ class MPTTTests(TestCase):
         sibling_b = ModelX.objects.create(field_b='second', field_x='ModelX', parent=root_node)
         sibling_c = ModelY.objects.create(field_b='third', field_y='ModelY', parent=root_node)
 
-        # sanity check
+        # sanity checks
         self.assertEqual(list(root_node.get_descendants()), [sibling_a, sibling_b, sibling_c])
-
         self.assertEqual(list(sibling_a.get_siblings()), [sibling_b, sibling_c])
         self.assertEqual(list(sibling_b.get_siblings()), [sibling_a, sibling_c])
         self.assertEqual(list(sibling_c.get_siblings()), [sibling_a, sibling_b])
 
+        # When looking for siblings, it should be done from the base model,
+        # not and not the child model type (which may not find all instances)
         self.assertEqual(sibling_a.get_previous_sibling(), None)
         self.assertEqual(sibling_a.get_next_sibling(), sibling_b)
 

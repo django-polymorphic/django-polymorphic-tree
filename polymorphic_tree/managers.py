@@ -50,3 +50,16 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
         # By using .all(), the proper get_query_set()/get_queryset() will be used for each Django version.
         # Django 1.4/1.5 need to use get_query_set(), because the RelatedManager overrides that.
         return self.all().toplevel()
+
+    def _mptt_filter(self, qs=None, **filters):
+        if self._base_manager and qs is not None:
+            # This is a little hack to fix get_previous_sibling() / get_next_sibling().
+            # When the queryset is defined (meaning: a call was made from model._tree_manager._mptt_filter(qs)),
+            # there is a call to find related objects.# The current model might be a derived model however,
+            # due to out polymorphic layout. Enforce seeking from the base model that holds the entire MPTT structure,
+            # and the polymorphic queryset will upgrade the models again.
+            if issubclass(qs.model, self.model):
+                qs.model = self._base_manager.model
+                qs.query.model = self._base_manager.model
+
+        return super(PolymorphicMPTTModelManager, self)._mptt_filter(qs, **filters)
