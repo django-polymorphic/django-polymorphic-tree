@@ -6,10 +6,14 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
-from polymorphic.__version__ import __version__ as polymorphic_version
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
+
+try:
+    from polymorphic.__version__ import __version__ as polymorphic_version  # pre 0.8 used a __version__.py
+except ImportError:
+    from polymorphic import __version__ as polymorphic_version
 
 try:
     # Django 1.6 requires this
