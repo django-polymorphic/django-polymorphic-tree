@@ -154,11 +154,27 @@ The ``child_models`` attribute defines which admin interface is loaded for the *
 The list view is still rendered by the parent admin.
 
 
+Tests
+-----
+
+To run the included test suite, execute::
+
+    ./runtests.py
+
+To test support for multiple Python and Django versions, run tox from the repository root::
+
+    pip install tox
+    tox
+
+The Python versions need to be installed at your system.  See pyenv (Linux) or Homebrew (Mac OS X).
+
+Python 2.6, 2.7, and 3.3 are the currently supported versions.
+
+
 Todo
 ----
 
 * Sphinx Documentation
-* Unit tests
 
 
 Contributing
