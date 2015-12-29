@@ -1,7 +1,15 @@
+Changes in 1.2
+--------------
+
+* Fix compatibility with Django 1.9.
+* Fix support for MPTT ``get_previous_sibling()`` / ``get_next_sibling()``.
+* Fix compatibility with django-polymorphic_ 0.8 final
+
+
 Changes in 1.1.2
 ----------------
 
-* Fix compatibility with django-polymorphic_ 0.8
+* Fix compatibility with upcoming django-polymorphic_ 0.8
 
 
 Changes in 1.1.1
