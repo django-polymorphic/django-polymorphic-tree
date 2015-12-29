@@ -39,13 +39,13 @@ setup(
     license='Apache 2.0',
 
     install_requires=[
-        'django-polymorphic>=0.7.1',  # ensure Django 1.8 compatibility
+        'django-polymorphic>=0.8.1',  # ensure Django 1.9 compatibility
         'django-mptt>=0.6.0',         # Still allow 0.6 to have Django 1.5 support
         'django-tag-parser>=2.1',     # ensure Django 1.8 compatibility
         'future>=0.12.2',
     ],
     requires=[
-        'Django (>=1.4)',   # Using staticfiles
+        'Django (>=1.5)',
     ],
     description="A polymorphic mptt structure to display content in a tree.",
     long_description=read('README.rst'),
