@@ -106,12 +106,14 @@ class PolymorphicTests(TestCase):
         self.assertEqual(show_base_manager(PlainB), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainB'>")
         self.assertEqual(show_base_manager(PlainC), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainC'>")
 
+        # Unlike standard polymorphic, the manager persists everywhere.
+        # This makes sure that the features of MPTT are also available everywhere.
         self.assertEqual(show_base_manager(Model2A), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2A'>")
-        self.assertEqual(show_base_manager(Model2B), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.Model2B'>")
-        self.assertEqual(show_base_manager(Model2C), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.Model2C'>")
+        self.assertEqual(show_base_manager(Model2B), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2B'>")
+        self.assertEqual(show_base_manager(Model2C), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2C'>")
 
         self.assertEqual(show_base_manager(One2OneRelatingModel), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.One2OneRelatingModel'>")
-        self.assertEqual(show_base_manager(One2OneRelatingModelDerived), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.One2OneRelatingModelDerived'>")
+        self.assertEqual(show_base_manager(One2OneRelatingModelDerived), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.One2OneRelatingModelDerived'>")
 
     def test_instance_default_manager(self):
         def show_default_manager(instance):
