@@ -17,7 +17,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import formats, timezone
 from django.utils.html import escape, conditional_escape
-from django.utils.safestring import mark_safe
+from django.utils.safestring import mark_safe, SafeData
 from django.utils.encoding import smart_text, force_text
 from django.template import Library
 from django.contrib.admin.templatetags.admin_list import _boolean_icon, result_headers
@@ -251,6 +251,9 @@ def _get_non_field_repr(cl, result, field_name):
         if boolean:
             allow_tags = True
             result_repr = _boolean_icon(value)
+        elif isinstance(value, SafeData):
+            allow_tags = True
+            result_repr = value
         else:
             result_repr = smart_text(value)
 
