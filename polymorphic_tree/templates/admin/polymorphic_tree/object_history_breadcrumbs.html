@@ -8,6 +8,8 @@
     {% else %}
         &rsaquo; <a href="{% url 'admin:app_list' app_label=app_label %}">{{ app_label|capfirst|escape }}</a>
     {% endif %}
+
+    {# not using module_name, because the 'opts' correclty point to the base model #}
     &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
 
     {% for parent in object|mptt_breadcrumb %}
