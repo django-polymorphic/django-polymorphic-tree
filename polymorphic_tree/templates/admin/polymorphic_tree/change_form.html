@@ -1,15 +1,3 @@
 {% extends "admin/change_form.html" %}
-{% load i18n admin_modify admin_urls polymorphic_admin_tags polymorphic_tree_admin_tags %}
 
-{# Add tree levels to polymorphic breadcrumb #}
-{% block breadcrumbs %}{% if not is_popup %}{% breadcrumb_scope base_opts %}
-<div class="breadcrumbs">
-     <a href="{% url 'admin:index' %}">{% trans "Home" %}</a> &rsaquo;
-     <a href="{% url 'admin:app_list' app_label=app_label %}">{{ app_label|capfirst|escape }}</a> &rsaquo;
-     {% if has_change_permission %}<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} &rsaquo;
-     {% for p in original|mptt_breadcrumb %}
-       <a href="{% url opts|admin_urlname:'change' p.id %}">{{ p.title }}</a> &rsaquo;
-     {% endfor %}
-     {% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
-</div>
-{% endbreadcrumb_scope %}{% endif %}{% endblock %}
+{% block breadcrumbs %}{% if not is_popup %}{% include "admin/polymorphic_tree/change_form_breadcrumbs.html" %}{% endif %}{% endblock %}

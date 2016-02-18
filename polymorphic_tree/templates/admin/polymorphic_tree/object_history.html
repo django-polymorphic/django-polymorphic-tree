@@ -1,0 +1,10 @@
+{% extends 'admin/object_history.html' %}{% comment %}
+
+    This file is selected by default to display polymorphic mptt object history.
+    When using reversion or reversion-compare, this template could be replaced
+    with the proper {% extends "reversion/object_history.html" %} template.
+    Hence, the breadcrumb code is in a separate include file.
+
+{% endcommenr %}
+
+{% block breadcrumbs %}{% include "admin/polymorphic_tree/object_history_breadcrumbs.html" %}{% endblock %}
