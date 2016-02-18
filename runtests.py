@@ -3,7 +3,6 @@ import django
 import os
 import sys
 from django.core.management import execute_from_command_line
-
 from django.conf import settings, global_settings as default_settings
 
 
