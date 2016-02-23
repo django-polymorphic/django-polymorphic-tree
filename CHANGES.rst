@@ -1,3 +1,9 @@
+Changes in 1.2.3
+----------------
+
+* Fix tree list appearance for Django 1.8 and below (classic theme).
+
+
 Changes in 1.2.2
 ----------------
 
