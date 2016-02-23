@@ -11,6 +11,7 @@ to the class, to define custom classes for a column.
 
 This feature can be activated by simply extending the template stylable/admin/change_list.html
 """
+import django
 from future.builtins import zip, str
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -46,10 +47,19 @@ class StylableResultList(BaseInclusionNode):
 
     def get_context_data(self, parent_context, *tag_args, **tag_kwargs):
         cl = tag_args[0]
+
+        if 'grapelli' in settings.INSTALLED_APPS:
+            theme_css = 'polymorphic_tree/adminlist/nodetree_grappelli.css'
+        elif 'flat' in settings.INSTALLED_APPS or django.VERSION >= (1, 9):
+            theme_css = 'polymorphic_tree/adminlist/nodetree_flat.css'
+        else:
+            theme_css = 'polymorphic_tree/adminlist/nodetree_classic.css'
+
         return {
             'cl': cl,
             'result_headers': list(stylable_result_headers(cl)),
             'results': list(stylable_results(cl)),
+            'nodetree_theme_css': theme_css,
 
             # added for frontend
             'has_add_permission': parent_context['has_add_permission'],

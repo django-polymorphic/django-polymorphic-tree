@@ -18,8 +18,8 @@
 .jqtree-django .col-metadata {
   float: right;
   width: auto;  /* all 3 columns combined is 393px */
-  border-right: 1px solid #ddd;
   z-index: 1;
+  overflow: hidden;
 }
 
 .jqtree-django .js-tree-header .action-checkbox-column { display: none; }
@@ -50,15 +50,6 @@
 * html .jqtree-django li div { height:     1%; } /* 1% of nothing makes IE 6 do the right thing. */
 *+html .jqtree-django li > div { min-height: 0;  } /* and IE7 has new tricks to trigger hasLayout. */
 
-
-.jqtree-django .col-primary,
-.jqtree-django .col-metadata {
-  /* Fix height of columns, for zebra background.
-  Also masks subtle differences within various cells if they are there */
-  height: 27px;
-  overflow: hidden;
-}
-
 .jqtree-django ul {
   clear: both;
   /* reset django admin styles */
@@ -71,15 +62,10 @@
 .jqtree-django ul.tree {
   margin: 0;
   padding: 0 0 0 12px;
-  background-image: url(zebra.png);
 }
 
 
 /* column layout */
-
-#changelist table.js-tree-header thead th {
-  padding: 2px 5px;  /* restore Django 1.3 padding, in case Django 1.4 is used. */
-}
 
 .jqtree-django ul.tree a.toggler {
   position: absolute;
@@ -91,9 +77,7 @@
 .jqtree-django div.col {
   /* the "td" cells */
   float: left;
-  padding: 5px;
 
-  border-left: 1px solid #ddd;
   line-height: 16px;  /* increase if a column is larger */
   font-size: 11px;
 }
@@ -135,49 +119,3 @@ ul.tree li img { vertical-align: baseline; }  /* keeps 3px space below, use 'bot
 ul.tree .no-js { display: none; }
 ul.tree li:first-child .move-up { visibility: hidden; }  /* Hiding in CSS is easy, the server-side urlnode.is_first_sibling call is expensive. */
 ul.tree li:last-child .move-down { visibility: hidden; }
-
-
-
-/* grapelli styling and workarounds */
-
-#grp-container .results {
-  margin: 0 0 5px 0;
-}
-
-#grp-container .jqtree-django table {
-  width: 100%;  /* for grapelli */
-}
-
-#grp-container #js-result-list {
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  margin-left: -1px;
-  margin-right: 1px;
-}
-
-#grp-container .jqtree-django ul.tree {
-  margin: 0;
-  padding: 0 0 0 12px;
-  background-image: url(zebra-grapelli.png);
-}
-
-#grp-container .jqtree-django .col-primary,
-#grp-container .jqtree-django .col-metadata {
-  height: 36px;
-}
-
-#grp-container table thead th.col-title {
-  border-top-left-radius: 2px;
-  border-left: 0 none;
-}
-
-#grp-container .jqtree-django .col-metadata {
-  border-right: 0;
-}
-
-#grp-container .jqtree-django div.col {
-  padding: 10px;
-}

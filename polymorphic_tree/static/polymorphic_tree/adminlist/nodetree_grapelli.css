@@ -1,0 +1,43 @@
+/* grapelli styling and workarounds */
+
+#grp-container .results {
+  margin: 0 0 5px 0;
+}
+
+#grp-container .jqtree-django table {
+  width: 100%;  /* for grapelli */
+}
+
+#grp-container #js-result-list {
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  margin-left: -1px;
+  margin-right: 1px;
+}
+
+#grp-container .jqtree-django ul.tree {
+  margin: 0;
+  padding: 0 0 0 12px;
+  background-image: url(zebra-grapelli.png);
+}
+
+#grp-container .jqtree-django .col-primary,
+#grp-container .jqtree-django .col-metadata {
+  height: 36px;
+}
+
+#grp-container table thead th.col-title {
+  border-top-left-radius: 2px;
+  border-left: 0 none;
+}
+
+#grp-container .jqtree-django .col-metadata {
+  border-right: 0;
+}
+
+#grp-container .jqtree-django div.col {
+  padding: 10px;
+}

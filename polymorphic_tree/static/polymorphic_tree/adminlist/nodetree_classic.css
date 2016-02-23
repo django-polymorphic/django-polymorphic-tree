@@ -1,0 +1,23 @@
+#changelist table.js-tree-header thead th {
+  padding: 2px 5px;  /* restore Django 1.3 padding, in case Django 1.4 is used. */
+}
+
+.jqtree-django ul.tree {
+  background-image: url(zebra.png);
+}
+
+.jqtree-django div.col {
+  padding: 5px;
+}
+
+.jqtree-django .col-primary,
+.jqtree-django .col-metadata {
+  /* Fix height of columns, for zebra background.
+  Also masks subtle differences within various cells if they are there */
+  height: 27px;
+}
+
+.jqtree-django .col-metadata {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}

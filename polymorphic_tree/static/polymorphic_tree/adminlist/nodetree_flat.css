@@ -1,0 +1,16 @@
+#changelist table.js-tree-header thead th {
+  padding: 8px;   /* align with fake div columns */
+}
+
+.jqtree-django ul.tree {
+  background-image: url(zebra-flat.png);
+}
+
+.jqtree-django div.col {
+  padding: 8px;
+}
+
+.jqtree-django .col-primary,
+.jqtree-django .col-metadata {
+  height: 35px;
+}
