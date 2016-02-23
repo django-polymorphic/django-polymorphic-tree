@@ -1,3 +1,9 @@
+Changes in 1.2.2
+----------------
+
+* Fix tree list appearance for Django 1.9 and flat theme.
+
+
 Changes in 1.2.1
 ----------------
 
