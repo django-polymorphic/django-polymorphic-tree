@@ -18,6 +18,9 @@
 }
 
 .jqtree-django .col-metadata {
-  border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
+}
+
+.jqtree-django .col-metadata .col {
+  border-left: 1px solid #ddd;
 }
