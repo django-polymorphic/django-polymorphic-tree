@@ -1,6 +1,19 @@
 django-polymorphic-tree
 =======================
 
+.. image:: https://img.shields.io/travis/edoburu/django-polymorphic-tree/master.svg?branch=master
+    :target: http://travis-ci.org/edoburu/django-polymorphic-tree
+.. image:: https://img.shields.io/pypi/v/django-polymorphic-tree.svg
+    :target: https://pypi.python.org/pypi/django-polymorphic-tree/
+.. image:: https://img.shields.io/pypi/dm/django-polymorphic-tree.svg
+    :target: https://pypi.python.org/pypi/django-polymorphic-tree/
+.. image:: https://img.shields.io/badge/wheel-yes-green.svg
+    :target: https://pypi.python.org/pypi/django-polymorphic-tree/
+.. image:: https://img.shields.io/pypi/l/django-polymorphic-tree.svg
+    :target: https://pypi.python.org/pypi/django-polymorphic-tree/
+.. image:: https://img.shields.io/codecov/c/github/edoburu/django-polymorphic-tree/master.svg
+    :target: https://codecov.io/github/edoburu/django-polymorphic-tree?branch=master
+
 This package combines django-mptt_ with django-polymorphic_.
 
 In other words, this module provides a node tree, where each node can be a different model type.
