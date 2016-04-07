@@ -12,14 +12,15 @@ env:
 - PACKAGES="django>=1.9.0,<1.10.0"
 matrix:
   exclude:
-  - python: '2.6'
-    env: PACKAGES="django>=1.7.0,<1.8.0 django-mptt<0.8.0"
-  - python: '2.6'
-    env: PACKAGES="django>=1.8.0,<1.9.0"
-  - python: '2.6'
-    env: PACKAGES="django>=1.9.0,<1.10.0"
   - python: '3.3'
     env: PACKAGES="django>=1.9.0,<1.10.0"
+  allow_failures:
+  - python: '2.7'
+    env: PACKAGES="django>=1.5.0,<1.6.0 django-mptt<0.7.0"
+  - python: '3.3'
+    env: PACKAGES="django>=1.5.0,<1.6.0 django-mptt<0.7.0"
+  - python: '3.4'
+    env: PACKAGES="django>=1.5.0,<1.6.0 django-mptt<0.7.0"
 before_install:
 - pip install codecov
 install:
