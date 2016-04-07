@@ -1,3 +1,9 @@
+Changes in 1.2.4
+----------------
+
+* Fix ``admin/polymorphic_tree/object_history.html`` template typoo.
+
+
 Changes in 1.2.3
 ----------------
 
