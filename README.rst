@@ -52,7 +52,9 @@ Next, create a project which uses the application::
     cd ..
     django-admin.py startproject demo
 
-Add the following to ``settings.py``::
+Add the following to ``settings.py``:
+
+.. code:: python
 
     INSTALLED_APPS += (
         'polymorphic_tree',
@@ -67,7 +69,9 @@ Usage
 The main feature of this module is creating a tree of custom node types.
 It boils down to creating a application with 2 files:
 
-The ``models.py`` file should define the custom node type, and any fields it has::
+The ``models.py`` file should define the custom node type, and any fields it has:
+
+.. code:: python
 
     from django.db import models
     from django.utils.translation import ugettext_lazy as _
@@ -115,7 +119,9 @@ The ``models.py`` file should define the custom node type, and any fields it has
             verbose_name_plural = _("Image nodes")
 
 
-The ``admin.py`` file should define the admin, both for the child nodes and parent::
+The ``admin.py`` file should define the admin, both for the child nodes and parent:
+
+.. code:: python
 
     from django.contrib import admin
     from django.utils.translation import ugettext_lazy as _
