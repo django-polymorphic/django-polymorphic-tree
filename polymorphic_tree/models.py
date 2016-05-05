@@ -77,7 +77,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
     can_have_children = True
 
     # Django fields
-    _default_manager = PolymorphicMPTTModelManager()
+    objects = PolymorphicMPTTModelManager()
 
     class Meta:
         abstract = True
