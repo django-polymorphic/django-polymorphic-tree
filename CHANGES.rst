@@ -1,3 +1,9 @@
+Changes in 1.2.5
+----------------
+
+* Fix grapelli theme appearance for admin list.
+
+
 Changes in 1.2.4
 ----------------
 
