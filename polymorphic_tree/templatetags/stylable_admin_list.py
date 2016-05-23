@@ -48,7 +48,7 @@ class StylableResultList(BaseInclusionNode):
     def get_context_data(self, parent_context, *tag_args, **tag_kwargs):
         cl = tag_args[0]
 
-        if 'grapelli' in settings.INSTALLED_APPS:
+        if 'grappelli' in settings.INSTALLED_APPS:
             theme_css = 'polymorphic_tree/adminlist/nodetree_grappelli.css'
         elif 'flat' in settings.INSTALLED_APPS or django.VERSION >= (1, 9):
             theme_css = 'polymorphic_tree/adminlist/nodetree_flat.css'
