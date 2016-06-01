@@ -25,8 +25,7 @@ before_install:
 - pip install codecov
 install:
 - pip install -U pip wheel
-- pip install $PACKAGES
-- pip install -e .
+- pip install $PACKAGES -e .
 script:
 - coverage run --source=polymorphic_tree runtests.py
 after_success:
