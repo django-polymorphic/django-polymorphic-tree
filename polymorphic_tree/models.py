@@ -1,6 +1,7 @@
 """
 Model that inherits from both Polymorphic and MPTT.
 """
+import uuid
 import django
 from future.utils import with_metaclass
 from django.core.exceptions import ValidationError
@@ -52,7 +53,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
     def _validate_parent(self, parent, model_instance):
         if not parent:
             return
-        elif isinstance(parent, integer_types):
+        elif isinstance(parent, integer_types) or isinstance(parent, uuid.UUID):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
             base_model = _get_base_polymorphic_model(model_instance.__class__)
 
