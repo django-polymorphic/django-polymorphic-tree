@@ -47,7 +47,7 @@
    */
 
   var data = [{% adminlist_recursetree cl %}{% with is_leaf=node.is_leaf_node %}
-    {id: {{ node.pk }}, classes: 'nodetype-{{ node|real_model_name|lower }}', can_have_children: {{ node.can_have_children|yesno:'true,false' }}, label: '<div class="col-primary{% if is_leaf %} leaf{% endif %}"><div class="col first-column"><a href="{{ change_url }}"{% if cl.is_popup %} onclick="opener.dismissRelatedLookupPopup(window, {{ node.pk }}); return false;"{% endif %}>{{ first_column|escapejs }}</a></div></div>{% if other_columns %}<div class="col-metadata">{% for name, repr in other_columns %}<div class="col col-{{ name }}">{{ repr|escapejs }}</div>{% endfor %}</div>{% endif %}'{% if not is_leaf %},
+    {id: '{{ node.pk }}', classes: 'nodetype-{{ node|real_model_name|lower }}', can_have_children: {{ node.can_have_children|yesno:'true,false' }}, label: '<div class="col-primary{% if is_leaf %} leaf{% endif %}"><div class="col first-column"><a href="{{ change_url }}"{% if cl.is_popup %} onclick="opener.dismissRelatedLookupPopup(window, {{ node.pk }}); return false;"{% endif %}>{{ first_column|escapejs }}</a></div></div>{% if other_columns %}<div class="col-metadata">{% for name, repr in other_columns %}<div class="col col-{{ name }}">{{ repr|escapejs }}</div>{% endfor %}</div>{% endif %}'{% if not is_leaf %},
      children: [ {{ children }}
      ]{% endif %}},{% endwith %}{% endadminlist_recursetree %}
     null  // for MSIE
@@ -88,9 +88,9 @@
       url: '{{ cl.model_admin.api_node_moved_view_url }}',
       dataType: 'json',
       data: {
-        'moved_id': parseInt(move_info.moved_node.id),
-        'target_id': parseInt(move_info.target_node.id),
-        'previous_parent_id': parseInt(move_info.previous_parent.id || 0),
+        'moved_id': move_info.moved_node.id,
+        'target_id': move_info.target_node.id,
+        'previous_parent_id': move_info.previous_parent.id,
         'position': move_info.position,
         'csrfmiddlewaretoken': '{{ csrf_token }}'
       },
