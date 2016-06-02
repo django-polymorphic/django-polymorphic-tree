@@ -189,10 +189,13 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
             position = request.POST['position']
 
-            if isinstance(moved_id, integer_types) and isinstance(target_id, integer_types):
-                previous_parent_id = int(request.POST['previous_parent_id']) or None
+            if request.POST.get('previous_parent_id'):
+                if isinstance(moved_id, integer_types) and isinstance(target_id, integer_types):
+                    previous_parent_id = int(request.POST['previous_parent_id'])
+                else:
+                    previous_parent_id = request.POST['previous_parent_id']
             else:
-                previous_parent_id = request.POST['previous_parent_id'] or None
+                previous_parent_id = None
 
             # Not using .non_polymorphic() so all models are downcasted to the derived model.
             # This causes the signal below to be emitted from the proper class as well.
