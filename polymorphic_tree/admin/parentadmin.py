@@ -1,4 +1,6 @@
-import json, django
+import json
+import django
+from django.utils.six import integer_types
 from future.builtins import str, int
 from distutils.version import StrictVersion
 from django.conf import settings
@@ -178,10 +180,19 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Update the position of a node, from a API request.
         """
         try:
-            moved_id = int(request.POST['moved_id'])
-            target_id = int(request.POST['target_id'])
+            try:
+                moved_id = int(request.POST['moved_id'])
+                target_id = int(request.POST['target_id'])
+            except ValueError:
+                moved_id = request.POST['moved_id']
+                target_id = request.POST['target_id']
+
             position = request.POST['position']
-            previous_parent_id = int(request.POST['previous_parent_id']) or None
+
+            if isinstance(moved_id, integer_types) and isinstance(target_id, integer_types):
+                previous_parent_id = int(request.POST['previous_parent_id']) or None
+            else:
+                previous_parent_id = request.POST['previous_parent_id'] or None
 
             # Not using .non_polymorphic() so all models are downcasted to the derived model.
             # This causes the signal below to be emitted from the proper class as well.
@@ -198,7 +209,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 'moved_id': moved_id,
                 'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
             }), content_type='application/json', status=409)  # Conflict
-        if moved.parent_id != previous_parent_id:
+        if str(moved.parent_id) != str(previous_parent_id):
             return HttpResponse(json.dumps({
                 'action': 'reload',
                 'error': 'Client seems to be out-of-sync, please reload!'
@@ -253,4 +264,3 @@ def _get_opt(model):
         return model._meta.app_label, model._meta.model_name  # Django 1.7 format
     except AttributeError:
         return model._meta.app_label, model._meta.module_name
-
