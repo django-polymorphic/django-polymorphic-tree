@@ -1,8 +1,8 @@
 django-polymorphic-tree
 =======================
 
-.. image:: https://img.shields.io/travis/edoburu/django-polymorphic-tree/master.svg?branch=master
-    :target: http://travis-ci.org/edoburu/django-polymorphic-tree
+.. image:: https://img.shields.io/travis/django-polymorphic/django-polymorphic-tree/master.svg?branch=master
+    :target: http://travis-ci.org/django-polymorphic/django-polymorphic-tree
 .. image:: https://img.shields.io/pypi/v/django-polymorphic-tree.svg
     :target: https://pypi.python.org/pypi/django-polymorphic-tree/
 .. image:: https://img.shields.io/pypi/dm/django-polymorphic-tree.svg
@@ -11,8 +11,8 @@ django-polymorphic-tree
     :target: https://pypi.python.org/pypi/django-polymorphic-tree/
 .. image:: https://img.shields.io/pypi/l/django-polymorphic-tree.svg
     :target: https://pypi.python.org/pypi/django-polymorphic-tree/
-.. image:: https://img.shields.io/codecov/c/github/edoburu/django-polymorphic-tree/master.svg
-    :target: https://codecov.io/github/edoburu/django-polymorphic-tree?branch=master
+.. image:: https://img.shields.io/codecov/c/github/django-polymorphic/django-polymorphic-tree/master.svg
+    :target: https://codecov.io/github/django-polymorphic/django-polymorphic-tree?branch=master
 
 This package combines django-mptt_ with django-polymorphic_.
 
@@ -39,7 +39,7 @@ First install the module, preferably in a virtual environment::
 
 Or install the current repository::
 
-    pip install -e git+https://github.com/edoburu/django-polymorphic-tree.git#egg=django-polymorphic-tree
+    pip install -e git+https://github.com/django-polymorphic/django-polymorphic-tree.git#egg=django-polymorphic-tree
 
 The main dependencies are django-mptt_ and django-polymorphic_,
 which will be automatically installed.
@@ -211,5 +211,5 @@ Pull requests are welcome too. :-)
 .. _django-fiber: https://github.com/ridethepony/django-fiber
 .. _django-fluent-pages: https://github.com/edoburu/django-fluent-pages
 .. _django-mptt: https://github.com/django-mptt/django-mptt
-.. _django-polymorphic: https://github.com/chrisglass/django_polymorphic
+.. _django-polymorphic: https://github.com/django-polymorphic/django-polymorphic
 
