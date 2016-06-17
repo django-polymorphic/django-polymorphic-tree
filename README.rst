@@ -1,11 +1,6 @@
-django-polymorphic-tree
-=======================
-
 .. image:: https://img.shields.io/travis/django-polymorphic/django-polymorphic-tree/master.svg?branch=master
     :target: http://travis-ci.org/django-polymorphic/django-polymorphic-tree
 .. image:: https://img.shields.io/pypi/v/django-polymorphic-tree.svg
-    :target: https://pypi.python.org/pypi/django-polymorphic-tree/
-.. image:: https://img.shields.io/pypi/dm/django-polymorphic-tree.svg
     :target: https://pypi.python.org/pypi/django-polymorphic-tree/
 .. image:: https://img.shields.io/badge/wheel-yes-green.svg
     :target: https://pypi.python.org/pypi/django-polymorphic-tree/
@@ -14,11 +9,15 @@ django-polymorphic-tree
 .. image:: https://img.shields.io/codecov/c/github/django-polymorphic/django-polymorphic-tree/master.svg
     :target: https://codecov.io/github/django-polymorphic/django-polymorphic-tree?branch=master
 
+django-polymorphic-tree
+=======================
+
 This package combines django-mptt_ with django-polymorphic_.
+You can write Django models that form a tree structure where each node can be a different model type.
 
-In other words, this module provides a node tree, where each node can be a different model type.
-This allows you to freely structure tree data. For example:
+Example uses:
 
+* Build a tree of organisation and company types (e.g. ``Partner``, ``Reseller``, ``Group`` and ``Customer``)
 * Build a tree of a root node, category nodes, leaf nodes, each with custom fields.
 * Build a todo list of projects, categories and items.
 * Build a book of chapters, sections, and pages.
@@ -26,8 +25,8 @@ This allows you to freely structure tree data. For example:
 Origin
 ------
 
-This module was extracted out of django-fluent-pages_ because it turned out to serve a generic purpose.
-This was done during contract work at Leukeleu_ (also known for their involvement in django-fiber_).
+This code was created in django-fluent-pages_, and extracted to become a separate package.
+This was done during contract work at Leukeleu_ (known for django-fiber_).
 
 
 Installation

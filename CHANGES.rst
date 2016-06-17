@@ -195,7 +195,7 @@ and not bother with a plugin registration system.
 
 .. _django-fluent-pages: https://github.com/edoburu/django-fluent-pages
 .. _django-parler: https://github.com/edoburu/django-parler
-.. _django-polymorphic: https://github.com/chrisglass/django_polymorphic
+.. _django-polymorphic: https://github.com/django-polymorphic/django-polymorphic
 .. _django-reversion: https://github.com/etianen/django-reversion
 .. _django-reversion-compare: https://github.com/jedie/django-reversion-compare
 .. _django-tag-parser: https://github.com/edoburu/django-tag-parser
