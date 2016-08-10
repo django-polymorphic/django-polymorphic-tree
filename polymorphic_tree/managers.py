@@ -34,10 +34,12 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
     #: The queryset class to use.
     queryset_class = PolymorphicMPTTQuerySet
 
-    # Re-apply the logic from django-polymorphic and django-mptt.
-    # As of django-mptt 0.7, TreeManager.get_querset() no longer calls super()
     def get_queryset(self):
-        return self.queryset_class(self.model, using=self._db).order_by(self.tree_id_attr, self.left_attr)
+        # Re-apply the logic from django-polymorphic and django-mptt.
+        # As of django-mptt 0.7, TreeManager.get_querset() no longer calls super()
+        # In django
+        qs = PolymorphicManager.get_queryset(self)  # can filter on proxy models
+        return qs.order_by(self.tree_id_attr, self.left_attr)
 
     # For Django 1.5
     if django.VERSION < (1, 7):
