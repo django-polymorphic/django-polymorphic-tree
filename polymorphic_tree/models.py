@@ -6,7 +6,7 @@ from future.utils import with_metaclass
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.six import integer_types
-from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey
+from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey, raise_if_unsaved
 from polymorphic.base import PolymorphicModelBase
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
 
@@ -87,6 +87,26 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
     # parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'), help_text=_('You can also change the parent by dragging the item in the list.'))
     # class MPTTMeta:
     #     order_insertion_by = 'title'
+
+    @raise_if_unsaved
+    def get_closest_ancestor_of_type(self, model, include_self=False):
+        """
+        Find the first parent of a specific model type.
+        """
+        if include_self and isinstance(self, model):
+            return self
+        else:
+            try:
+                return self.get_ancestors_of_type(model, ascending=False)[0]
+            except IndexError:
+                return None
+
+    @raise_if_unsaved
+    def get_ancestors_of_type(self, model, ascending=False, include_self=False):
+        """
+        Find a parent of a specific type.
+        """
+        return self.get_ancestors(ascending=ascending, include_self=include_self).instance_of(model)
 
 
 if django.VERSION < (1,7):
