@@ -40,7 +40,7 @@ setup(
 
     install_requires=[
         'django-polymorphic>=0.9.1',  # needed for object_history_template fix
-        'django-mptt>=0.6.0',         # Still allow 0.6 to have Django 1.5 support
+        'django-mptt>=0.7.0',         # Still allow 0.7 to have Django 1.6 support
         'django-tag-parser>=2.1',     # ensure Django 1.8 compatibility
         'future>=0.12.2',
     ],
@@ -71,12 +71,13 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Framework :: Django',
-        'Framework :: Django :: 1.4',
-        'Framework :: Django :: 1.5',
         'Framework :: Django :: 1.6',
         'Framework :: Django :: 1.7',
         'Framework :: Django :: 1.8',
+        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.10',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
