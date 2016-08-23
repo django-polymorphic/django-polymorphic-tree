@@ -5,22 +5,20 @@ python:
 - '3.3'
 - '3.4'
 env:
-- PACKAGES="django>=1.5.0,<1.6.0 django-mptt<0.7.0"
-- PACKAGES="django>=1.6.0,<1.7.0 django-mptt<0.8.0"
-- PACKAGES="django>=1.7.0,<1.8.0 django-mptt<0.8.0"
-- PACKAGES="django>=1.8.0,<1.9.0"
-- PACKAGES="django>=1.9.0,<1.10.0"
+- PACKAGES="django>=1.5,<1.6 django-mptt<0.7"
+- PACKAGES="django>=1.6,<1.7 django-mptt<0.8"
+- PACKAGES="django>=1.7,<1.8 django-mptt<0.8"
+- PACKAGES="django>=1.8,<1.9"
+- PACKAGES="django>=1.9,<1.10"
+- PACKAGES="django>=1.10,<1.11 django-polymorphic>=1.0b1"
 matrix:
   exclude:
   - python: '3.3'
-    env: PACKAGES="django>=1.9.0,<1.10.0"
-  allow_failures:
-  - python: '2.7'
-    env: PACKAGES="django>=1.5.0,<1.6.0 django-mptt<0.7.0"
+    env: PACKAGES="django>=1.9,<1.10"
   - python: '3.3'
-    env: PACKAGES="django>=1.5.0,<1.6.0 django-mptt<0.7.0"
-  - python: '3.4'
-    env: PACKAGES="django>=1.5.0,<1.6.0 django-mptt<0.7.0"
+    env: PACKAGES="django>=1.10,<1.11 django-polymorphic>=1.0b1"
+  allow_failures:
+  - env: PACKAGES="django>=1.5,<1.6 django-mptt<0.7"
 before_install:
 - pip install codecov
 install:
