@@ -118,8 +118,8 @@ class PolymorphicTests(TestCase):
     def test_instance_default_manager(self):
         def show_default_manager(instance):
             return "{0} {1}".format(
-                repr(type(instance._default_manager)),
-                repr(instance._default_manager.model)
+                repr(type(instance.__class__._default_manager)),
+                repr(instance.__class__._default_manager.model)
             )
 
         plain_a = PlainA(field1='C1')
