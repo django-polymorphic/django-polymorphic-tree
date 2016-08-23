@@ -1,3 +1,18 @@
+Changes in 1.3
+--------------
+
+* Added Django 1.10 support
+* Added convenient `get_closest_ancestor_of_type()` and `get_ancestors_of_type()` methods
+* Support proxy model filtering by django-polymorphic_ 1.0
+* Dropped Django 1.5 support / django-mptt 0.6 support.
+
+.. note:: As of Django 1.10 managers of abstract classes are also inherited.
+          Hence, the need to override ``_default_manager`` is removed.
+          Use ``objects = YourPolymorphicMPTTManager()`` to override the manager now.
+
+          Make sure django-polymorphic_ 1.0 is installed for Django 1.10 projects.
+
+
 Changes in 1.2.5
 ----------------
 

@@ -45,7 +45,7 @@ setup(
         'future>=0.12.2',
     ],
     requires=[
-        'Django (>=1.5)',
+        'Django (>=1.6)',
     ],
     description="A polymorphic mptt structure to display content in a tree.",
     long_description=read('README.rst'),
@@ -53,8 +53,8 @@ setup(
     author='Diederik van der Boor',
     author_email='opensource@edoburu.nl',
 
-    url='https://github.com/edoburu/django-polymorphic-tree',
-    download_url='https://github.com/edoburu/django-polymorphic-tree/zipball/master',
+    url='https://github.com/django-polymorphic/django-polymorphic-tree',
+    download_url='https://github.com/django-polymorphic/django-polymorphic-tree/zipball/master',
 
     packages=find_packages(),
     include_package_data=True,
