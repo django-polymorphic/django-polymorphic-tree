@@ -39,7 +39,7 @@ setup(
     license='Apache 2.0',
 
     install_requires=[
-        'django-polymorphic>=0.9.1',  # needed for object_history_template fix
+        'django-polymorphic>=1.0',    # needed for Django 1.10 compatibility
         'django-mptt>=0.7.0',         # Still allow 0.7 to have Django 1.6 support
         'django-tag-parser>=2.1',     # ensure Django 1.8 compatibility
         'future>=0.12.2',
