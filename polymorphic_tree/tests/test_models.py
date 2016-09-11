@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+import django
 from django.db.models import Q
 from django.test import TestCase
 
@@ -116,11 +118,18 @@ class PolymorphicTests(TestCase):
         self.assertEqual(show_base_manager(One2OneRelatingModelDerived), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.One2OneRelatingModelDerived'>")
 
     def test_instance_default_manager(self):
-        def show_default_manager(instance):
-            return "{0} {1}".format(
-                repr(type(instance.__class__._default_manager)),
-                repr(instance.__class__._default_manager.model)
-            )
+        if django.VERSION >= (1, 10, 1):
+            def show_default_manager(instance):
+                return "{0} {1}".format(
+                    repr(type(instance.__class__.objects)),
+                    repr(instance.__class__.objects.model)
+                )
+        else:
+            def show_default_manager(instance):
+                return "{0} {1}".format(
+                    repr(type(instance.__class__._default_manager)),
+                    repr(instance.__class__._default_manager.model)
+                )
 
         plain_a = PlainA(field1='C1')
         plain_b = PlainB(field2='C1')
