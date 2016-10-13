@@ -1,0 +1,75 @@
+# Copyright (C) 2010-2012
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Gonzalo Bustos, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-30 14:49+0100\n"
+"PO-Revision-Date: 2011-01-10 23:54+0100\n"
+"Last-Translator: Gonzalo Bustos\n"
+"Language-Team: Spanish (Argentina) <LL@li.org>\n"
+"Language: es_AR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin/parentadmin.py:33
+msgid "Node type"
+msgstr "Tipo de nodo"
+
+#: admin/parentadmin.py:44
+msgid "node type"
+msgstr "tipo de nodo"
+
+#: admin/parentadmin.py:102
+msgid "Actions"
+msgstr "Acciones"
+
+#: admin/parentadmin.py:113
+msgid "Add sub node"
+msgstr "Agregar sub nodo"
+
+#: admin/parentadmin.py:121
+msgid "View on site"
+msgstr "Ver en sitio"
+
+#: admin/parentadmin.py:199
+#, python-brace-format
+msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow children!"
+msgstr "No se puede ubicar ‘{0}’ bajo ‘{1}’; un {2} no permite hijos!"
+
+#: models.py:43
+msgid "The selected node cannot have child nodes."
+msgstr "El nodo seleccionado no puede tener nodos hijos."
+
+#: templates/admin/polymorphic_tree/change_form_breadcrumbs.html:5
+#: templates/admin/polymorphic_tree/delete_confirmation.html:7
+#: templates/admin/polymorphic_tree/object_history_breadcrumbs.html:5
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/admin/polymorphic_tree/change_form_breadcrumbs.html:20
+msgid "Add"
+msgstr "Agregar"
+
+#: templates/admin/polymorphic_tree/delete_confirmation.html:20
+msgid "Delete"
+msgstr "Eliminar"
+
+#: templates/admin/polymorphic_tree/jstree_list_results.html:111
+msgid ""
+"Unable to move the node, the current display is out-of-date.\\nThe current "
+"page now reloaded."
+msgstr "No se puede mover el nodo, el display actual está desactualizado.\\nSe recargó la página actual."
+
+#: templates/admin/polymorphic_tree/jstree_list_results.html:119
+msgid ""
+"There was an error while moving the node, please reload the current page."
+msgstr "Hubo un error cuando se movía el nodo, por favor recargá la página actual."
+
+#: templates/admin/polymorphic_tree/object_history_breadcrumbs.html:20
+msgid "History"
+msgstr "Historia"
