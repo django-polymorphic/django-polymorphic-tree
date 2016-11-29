@@ -1,3 +1,12 @@
+Changes in 1.3.1 (2016-11-29)
+-----------------------------
+
+* Add Spanish (Argentina) language
+* Fix rendering of empty list items on Django 1.9+ that have non-existing attributes/objects.
+* Enforcing django-polymorphic_ >= 1.0.1 for Django 1.10.1 compatibility.
+  (the previous version already required django-polymorphic_ 1.0)
+
+
 Changes in 1.3
 --------------
 
