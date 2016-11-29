@@ -268,7 +268,7 @@ def _get_non_field_repr(cl, result, field_name):
             result_repr = smart_text(value)
 
     except (AttributeError, ObjectDoesNotExist):
-        result_repr = EMPTY_CHANGELIST_VALUE
+        result_repr = get_empty_value_display(cl)
     else:
         # Strip HTML tags in the resulting text, except if the
         # function has an "allow_tags" attribute set to True.
