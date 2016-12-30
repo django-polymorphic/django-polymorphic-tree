@@ -198,7 +198,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 'moved_id': moved_id,
                 'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
             }), content_type='application/json', status=409)  # Conflict
-        if moved.parent_id != previous_parent_id:
+        if getattr(moved, '{}_id'.format(moved._mptt_meta.parent_attr)) != previous_parent_id:
             return HttpResponse(json.dumps({
                 'action': 'reload',
                 'error': 'Client seems to be out-of-sync, please reload!'
