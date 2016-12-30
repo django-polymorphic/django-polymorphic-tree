@@ -46,3 +46,27 @@ class ModelX(Base):
 
 class ModelY(Base):
     field_y = models.CharField(max_length=10)
+
+
+class ModelWithCustomParentName(PolymorphicMPTTModel):
+    """Model with custom parent name
+
+    A model where ``PolymorphicTreeForeignKey`` attribute has not ``parent``
+    name, but ``chief``
+
+    Attributes:
+        chief (ModelWithCustomParentName): parent
+        field5 (str): test field
+    """
+    chief = PolymorphicTreeForeignKey('self',
+                                      blank=True,
+                                      null=True,
+                                      related_name='subordinate',
+                                      verbose_name='Chief')
+    field5 = models.CharField(max_length=10)
+
+    class MPTTMeta:
+        parent_attr = 'chief'
+
+    def __str__(self):
+        return self.field5
