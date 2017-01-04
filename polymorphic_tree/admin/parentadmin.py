@@ -1,4 +1,5 @@
 import json, django
+
 from future.builtins import str, int
 from distutils.version import StrictVersion
 from django.conf import settings
@@ -22,6 +23,11 @@ except ImportError:
     # Django 1.3 compatibility
     from django.conf.urls.defaults import url
 
+try:
+    from django.contrib.auth import get_permission_codename
+except ImportError:
+    def get_permission_codename(action, opts):
+        return '%s_%s' % (action, opts.model_name)
 
 try:
     transaction_atomic = transaction.atomic
@@ -192,6 +198,13 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         except self.model.DoesNotExist as e:
             return HttpResponseNotFound(json.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
+        if not request.user.has_perm(get_permission_codename('change', moved._meta), moved):
+            return HttpResponse(json.dumps({
+                'action': 'reject',
+                'moved_id': moved_id,
+                'error': _('You do not have permission to move this node.')
+            }), content_type='application/json', status=409)
+
         if not self.can_have_children(target) and position == 'inside':
             return HttpResponse(json.dumps({
                 'action': 'reject',
@@ -203,8 +216,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 'action': 'reload',
                 'error': 'Client seems to be out-of-sync, please reload!'
             }), content_type='application/json', status=409)
-
-        # TODO: with granular user permissions, check if user is allowed to edit both pages.
 
         mptt_position = {
             'inside': 'first-child',
