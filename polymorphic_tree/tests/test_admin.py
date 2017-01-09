@@ -1,11 +1,11 @@
-from unittest import TestCase
-
 import sys
+from unittest import TestCase
 
 from django.contrib.admin import AdminSite
 
+from polymorphic_tree.admin.parentadmin import get_permission_codename
 from polymorphic_tree.tests.admin import TreeNodeParentAdmin
-from polymorphic_tree.tests.models import ModelWithCustomParentName
+from polymorphic_tree.tests.models import Model2A, ModelWithCustomParentName
 
 if sys.version_info[0] == 3:
     from unittest.mock import MagicMock
@@ -43,3 +43,8 @@ class PolymorphicAdminTests(TestCase):
         # This hack used for django 1.7 support
         self.child2 = ModelWithCustomParentName.objects.get(pk=self.child2.pk)
         self.assertEqual(self.child2.chief, self.child1)
+
+    def test_get_permission_codename(self):
+        # This is to test whether our function works in older Django versions.
+        self.assertEqual(get_permission_codename('change', Model2A._meta),
+                         'change_model2a')
