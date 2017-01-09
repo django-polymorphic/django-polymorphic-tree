@@ -1,10 +1,16 @@
 from unittest import TestCase
-from unittest.mock import MagicMock
+
+import sys
 
 from django.contrib.admin import AdminSite
 
 from polymorphic_tree.tests.admin import TreeNodeParentAdmin
 from polymorphic_tree.tests.models import ModelWithCustomParentName
+
+if sys.version_info[0] == 3:
+    from unittest.mock import MagicMock
+else:
+    from mock import MagicMock
 
 
 class PolymorphicAdminTests(TestCase):
@@ -33,5 +39,7 @@ class PolymorphicAdminTests(TestCase):
             'position': 'inside'
         }
         self.parent_admin.api_node_moved_view(request)
-        self.child2.refresh_from_db()
+        # Analog of self.child2.refresh_from_db()
+        # This hack used for django 1.7 support
+        self.child2 = ModelWithCustomParentName.objects.get(pk=self.child2.pk)
         self.assertEqual(self.child2.chief, self.child1)
