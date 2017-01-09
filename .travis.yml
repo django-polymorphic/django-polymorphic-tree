@@ -18,9 +18,9 @@ matrix:
   - python: '3.3'
     env: PACKAGES="django>=1.10,<1.11"
   - python: '3.5'
-    env: PACKAGES="django>=1.7,<1.8"
+    env: PACKAGES="django>=1.7,<1.8 django-mptt<0.8"
   - python: '3.6'
-    env: PACKAGES="django>=1.7,<1.8"
+    env: PACKAGES="django>=1.7,<1.8 django-mptt<0.8"
 before_install:
 - pip install codecov
 install:
