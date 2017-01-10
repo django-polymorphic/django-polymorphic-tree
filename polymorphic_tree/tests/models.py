@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from polymorphic.showfields import ShowFieldContent
@@ -70,3 +71,31 @@ class ModelWithCustomParentName(PolymorphicMPTTModel):
 
     def __str__(self):
         return self.field5
+
+
+class ModelWithValidation(PolymorphicMPTTModel):
+    """Model with custom validation
+
+    A model with redefined ``clean`` method
+
+    ``clean`` method always raises ``ValidationError``
+
+    Attributes:
+        parent (ModelWithValidation): parent
+        field6 (str): test field
+    """
+
+    parent = PolymorphicTreeForeignKey('self',
+                                       blank=True,
+                                       null=True,
+                                       related_name='children',
+                                       verbose_name='Chief')
+
+    field6 = models.CharField(max_length=10)
+
+    def clean(self):
+        """Raise validation error"""
+        raise ValidationError({
+            'parent': 'There is something with parent field'
+        })
+
