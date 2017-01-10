@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
+from mptt.exceptions import InvalidMove
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
@@ -224,13 +225,18 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             'after': 'right',
         }[position]
         try:
-            setattr(moved, moved._mptt_meta.parent_attr, target)
-            moved.full_clean()
+            moved.can_be_moved(target)
         except ValidationError as e:
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
                 'error': '\n'.join(e.messages)
+            }), content_type='application/json', status=400)
+        except InvalidMove as e:
+            return HttpResponse(json.dumps({
+                'action': 'reject',
+                'moved_id': moved_id,
+                'error': str(e)
             }), content_type='application/json', status=400)
         moved.move_to(target, mptt_position)
 
