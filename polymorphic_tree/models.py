@@ -123,7 +123,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         Args:
             target (PolymorphicMPTTModel): future parent of node
         """
-        return True
+        pass
 
 
 if django.VERSION < (1,7):
