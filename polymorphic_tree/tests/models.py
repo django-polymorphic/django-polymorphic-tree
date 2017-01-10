@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from mptt.exceptions import InvalidMove
 
 from polymorphic.showfields import ShowFieldContent
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
@@ -76,9 +77,10 @@ class ModelWithCustomParentName(PolymorphicMPTTModel):
 class ModelWithValidation(PolymorphicMPTTModel):
     """Model with custom validation
 
-    A model with redefined ``clean`` method
+    A model with redefined ``clean`` and ``can_be_moved`` methods
 
     ``clean`` method always raises ``ValidationError``
+    ``can_be_moved`` always calls ``clean``
 
     Attributes:
         parent (ModelWithValidation): parent
@@ -88,8 +90,7 @@ class ModelWithValidation(PolymorphicMPTTModel):
     parent = PolymorphicTreeForeignKey('self',
                                        blank=True,
                                        null=True,
-                                       related_name='children',
-                                       verbose_name='Chief')
+                                       related_name='children')
 
     field6 = models.CharField(max_length=10)
 
@@ -99,3 +100,29 @@ class ModelWithValidation(PolymorphicMPTTModel):
             'parent': 'There is something with parent field'
         })
 
+    def can_be_moved(self, target):
+        """Execute ``clean``"""
+        self.clean()
+
+
+class ModelWithInvalidMove(PolymorphicMPTTModel):
+    """Model with custom validation
+
+    A model with redefined only ``can_be_moved`` method which always raises
+    ``InvalidMove``
+
+    Attributes:
+        parent (ModelWithValidation): parent
+        field7 (str): test field
+    """
+
+    parent = PolymorphicTreeForeignKey('self',
+                                       blank=True,
+                                       null=True,
+                                       related_name='children')
+
+    field7 = models.CharField(max_length=10)
+
+    def can_be_moved(self, target):
+        """Raise ``InvalidMove``"""
+        raise InvalidMove('Invalid move')

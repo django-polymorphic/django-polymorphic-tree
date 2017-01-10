@@ -6,7 +6,7 @@ from django.contrib.admin import AdminSite
 from polymorphic_tree.admin.parentadmin import get_permission_codename
 from polymorphic_tree.tests.admin import TreeNodeParentAdmin
 from polymorphic_tree.tests.models import Model2A, ModelWithCustomParentName, \
-    ModelWithValidation
+    ModelWithValidation, ModelWithInvalidMove
 
 if sys.version_info[0] == 3:
     from unittest.mock import MagicMock
@@ -47,6 +47,23 @@ class PolymorphicAdminTests(TestCase):
             AdminSite()
         )
 
+        self.parent_invalid_move = ModelWithInvalidMove.objects.create(
+            field7='parent'
+        )
+        self.child1_invalid_move = ModelWithInvalidMove.objects.create(
+            field7='child1',
+            parent=self.parent_invalid_move
+        )
+        self.child2_invalid_move = ModelWithInvalidMove.objects.create(
+            field7='child2',
+            parent=self.parent_invalid_move
+        )
+
+        self.parent_admin_invalid_move = TreeNodeParentAdmin(
+            ModelWithInvalidMove,
+            AdminSite()
+        )
+
     def test_make_child2_child_child1(self):
         """Make ``self.child2`` child of ``self.child1``"""
         request = MagicMock()
@@ -75,6 +92,22 @@ class PolymorphicAdminTests(TestCase):
         }
 
         resp = self.parent_admin_with_validation.api_node_moved_view(request)
+
+        self.assertEqual(resp.status_code, 400)
+
+    def test_invalid_move(self):
+        """Ensure that if move can't be performed due validation error, move
+        can't be performed and json error returned
+        """
+        request = MagicMock()
+        request.POST = {
+            'moved_id': self.child2_invalid_move.id,
+            'target_id': self.child1_invalid_move.id,
+            'previous_parent_id': self.parent_invalid_move.id,
+            'position': 'inside'
+        }
+
+        resp = self.parent_admin_invalid_move.api_node_moved_view(request)
 
         self.assertEqual(resp.status_code, 400)
 
