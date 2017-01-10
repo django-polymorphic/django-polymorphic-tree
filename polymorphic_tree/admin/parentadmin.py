@@ -1,5 +1,6 @@
 import json, django
 
+from django.core.exceptions import ValidationError
 from future.builtins import str, int
 from distutils.version import StrictVersion
 from django.conf import settings
@@ -222,6 +223,15 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             'before': 'left',
             'after': 'right',
         }[position]
+        try:
+            setattr(moved, moved._mptt_meta.parent_attr, target)
+            moved.full_clean()
+        except ValidationError as e:
+            return HttpResponse(json.dumps({
+                'action': 'reject',
+                'moved_id': moved_id,
+                'error': '\n'.join(e.messages)
+            }), content_type='application/json', status=400)
         moved.move_to(target, mptt_position)
 
         # Some packages depend on calling .save() or post_save signal after updating a model.
