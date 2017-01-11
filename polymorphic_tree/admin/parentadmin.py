@@ -217,13 +217,26 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 'error': _('You do not have permission to move this node.')
             }), content_type='application/json', status=409)
 
+        # Find out which parent the node will reside under.
+        parent_attr_id = '{}_id'.format(moved._mptt_meta.parent_attr)
+
         if position == 'inside':
+            test_new_parent = target
+        else:
+            # left/right of an other node
+            if getattr(target, parent_attr_id) != getattr(moved, parent_attr_id):
+                test_new_parent = getattr(target, moved._mptt_meta.parent_attr)
+            else:
+                test_new_parent = None  # kept inside the same parent.
+
+        # Test whether the parent allows this node to be a child.
+        if test_new_parent is not None:
             error = None
-            if not self.can_have_children(target):
+            if not self.can_have_children(test_new_parent):
                 error = _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019;'
                     u' a {2} does not allow children!').format(moved, target,
                     target._meta.verbose_name)
-            elif not self.can_have_children(target, moved):
+            elif not self.can_have_children(test_new_parent, child=moved):
                 error = _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019;'
                     u' a {2} does not allow {3} as a child!').format(moved,
                     target, target._meta.verbose_name, moved._meta.verbose_name)
@@ -235,7 +248,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 }), content_type='application/json', status=409)  # Conflict
 
         # Compare on strings to support UUID fields.
-        parent_attr_id = '{}_id'.format(moved._mptt_meta.parent_attr)
         if str(getattr(moved, parent_attr_id)) != str(previous_parent_id):
             return HttpResponse(json.dumps({
                 'action': 'reload',
