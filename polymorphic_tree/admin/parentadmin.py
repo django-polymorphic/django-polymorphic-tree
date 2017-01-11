@@ -96,11 +96,9 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         templates.insert(-1, 'admin/polymorphic_tree/change_list.html')  # Just before admin/change_list.html
         return templates
 
-
     # NOTE: the regular results table is replaced client-side with a jqTree list.
     # When making changes to the list, test both the JavaScript and non-JavaScript variant.
     # The jqTree variant still uses the server-side rendering for the columns.
-
 
     def actions_column(self, node):
         """
@@ -111,7 +109,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
     actions_column.allow_tags = True
     actions_column.short_description = _('Actions')
-
 
     def get_action_icons(self, node):
         """
@@ -138,13 +135,11 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         actions.append(u'<span class="no-js">{0}{1}</span>'.format(move_up, move_down))
         return actions
 
-
     def can_preview_object(self, node):
         """
         Define whether a node can be previewed.
         """
         return hasattr(node, 'get_absolute_url')
-
 
     # ---- Custom views ----
 
@@ -161,13 +156,11 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         ]
         return extra_urls + base_urls
 
-
     @property
     def api_node_moved_view_url(self):
         # Provided for result list template
         info = _get_opt(self.model)
         return reverse('admin:{0}_{1}_moved'.format(*info), current_app=self.admin_site.name)
-
 
     @transaction_atomic
     def api_node_moved_view(self, request):
@@ -240,7 +233,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             'action_column': self.actions_column(moved),
         }), content_type='application/json')
 
-
     def move_up_view(self, request, object_id):
         node = self.model.objects.get(pk=object_id)
 
@@ -250,7 +242,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 node.move_to(previous_sibling_category, position='left')
 
         return HttpResponseRedirect('../../')
-
 
     def move_down_view(self, request, object_id):
         node = self.model.objects.get(pk=object_id)

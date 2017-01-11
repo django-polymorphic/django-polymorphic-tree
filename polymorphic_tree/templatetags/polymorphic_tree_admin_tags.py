@@ -29,6 +29,7 @@ def mptt_breadcrumb(node):
 
 
 class AdminListRecurseTreeNode(Node):
+
     def __init__(self, template_nodes, cl_var):
         self.template_nodes = template_nodes
         self.cl_var = cl_var

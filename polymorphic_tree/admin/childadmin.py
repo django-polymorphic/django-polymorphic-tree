@@ -20,7 +20,6 @@ class PolymorphicMPTTChildModelAdmin(PolymorphicChildModelAdmin, MPTTModelAdmin)
     # as that class is used for the real admin screen in the edit/delete view.
     # This class is only a base class for the custom node type plugins.
 
-
     @property
     def change_form_template(self):
         # Insert template before default admin/polymorphic to have the tree in the breadcrumb

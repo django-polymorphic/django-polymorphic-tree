@@ -83,7 +83,6 @@ def stylable_result_headers(cl):
     for field_name, header in zip(cl.list_display, result_headers(cl)):
         header['field_name'] = field_name  # For JavaScript
 
-
         if header.get('class_attrib'):
             # Remove any sorting marker for mptt tables, because they are not sortable.
             if hasattr(cl.model, '_mptt_meta'):
@@ -100,6 +99,7 @@ def stylable_result_headers(cl):
 
 
 class ResultListRow(list):
+
     def __init__(self, seq, object):
         super(ResultListRow, self).__init__(seq)
         self.object = object
@@ -171,8 +171,8 @@ def stylable_items_for_result(cl, result, form):
                 result_id = repr(force_text(value))[1:]
                 link_attr += ' onclick="opener.dismissRelatedLookupPopup(window, %s); return false;"' % result_id
 
-            yield mark_safe(u'<%s%s><a href="%s"%s>%s</a></%s>' % \
-                (table_tag, row_attr, url, link_attr, conditional_escape(result_repr), table_tag))
+            yield mark_safe(u'<%s%s><a href="%s"%s>%s</a></%s>' %
+                            (table_tag, row_attr, url, link_attr, conditional_escape(result_repr), table_tag))
         else:
             # By default the fields come from ModelAdmin.list_editable,
             # but if we pull the fields out of the form instead,

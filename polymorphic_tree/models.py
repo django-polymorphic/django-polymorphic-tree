@@ -29,7 +29,6 @@ def _get_base_polymorphic_model(ChildModel):
     return None
 
 
-
 class PolymorphicMPTTModelBase(MPTTModelBase, PolymorphicModelBase):
     """
     Metaclass for all polymorphic models.
@@ -51,7 +50,6 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
         value = super(PolymorphicTreeForeignKey, self).clean(value, model_instance)
         self._validate_parent(value, model_instance)
         return value
-
 
     def _validate_parent(self, parent, model_instance):
         if not parent:
@@ -130,7 +128,6 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
             child_types[key] = new_children
         return child_types[key]
 
-
     class Meta:
         abstract = True
         ordering = ('tree_id', 'lft',)
@@ -160,7 +157,6 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         """
         return self.get_ancestors(ascending=ascending, include_self=include_self).instance_of(model)
 
-
     def is_child_allowed(self, child):
         """
         Tell whether this node allows the given node as child.
@@ -170,7 +166,6 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
 
         child_types = self.get_child_types()
         return not child_types or child.polymorphic_ctype_id in child_types
-
 
     def validate_move(self, target, position='first-child'):
         """
@@ -186,13 +181,13 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         if not new_parent.can_have_children:
             raise InvalidMove(
                 _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
-                    .format(self, new_parent, new_parent._meta.verbose_name)
+                .format(self, new_parent, new_parent._meta.verbose_name)
             )
 
         if not new_parent.is_child_allowed(self):
             raise InvalidMove(
                 _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
-                    .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
+                .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
             )
 
         # Allow custom validation
@@ -228,7 +223,7 @@ def _get_new_parent(moved, target, position='first-child'):
         raise ValueError("invalid mptt position argument")
 
 
-if django.VERSION < (1,7):
+if django.VERSION < (1, 7):
     # South integration
     try:
         from south.modelsinspector import add_introspection_rules

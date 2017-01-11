@@ -3,8 +3,6 @@ The manager class for the CMS models
 """
 import django
 from django.db.models.query import QuerySet
-from django.utils.translation import ugettext_lazy as _
-from mptt.exceptions import InvalidMove
 from mptt.managers import TreeManager
 from polymorphic.manager import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
@@ -22,6 +20,7 @@ class PolymorphicMPTTQuerySet(TreeQuerySet, PolymorphicQuerySet):
     """
     Base class for querysets
     """
+
     def toplevel(self):
         """
         Return all nodes which have no parent.
