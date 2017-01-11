@@ -1,5 +1,5 @@
 import json
-import django
+import sys
 from future.builtins import str, int
 from distutils.version import StrictVersion
 from django.conf import settings
@@ -7,7 +7,6 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
-from django.utils.six import integer_types
 from django.utils.translation import ugettext_lazy as _
 from mptt.exceptions import InvalidMove
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
@@ -18,6 +17,9 @@ try:
     from polymorphic.__version__ import __version__ as polymorphic_version  # pre 0.8 used a __version__.py
 except ImportError:
     from polymorphic import __version__ as polymorphic_version
+
+if sys.version_info[0] >= 3:
+    long = int  # Python 2 compatibility
 
 try:
     # Django 1.6 requires this
@@ -190,20 +192,12 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Update the position of a node, from a API request.
         """
         try:
-            try:
-                moved_id = int(request.POST['moved_id'])
-                target_id = int(request.POST['target_id'])
-            except ValueError:
-                moved_id = request.POST['moved_id']
-                target_id = request.POST['target_id']
-
+            moved_id = _get_pk_value(request.POST['moved_id'])
+            target_id = _get_pk_value(request.POST['target_id'])
             position = request.POST['position']
 
             if request.POST.get('previous_parent_id'):
-                if isinstance(moved_id, integer_types) and isinstance(target_id, integer_types):
-                    previous_parent_id = int(request.POST['previous_parent_id'])
-                else:
-                    previous_parent_id = request.POST['previous_parent_id']
+                previous_parent_id = _get_pk_value(request.POST['previous_parent_id'])
             else:
                 previous_parent_id = None
 
@@ -240,7 +234,9 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                     'error': error
                 }), content_type='application/json', status=409)  # Conflict
 
-        if str(getattr(moved, '{}_id'.format(moved._mptt_meta.parent_attr))) != str(previous_parent_id):
+        # Compare on strings to support UUID fields.
+        parent_attr_id = '{}_id'.format(moved._mptt_meta.parent_attr)
+        if str(getattr(moved, parent_attr_id)) != str(previous_parent_id):
             return HttpResponse(json.dumps({
                 'action': 'reload',
                 'error': 'Client seems to be out-of-sync, please reload!'
@@ -307,3 +303,10 @@ def _get_opt(model):
         return model._meta.app_label, model._meta.model_name  # Django 1.7 format
     except AttributeError:
         return model._meta.app_label, model._meta.module_name
+
+
+def _get_pk_value(text):
+    try:
+        return long(text)
+    except ValueError:
+        return text  # Allow uuid fields
