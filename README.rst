@@ -172,6 +172,40 @@ The ``child_models`` attribute defines which admin interface is loaded for the *
 The list view is still rendered by the parent admin.
 
 
+Validation
+^^^^^^^^^^
+
+When drag-n-drop nodes in tree in admin, ``clean``/``full_clean`` method is not called. To implement validation, you
+should override ``can_be_moved`` model method. Method have to return ``True`` if nothing happens and moving is allowing.
+Otherwise, ``can_be_moved`` have to raise ``ValidationError`` or ``InvalidMove`` from ``mptt.exceptions``
+
+.. code:: python
+
+    class Participant(PolymorphicMPTTModel):
+        conference = models.ForeignKey(Conference)
+        invited_by = PolymorphicTreeForeignKey(
+            'self',
+            null=True,
+            blank=True,
+            related_name='invited',
+            verbose_name=_('Invited')
+        )
+
+        def clean(self):
+            if self.participant:
+                if self.conference != self.manager.conference:
+                    raise ValidationError({
+                        'invited_by': _(
+                            'Participants have to be from the same '
+                            'conference'
+                        )
+                    })
+
+        def can_be_moved(self, target):
+            self.invited_by = target
+            self.clean()
+            return True
+
 Tests
 -----
 
@@ -179,15 +213,24 @@ To run the included test suite, execute::
 
     ./runtests.py
 
-To test support for multiple Python and Django versions, run tox from the repository root::
+To test support for multiple Python and Django versions, you need to follow steps below:
+
+* install project requirements in virtual environment
+* install python 2.7, 3.3, 3.4, 3.5, 3.6 python versions through pyenv (See pyenv (Linux) or Homebrew (Mac OS X).)
+* create .python-version file and add full list of installed versions with which project have to be tested, example::
+
+    2.6.9
+    2.7.13
+    3.3.6
+    3.4.5
+    3.5.2
+    3.6.0
+* run tox from the repository root::
 
     pip install tox
     tox
 
-The Python versions need to be installed at your system.  See pyenv (Linux) or Homebrew (Mac OS X).
-
-Python 2.6, 2.7, and 3.3 are the currently supported versions.
-
+Python 2.7, 3.3, 3.4, 3.5 and 3.6 and django 1.7, 1.8, 1.9 and 1.10 are the currently supported versions.
 
 Todo
 ----

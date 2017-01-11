@@ -111,6 +111,20 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         """
         return self.get_ancestors(ascending=ascending, include_self=include_self).instance_of(model)
 
+    def can_be_moved(self, target):
+        """Can move be finished
+
+        Method have to be redefined in inherited model to define cases when
+        node can be moved. If method is not redefined moving always allows
+
+        To deny move, this method have to be raised ``ValidationError`` or
+        ``InvalidMove`` from ``mptt.exceptions``
+
+        Args:
+            target (PolymorphicMPTTModel): future parent of node
+        """
+        pass
+
 
 if django.VERSION < (1,7):
     # South integration

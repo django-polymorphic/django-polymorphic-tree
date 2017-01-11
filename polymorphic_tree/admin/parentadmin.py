@@ -1,5 +1,6 @@
 import json, django
 
+from django.core.exceptions import ValidationError
 from future.builtins import str, int
 from distutils.version import StrictVersion
 from django.conf import settings
@@ -7,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
+from mptt.exceptions import InvalidMove
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
 from polymorphic_tree.models import PolymorphicMPTTModel
 from mptt.admin import MPTTModelAdmin
@@ -211,7 +213,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 'moved_id': moved_id,
                 'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
             }), content_type='application/json', status=409)  # Conflict
-        if moved.parent_id != previous_parent_id:
+        if getattr(moved, '{}_id'.format(moved._mptt_meta.parent_attr)) != previous_parent_id:
             return HttpResponse(json.dumps({
                 'action': 'reload',
                 'error': 'Client seems to be out-of-sync, please reload!'
@@ -222,6 +224,20 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             'before': 'left',
             'after': 'right',
         }[position]
+        try:
+            moved.can_be_moved(target)
+        except ValidationError as e:
+            return HttpResponse(json.dumps({
+                'action': 'reject',
+                'moved_id': moved_id,
+                'error': '\n'.join(e.messages)
+            }), content_type='application/json', status=400)
+        except InvalidMove as e:
+            return HttpResponse(json.dumps({
+                'action': 'reject',
+                'moved_id': moved_id,
+                'error': str(e)
+            }), content_type='application/json', status=400)
         moved.move_to(target, mptt_position)
 
         # Some packages depend on calling .save() or post_save signal after updating a model.

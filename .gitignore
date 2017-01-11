@@ -13,3 +13,4 @@ dist/
 docs/_build/
 *.sqlite3
 .tox
+.python-version

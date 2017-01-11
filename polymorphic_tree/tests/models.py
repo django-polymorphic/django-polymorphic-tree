@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from mptt.exceptions import InvalidMove
 
 from polymorphic.showfields import ShowFieldContent
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
@@ -46,3 +48,81 @@ class ModelX(Base):
 
 class ModelY(Base):
     field_y = models.CharField(max_length=10)
+
+
+class ModelWithCustomParentName(PolymorphicMPTTModel):
+    """Model with custom parent name
+
+    A model where ``PolymorphicTreeForeignKey`` attribute has not ``parent``
+    name, but ``chief``
+
+    Attributes:
+        chief (ModelWithCustomParentName): parent
+        field5 (str): test field
+    """
+    chief = PolymorphicTreeForeignKey('self',
+                                      blank=True,
+                                      null=True,
+                                      related_name='subordinate',
+                                      verbose_name='Chief')
+    field5 = models.CharField(max_length=10)
+
+    class MPTTMeta:
+        parent_attr = 'chief'
+
+    def __str__(self):
+        return self.field5
+
+
+class ModelWithValidation(PolymorphicMPTTModel):
+    """Model with custom validation
+
+    A model with redefined ``clean`` and ``can_be_moved`` methods
+
+    ``clean`` method always raises ``ValidationError``
+    ``can_be_moved`` always calls ``clean``
+
+    Attributes:
+        parent (ModelWithValidation): parent
+        field6 (str): test field
+    """
+
+    parent = PolymorphicTreeForeignKey('self',
+                                       blank=True,
+                                       null=True,
+                                       related_name='children')
+
+    field6 = models.CharField(max_length=10)
+
+    def clean(self):
+        """Raise validation error"""
+        raise ValidationError({
+            'parent': 'There is something with parent field'
+        })
+
+    def can_be_moved(self, target):
+        """Execute ``clean``"""
+        self.clean()
+
+
+class ModelWithInvalidMove(PolymorphicMPTTModel):
+    """Model with custom validation
+
+    A model with redefined only ``can_be_moved`` method which always raises
+    ``InvalidMove``
+
+    Attributes:
+        parent (ModelWithValidation): parent
+        field7 (str): test field
+    """
+
+    parent = PolymorphicTreeForeignKey('self',
+                                       blank=True,
+                                       null=True,
+                                       related_name='children')
+
+    field7 = models.CharField(max_length=10)
+
+    def can_be_moved(self, target):
+        """Raise ``InvalidMove``"""
+        raise InvalidMove('Invalid move')
