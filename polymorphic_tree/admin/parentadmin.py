@@ -217,9 +217,15 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 'error': _('You do not have permission to move this node.')
             }), content_type='application/json', status=409)
 
-        # Find out which parent the node will reside under.
+        # Compare on strings to support UUID fields.
         parent_attr_id = '{}_id'.format(moved._mptt_meta.parent_attr)
+        if str(getattr(moved, parent_attr_id)) != str(previous_parent_id):
+            return HttpResponse(json.dumps({
+                'action': 'reload',
+                'error': 'Client seems to be out-of-sync, please reload!'
+            }), content_type='application/json', status=409)
 
+        # Find out which parent the node will reside under.
         if position == 'inside':
             test_new_parent = target
         else:
@@ -246,13 +252,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                     'moved_id': moved_id,
                     'error': error
                 }), content_type='application/json', status=409)  # Conflict
-
-        # Compare on strings to support UUID fields.
-        if str(getattr(moved, parent_attr_id)) != str(previous_parent_id):
-            return HttpResponse(json.dumps({
-                'action': 'reload',
-                'error': 'Client seems to be out-of-sync, please reload!'
-            }), content_type='application/json', status=409)
 
         mptt_position = {
             'inside': 'first-child',
