@@ -122,8 +122,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
                         except ValueError:
                             app_label = self._meta.app_label
                             model = child
-                        ct_id = ContentType.objects.get(app_label=app_label,
-                            model=model).id
+                        ct_id = ContentType.objects.get_by_natural_key(app_label, model).id
                 else:
                     # pass in a model class
                     ct_id = ContentType.objects.get_for_model(child).id
