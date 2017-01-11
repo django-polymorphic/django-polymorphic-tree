@@ -1,12 +1,13 @@
-import json, django
-
-from django.core.exceptions import ValidationError
+import json
+import django
 from future.builtins import str, int
 from distutils.version import StrictVersion
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.utils.six import integer_types
 from django.utils.translation import ugettext_lazy as _
 from mptt.exceptions import InvalidMove
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
@@ -189,10 +190,22 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Update the position of a node, from a API request.
         """
         try:
-            moved_id = int(request.POST['moved_id'])
-            target_id = int(request.POST['target_id'])
+            try:
+                moved_id = int(request.POST['moved_id'])
+                target_id = int(request.POST['target_id'])
+            except ValueError:
+                moved_id = request.POST['moved_id']
+                target_id = request.POST['target_id']
+
             position = request.POST['position']
-            previous_parent_id = int(request.POST['previous_parent_id']) or None
+
+            if request.POST.get('previous_parent_id'):
+                if isinstance(moved_id, integer_types) and isinstance(target_id, integer_types):
+                    previous_parent_id = int(request.POST['previous_parent_id'])
+                else:
+                    previous_parent_id = request.POST['previous_parent_id']
+            else:
+                previous_parent_id = None
 
             # Not using .non_polymorphic() so all models are downcasted to the derived model.
             # This causes the signal below to be emitted from the proper class as well.
@@ -227,7 +240,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                     'error': error
                 }), content_type='application/json', status=409)  # Conflict
 
-        if getattr(moved, '{}_id'.format(moved._mptt_meta.parent_attr)) != previous_parent_id:
+        if str(getattr(moved, '{}_id'.format(moved._mptt_meta.parent_attr))) != str(previous_parent_id):
             return HttpResponse(json.dumps({
                 'action': 'reload',
                 'error': 'Client seems to be out-of-sync, please reload!'
@@ -294,4 +307,3 @@ def _get_opt(model):
         return model._meta.app_label, model._meta.model_name  # Django 1.7 format
     except AttributeError:
         return model._meta.app_label, model._meta.module_name
-
