@@ -3,6 +3,7 @@ Model that inherits from both Polymorphic and MPTT.
 """
 import uuid
 import django
+from mptt.exceptions import InvalidMove
 from six import integer_types, string_types
 from future.utils import with_metaclass
 from django.contrib.contenttypes.models import ContentType
@@ -42,7 +43,8 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
     A foreignkey that limits the node types the parent can be.
     """
     default_error_messages = {
-        'no_children_allowed': _("The selected node cannot have child nodes."),
+        'no_children_allowed': _("The selected parent cannot have child nodes."),
+        'child_not_allowed': _("The selected parent cannot have this node type as a child!")
     }
 
     def clean(self, value, model_instance):
@@ -61,22 +63,11 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
         elif not isinstance(parent, PolymorphicMPTTModel):
             raise ValueError("Unknown parent value")
 
-        if parent.can_have_children:
-            return
+        if not parent.can_have_children:
+            raise ValidationError(self.error_messages['no_children_allowed'])
 
-        can_have_children = parent.can_have_children
-        if can_have_children:
-            child_types = parent.get_child_types()
-            if (len(child_types) == 0 or
-                    model_instance.polymorphic_ctype_id in child_types):
-                return # child is allowed
-            raise ValidationError(
-                self.error_messages['child_not_allowed'].format(parent,
-                    parent._meta.verbose_name,
-                    model_instance._meta.verbose_name))
-
-        raise ValidationError(self.error_messages['no_children_allowed'])
-
+        if not parent.is_child_allowed(model_instance):
+            raise ValidationError(self.error_messages['child_not_allowed'])
 
 
 class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, PolymorphicModel)):
@@ -170,7 +161,45 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         """
         return self.get_ancestors(ascending=ascending, include_self=include_self).instance_of(model)
 
-    def can_be_moved(self, target):
+
+    def is_child_allowed(self, child):
+        """
+        Tell whether this node allows the given node as child.
+        """
+        if not self.can_have_children:
+            return False
+
+        child_types = self.get_child_types()
+        return not child_types or child.polymorphic_ctype_id in child_types
+
+
+    def validate_move(self, target, position='first-child'):
+        """
+        Validate whether the move to a new location is permitted.
+
+        :param target: The node to move to
+        :type target: PolymorphicMPTTModel
+        :param position: The relative position to the target. This can be ``'first-child'``,
+                         ``'last-child'``, ``'left'`` or ``'right'``.
+        """
+        new_parent = _get_new_parent(self, target, position)
+
+        if not new_parent.can_have_children:
+            raise InvalidMove(
+                _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
+                    .format(self, new_parent, new_parent._meta.verbose_name)
+            )
+
+        if not new_parent.is_child_allowed(self):
+            raise InvalidMove(
+                _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
+                    .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
+            )
+
+        # Allow custom validation
+        self.validate_move_to(new_parent)
+
+    def validate_move_to(self, new_parent):
         """Can move be finished
 
         Method have to be redefined in inherited model to define cases when
@@ -178,11 +207,26 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
 
         To deny move, this method have to be raised ``ValidationError`` or
         ``InvalidMove`` from ``mptt.exceptions``
-
-        Args:
-            target (PolymorphicMPTTModel): future parent of node
         """
         pass
+
+
+def _get_new_parent(moved, target, position='first-child'):
+    """
+    Find out which parent the node will reside under.
+    """
+    if position in ('first-child', 'last-child'):
+        return target
+    elif position in ('left', 'right'):
+        # left/right of an other node
+        parent_attr_id = '{}_id'.format(moved._mptt_meta.parent_attr)
+        if getattr(target, parent_attr_id) == getattr(moved, parent_attr_id):
+            # kept inside the same parent, hopefully use the cache we already have.
+            return getattr(moved, moved._mptt_meta.parent_attr)
+
+        return getattr(target, target._mptt_meta.parent_attr)
+    else:
+        raise ValueError("invalid mptt position argument")
 
 
 if django.VERSION < (1,7):

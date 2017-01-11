@@ -3,6 +3,8 @@ The manager class for the CMS models
 """
 import django
 from django.db.models.query import QuerySet
+from django.utils.translation import ugettext_lazy as _
+from mptt.exceptions import InvalidMove
 from mptt.managers import TreeManager
 from polymorphic.manager import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
@@ -65,3 +67,11 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
                 qs.query.model = self._base_manager.model
 
         return super(PolymorphicMPTTModelManager, self)._mptt_filter(qs, **filters)
+
+    def move_node(self, node, target, position='last-child'):
+        """
+        Move a node to a new location.
+        This also performs checks whether the target allows this node to reside there.
+        """
+        node.validate_move(target, position=position)
+        return super(PolymorphicMPTTModelManager, self).move_node(node, target, position=position)

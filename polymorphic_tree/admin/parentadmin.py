@@ -118,7 +118,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Return a list of all action icons in the :func:`actions_column`.
         """
         actions = []
-        if self.can_have_children(node):
+        if node.can_have_children:
             actions.append(
                 u'<a href="add/?{parent_attr}={id}" title="{title}" class="add-child-object"><img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     parent_attr=self.model._mptt_meta.parent_attr, id=node.pk, title=_('Add sub node'), static=settings.STATIC_URL)
@@ -144,23 +144,6 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         Define whether a node can be previewed.
         """
         return hasattr(node, 'get_absolute_url')
-
-
-    def can_have_children(self, node, child=None):
-        """
-        Define whether a node can have children.
-        """
-        can_have_children = node.can_have_children
-        if not can_have_children:
-            return False
-
-        child_types = node.get_child_types()
-
-        # if child is None then we are just interested in boolean
-        # if we have a child we should check if it is allowed
-        return (can_have_children and (
-                child is None or len(child_types) == 0 or
-                child.polymorphic_ctype_id in child_types))
 
 
     # ---- Custom views ----
@@ -225,54 +208,25 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
                 'error': 'Client seems to be out-of-sync, please reload!'
             }), content_type='application/json', status=409)
 
-        # Find out which parent the node will reside under.
-        if position == 'inside':
-            test_new_parent = target
-        else:
-            # left/right of an other node
-            if getattr(target, parent_attr_id) != getattr(moved, parent_attr_id):
-                test_new_parent = getattr(target, moved._mptt_meta.parent_attr)
-            else:
-                test_new_parent = None  # kept inside the same parent.
-
-        # Test whether the parent allows this node to be a child.
-        if test_new_parent is not None:
-            error = None
-            if not self.can_have_children(test_new_parent):
-                error = _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019;'
-                    u' a {2} does not allow children!').format(moved, target,
-                    target._meta.verbose_name)
-            elif not self.can_have_children(test_new_parent, child=moved):
-                error = _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019;'
-                    u' a {2} does not allow {3} as a child!').format(moved,
-                    target, target._meta.verbose_name, moved._meta.verbose_name)
-            if error is not None:
-                return HttpResponse(json.dumps({
-                    'action': 'reject',
-                    'moved_id': moved_id,
-                    'error': error
-                }), content_type='application/json', status=409)  # Conflict
-
         mptt_position = {
             'inside': 'first-child',
             'before': 'left',
             'after': 'right',
         }[position]
         try:
-            moved.can_be_moved(target)
+            moved.move_to(target, mptt_position)
         except ValidationError as e:
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
                 'error': '\n'.join(e.messages)
-            }), content_type='application/json', status=400)
+            }), content_type='application/json', status=409)  # Conflict
         except InvalidMove as e:
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
                 'error': str(e)
-            }), content_type='application/json', status=400)
-        moved.move_to(target, mptt_position)
+            }), content_type='application/json', status=409)
 
         # Some packages depend on calling .save() or post_save signal after updating a model.
         # This is required by django-fluent-pages for example to update the URL caches.

@@ -5,6 +5,7 @@ import django
 from django.db.models import Q
 from django.test import TestCase
 
+from polymorphic_tree.managers import PolymorphicMPTTModelManager
 from .models import *
 
 
@@ -225,3 +226,10 @@ class MPTTTests(TestCase):
         self.assertTrue(grandchild.is_child_node())
         self.assertTrue(grandchild.is_leaf_node())
         self.assertFalse(grandchild.is_root_node())
+
+    def test_tree_manager(self):
+        # Having the tree manager correct is absolutely essential,
+        # so our move validation is also triggered.
+        self.assertIsInstance(Model2A()._tree_manager, PolymorphicMPTTModelManager)
+        self.assertIsInstance(Model2B()._tree_manager, PolymorphicMPTTModelManager)
+        self.assertIsInstance(Model2C()._tree_manager, PolymorphicMPTTModelManager)

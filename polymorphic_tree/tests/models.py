@@ -77,10 +77,10 @@ class ModelWithCustomParentName(PolymorphicMPTTModel):
 class ModelWithValidation(PolymorphicMPTTModel):
     """Model with custom validation
 
-    A model with redefined ``clean`` and ``can_be_moved`` methods
+    A model with redefined ``clean`` and ``validate_move_to`` methods
 
     ``clean`` method always raises ``ValidationError``
-    ``can_be_moved`` always calls ``clean``
+    ``validate_move_to`` always calls ``clean``
 
     Attributes:
         parent (ModelWithValidation): parent
@@ -100,7 +100,7 @@ class ModelWithValidation(PolymorphicMPTTModel):
             'parent': 'There is something with parent field'
         })
 
-    def can_be_moved(self, target):
+    def validate_move_to(self, target):
         """Execute ``clean``"""
         self.clean()
 
@@ -108,7 +108,7 @@ class ModelWithValidation(PolymorphicMPTTModel):
 class ModelWithInvalidMove(PolymorphicMPTTModel):
     """Model with custom validation
 
-    A model with redefined only ``can_be_moved`` method which always raises
+    A model with redefined only ``validate_move_to`` method which always raises
     ``InvalidMove``
 
     Attributes:
@@ -123,6 +123,6 @@ class ModelWithInvalidMove(PolymorphicMPTTModel):
 
     field7 = models.CharField(max_length=10)
 
-    def can_be_moved(self, target):
+    def validate_move_to(self, target):
         """Raise ``InvalidMove``"""
         raise InvalidMove('Invalid move')
