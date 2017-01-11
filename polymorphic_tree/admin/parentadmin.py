@@ -118,7 +118,8 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         actions = []
         if node.can_have_children:
             actions.append(
-                u'<a href="add/?{parent_attr}={id}" title="{title}" class="add-child-object"><img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
+                u'<a href="add/?{parent_attr}={id}" title="{title}" class="add-child-object">'
+                u'<img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     parent_attr=self.model._mptt_meta.parent_attr, id=node.pk, title=_('Add sub node'), static=settings.STATIC_URL)
             )
         else:
@@ -126,7 +127,8 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
         if self.can_preview_object(node):
             actions.append(
-                u'<a href="{url}" title="{title}" target="_blank"><img src="{static}polymorphic_tree/icons/world.gif" width="16" height="16" alt="{title}" /></a>'.format(
+                u'<a href="{url}" title="{title}" target="_blank">'
+                u'<img src="{static}polymorphic_tree/icons/world.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     url=node.get_absolute_url(), title=_('View on site'), static=settings.STATIC_URL)
             )
 

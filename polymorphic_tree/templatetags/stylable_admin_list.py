@@ -200,7 +200,7 @@ def _get_mptt_indent_field(cl, result):
     mptt_indent_field = None
     for field_name in cl.list_display:
         try:
-            f = cl.lookup_opts.get_field(field_name)
+            cl.lookup_opts.get_field(field_name)
         except models.FieldDoesNotExist:
             if mptt_indent_field is None:
                 attr = getattr(result, field_name, None)
@@ -244,7 +244,7 @@ def _get_non_field_repr(cl, result, field_name):
         if callable(field_name):
             attr = field_name
             value = attr(result)
-        elif hasattr(cl.model_admin, field_name) and not field_name in ('__str__', '__unicode__'):
+        elif hasattr(cl.model_admin, field_name) and field_name not in ('__str__', '__unicode__'):
             attr = getattr(cl.model_admin, field_name)
             value = attr(result)
         else:

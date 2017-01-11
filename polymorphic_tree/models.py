@@ -35,7 +35,6 @@ class PolymorphicMPTTModelBase(MPTTModelBase, PolymorphicModelBase):
     Metaclass for all polymorphic models.
     Needed to support both MPTT and Polymorphic metaclasses.
     """
-    pass
 
 
 class PolymorphicTreeForeignKey(TreeForeignKey):
@@ -134,7 +133,8 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         ordering = ('tree_id', 'lft',)
 
     # Define:
-    # parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'), help_text=_('You can also change the parent by dragging the item in the list.'))
+    # parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'),
+    #                                    help_text=_('You can also change the parent by dragging the item in the list.'))
     # class MPTTMeta:
     #     order_insertion_by = 'title'
 
@@ -203,7 +203,6 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         To deny move, this method have to be raised ``ValidationError`` or
         ``InvalidMove`` from ``mptt.exceptions``
         """
-        pass
 
 
 def _get_new_parent(moved, target, position='first-child'):
