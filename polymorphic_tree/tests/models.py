@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from mptt.exceptions import InvalidMove
-
 from polymorphic.showfields import ShowFieldContent
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 

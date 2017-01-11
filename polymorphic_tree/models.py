@@ -2,16 +2,17 @@
 Model that inherits from both Polymorphic and MPTT.
 """
 import uuid
+
 import django
-from mptt.exceptions import InvalidMove
-from six import integer_types, string_types
-from future.utils import with_metaclass
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from future.utils import with_metaclass
+from mptt.exceptions import InvalidMove
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey, raise_if_unsaved
 from polymorphic.base import PolymorphicModelBase
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
+from six import integer_types, string_types
 
 try:
     from polymorphic.models import PolymorphicModel  # django-polymorphic 0.8

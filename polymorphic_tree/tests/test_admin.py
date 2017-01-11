@@ -2,11 +2,9 @@ import sys
 from unittest import TestCase
 
 from django.contrib.admin import AdminSite
-
 from polymorphic_tree.admin.parentadmin import get_permission_codename
 from polymorphic_tree.tests.admin import TreeNodeParentAdmin
-from polymorphic_tree.tests.models import Model2A, ModelWithCustomParentName, \
-    ModelWithValidation, ModelWithInvalidMove
+from polymorphic_tree.tests.models import Model2A, ModelWithCustomParentName, ModelWithInvalidMove, ModelWithValidation
 
 if sys.version_info[0] == 3:
     from unittest.mock import MagicMock

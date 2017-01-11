@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 import django
 from django.db.models import Q
 from django.test import TestCase
-
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
+
 from .models import *
 
 

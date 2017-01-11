@@ -1,5 +1,4 @@
-from polymorphic_tree.admin import (PolymorphicMPTTChildModelAdmin,
-                                    PolymorphicMPTTParentModelAdmin)
+from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, PolymorphicMPTTParentModelAdmin
 from polymorphic_tree.tests.models import ModelWithCustomParentName
 
 

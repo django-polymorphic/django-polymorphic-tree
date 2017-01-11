@@ -12,18 +12,17 @@ to the class, to define custom classes for a column.
 This feature can be activated by simply extending the template stylable/admin/change_list.html
 """
 import django
-from future.builtins import zip, str
 from django.conf import settings
+from django.contrib.admin.templatetags.admin_list import _boolean_icon, result_headers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils import formats, timezone
-from django.utils.html import escape, conditional_escape
-from django.utils.safestring import mark_safe, SafeData
-from django.utils.encoding import smart_text, force_text
 from django.template import Library
-from django.contrib.admin.templatetags.admin_list import _boolean_icon, result_headers
+from django.utils import formats, timezone
+from django.utils.encoding import force_text, smart_text
+from django.utils.html import conditional_escape, escape
+from django.utils.safestring import SafeData, mark_safe
+from future.builtins import str, zip
 from tag_parser.basetags import BaseInclusionNode
-
 
 # While this is based on mptt/templatetags/mptt_admin.py,
 # and django/contrib/admin/templatetags/admin_list.py,

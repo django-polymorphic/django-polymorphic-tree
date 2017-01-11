@@ -1,17 +1,18 @@
 import json
 import sys
-from future.builtins import str, int
 from distutils.version import StrictVersion
+
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
-from mptt.exceptions import InvalidMove
-from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicModelChoiceForm
-from polymorphic_tree.models import PolymorphicMPTTModel
+from future.builtins import int, str
 from mptt.admin import MPTTModelAdmin
+from mptt.exceptions import InvalidMove
+from polymorphic.admin import PolymorphicModelChoiceForm, PolymorphicParentModelAdmin
+from polymorphic_tree.models import PolymorphicMPTTModel
 
 try:
     from polymorphic.__version__ import __version__ as polymorphic_version  # pre 0.8 used a __version__.py

@@ -1,11 +1,10 @@
-from future.builtins import next
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.contenttypes.models import ContentType
 from django.template import Library, Node, TemplateSyntaxError, Variable
 from django.utils.safestring import mark_safe
+from future.builtins import next
 from mptt.templatetags.mptt_tags import cache_tree_children
 from polymorphic_tree.templatetags.stylable_admin_list import stylable_column_repr
-
 
 register = Library()
 
