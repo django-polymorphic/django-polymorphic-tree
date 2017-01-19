@@ -175,36 +175,7 @@ The list view is still rendered by the parent admin.
 Validation
 ^^^^^^^^^^
 
-When drag-n-drop nodes in tree in admin, ``clean``/``full_clean`` method is not called. To implement validation, you
-should override ``can_be_moved`` model method. Method have to return ``True`` if nothing happens and moving is allowing.
-Otherwise, ``can_be_moved`` have to raise ``ValidationError`` or ``InvalidMove`` from ``mptt.exceptions``
-
-.. code:: python
-
-    class Participant(PolymorphicMPTTModel):
-        conference = models.ForeignKey(Conference)
-        invited_by = PolymorphicTreeForeignKey(
-            'self',
-            null=True,
-            blank=True,
-            related_name='invited',
-            verbose_name=_('Invited')
-        )
-
-        def clean(self):
-            if self.participant:
-                if self.conference != self.manager.conference:
-                    raise ValidationError({
-                        'invited_by': _(
-                            'Participants have to be from the same '
-                            'conference'
-                        )
-                    })
-
-        def can_be_moved(self, target):
-            self.invited_by = target
-            self.clean()
-            return True
+When drag-n-drop nodes in tree in admin, ``clean`` calls.
 
 Tests
 -----
