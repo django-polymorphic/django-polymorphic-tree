@@ -179,78 +179,77 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         info = _get_opt(self.model)
         return reverse('admin:{0}_{1}_moved'.format(*info), current_app=self.admin_site.name)
 
-
-    @transaction_atomic
     def api_node_moved_view(self, request):
         """
         Update the position of a node, from a API request.
         """
+        moved_id = int(request.POST['moved_id'])
+        target_id = int(request.POST['target_id'])
+        position = request.POST['position']
+        previous_parent_id = int(request.POST['previous_parent_id']) or None
+
         try:
-            moved_id = int(request.POST['moved_id'])
-            target_id = int(request.POST['target_id'])
-            position = request.POST['position']
-            previous_parent_id = int(request.POST['previous_parent_id']) or None
+            with transaction_atomic():
+                try:
+                    # Not using .non_polymorphic() so all models are downcasted to the derived model.
+                    # This causes the signal below to be emitted from the proper class as well.
+                    moved = self.model.objects.get(pk=moved_id)
+                    target = self.model.objects.get(pk=target_id)
+                except (ValueError, KeyError) as e:
+                    return HttpResponseBadRequest(json.dumps({'action': 'foundbug', 'error': str(e[0])}), content_type='application/json')
+                except self.model.DoesNotExist as e:
+                    return HttpResponseNotFound(json.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
-            # Not using .non_polymorphic() so all models are downcasted to the derived model.
-            # This causes the signal below to be emitted from the proper class as well.
-            moved = self.model.objects.get(pk=moved_id)
-            target = self.model.objects.get(pk=target_id)
-        except (ValueError, KeyError) as e:
-            return HttpResponseBadRequest(json.dumps({'action': 'foundbug', 'error': str(e[0])}), content_type='application/json')
-        except self.model.DoesNotExist as e:
-            return HttpResponseNotFound(json.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
+                if not request.user.has_perm(get_permission_codename('change', moved._meta), moved):
+                    return HttpResponse(json.dumps({
+                        'action': 'reject',
+                        'moved_id': moved_id,
+                        'error': _('You do not have permission to move this node.')
+                    }), content_type='application/json', status=409)
 
-        if not request.user.has_perm(get_permission_codename('change', moved._meta), moved):
-            return HttpResponse(json.dumps({
-                'action': 'reject',
-                'moved_id': moved_id,
-                'error': _('You do not have permission to move this node.')
-            }), content_type='application/json', status=409)
+                if not self.can_have_children(target) and position == 'inside':
+                    return HttpResponse(json.dumps({
+                        'action': 'reject',
+                        'moved_id': moved_id,
+                        'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
+                    }), content_type='application/json', status=409)  # Conflict
+                if getattr(moved, '{}_id'.format(moved._mptt_meta.parent_attr)) != previous_parent_id:
+                    return HttpResponse(json.dumps({
+                        'action': 'reload',
+                        'error': 'Client seems to be out-of-sync, please reload!'
+                    }), content_type='application/json', status=409)
 
-        if not self.can_have_children(target) and position == 'inside':
-            return HttpResponse(json.dumps({
-                'action': 'reject',
-                'moved_id': moved_id,
-                'error': _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!').format(moved, target, target._meta.verbose_name)
-            }), content_type='application/json', status=409)  # Conflict
-        if getattr(moved, '{}_id'.format(moved._mptt_meta.parent_attr)) != previous_parent_id:
-            return HttpResponse(json.dumps({
-                'action': 'reload',
-                'error': 'Client seems to be out-of-sync, please reload!'
-            }), content_type='application/json', status=409)
+                mptt_position = {
+                    'inside': 'first-child',
+                    'before': 'left',
+                    'after': 'right',
+                }[position]
+                moved.move_to(target, mptt_position)
 
-        mptt_position = {
-            'inside': 'first-child',
-            'before': 'left',
-            'after': 'right',
-        }[position]
-        try:
-            moved.can_be_moved(target)
+                moved.clean()
+                # Some packages depend on calling .save() or post_save signal after updating a model.
+                # This is required by django-fluent-pages for example to update the URL caches.
+                moved.save()
+
+                # Report back to client.
+                return HttpResponse(json.dumps({
+                    'action': 'success',
+                    'error': None,
+                    'moved_id': moved_id,
+                    'action_column': self.actions_column(moved),
+                }), content_type='application/json')
         except ValidationError as e:
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
                 'error': '\n'.join(e.messages)
-            }), content_type='application/json', status=400)
+            }), content_type='application/json', status=409)  # Conflict
         except InvalidMove as e:
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
                 'error': str(e)
-            }), content_type='application/json', status=400)
-        moved.move_to(target, mptt_position)
-
-        # Some packages depend on calling .save() or post_save signal after updating a model.
-        # This is required by django-fluent-pages for example to update the URL caches.
-        moved.save()
-
-        # Report back to client.
-        return HttpResponse(json.dumps({
-            'action': 'success',
-            'error': None,
-            'moved_id': moved_id,
-            'action_column': self.actions_column(moved),
-        }), content_type='application/json')
+            }), content_type='application/json', status=409)
 
 
     def move_up_view(self, request, object_id):
