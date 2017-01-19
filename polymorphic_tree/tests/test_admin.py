@@ -93,7 +93,7 @@ class PolymorphicAdminTests(TestCase):
 
         resp = self.parent_admin_with_validation.api_node_moved_view(request)
 
-        self.assertEqual(resp.status_code, 400)
+        self.assertEqual(resp.status_code, 409)
 
     def test_invalid_move(self):
         """Ensure that if move can't be performed due validation error, move
@@ -109,7 +109,7 @@ class PolymorphicAdminTests(TestCase):
 
         resp = self.parent_admin_invalid_move.api_node_moved_view(request)
 
-        self.assertEqual(resp.status_code, 400)
+        self.assertEqual(resp.status_code, 409)
 
     def test_get_permission_codename(self):
         # This is to test whether our function works in older Django versions.
