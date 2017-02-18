@@ -39,38 +39,33 @@ msgstr ""
 
 #: admin/parentadmin.py:196
 msgid "You do not have permission to move this node."
-msgstr ""
+msgstr "Je hebt geen toegang om deze node te verplaatsen."
 
 #: models.py:46 models.py:193
 msgid "This node type should have a parent."
-msgstr ""
+msgstr "Deze node moet een subnode zijn."
 
 #: models.py:47
-#, fuzzy
-#| msgid "The selected node cannot have child nodes."
 msgid "The selected parent cannot have child nodes."
-msgstr "De gekozen node kan geen subpagina's bevatten."
+msgstr "De gekozen node kan geen subnodes bevatten."
 
 #: models.py:48
-#, fuzzy
-#| msgid "The selected node cannot have child nodes."
 msgid "The selected parent cannot have this node type as a child!"
-msgstr "De gekozen node kan geen subpagina's bevatten."
+msgstr "De gekozen node kan geen subnodes van dit type bevatten."
 
 #: models.py:197
 #, python-brace-format
 msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow children!"
 msgstr ""
-"Kan ‘{0}’ niet onder ‘{1}’ plaatsen; een {2} element staat geen "
-"onderliggende elementen toe!"
+"Kan ‘{0}’ niet onder ‘{1}’ plaatsen; een {2} staat geen "
+"onderliggende nodes toe!"
 
 #: models.py:203
 #, fuzzy, python-brace-format
 #| msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow children!"
 msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow {3} as a child!"
 msgstr ""
-"Kan ‘{0}’ niet onder ‘{1}’ plaatsen; een {2} element staat geen "
-"onderliggende elementen toe!"
+"Kan ‘{0}’ niet onder ‘{1}’ plaatsen; een {2} node staat {3} niet toe als onderliggende node!"
 
 #: templates/admin/polymorphic_tree/change_form_breadcrumbs.html:5
 #: templates/admin/polymorphic_tree/delete_confirmation.html:7
@@ -79,10 +74,9 @@ msgid "Home"
 msgstr ""
 
 #: templates/admin/polymorphic_tree/change_form_breadcrumbs.html:20
-#, fuzzy
 #| msgid "Add %s"
 msgid "Add"
-msgstr "%s toevoegen"
+msgstr ""
 
 #: templates/admin/polymorphic_tree/delete_confirmation.html:20
 msgid "Delete"
@@ -104,14 +98,3 @@ msgstr ""
 #: templates/admin/polymorphic_tree/object_history_breadcrumbs.html:20
 msgid "History"
 msgstr ""
-
-#~ msgid "Please correct the error below."
-#~ msgid_plural "Please correct the errors below."
-#~ msgstr[0] "Corrigeer a.u.b. de volgende fout:"
-#~ msgstr[1] "Corrigeer a.u.b. de volgende fouten:"
-
-#~ msgid "Type"
-#~ msgstr "Type"
-
-#~ msgid "Contents"
-#~ msgstr "Inhoud"
