@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-30 14:49+0100\n"
+"POT-Creation-Date: 2017-02-18 19:29+0100\n"
 "PO-Revision-Date: 2011-01-10 23:54+0100\n"
 "Last-Translator: Diederik van der Boor <vdboor@edoburu.nl>\n"
 "Language-Team: Dutch <NL@li.org>\n"
@@ -17,58 +17,101 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 1.1\n"
 
-#: models.py:36
-msgid "The selected node cannot have child nodes."
-msgstr "De gekozen node kan geen subpagina's bevatten."
-
-#: admin/parentadmin.py:15
+#: admin/parentadmin.py:45
 msgid "Node type"
 msgstr "Nodetype"
 
-#: admin/parentadmin.py:26
+#: admin/parentadmin.py:56
 msgid "node type"
 msgstr "nodetype"
 
-#: admin/parentadmin.py:70
+#: admin/parentadmin.py:112
 msgid "Actions"
 msgstr "Acties"
 
-#: admin/parentadmin.py:81
+#: admin/parentadmin.py:123
 msgid "Add sub node"
 msgstr "Sub node toevoegen"
 
-#: admin/parentadmin.py:162
+#: admin/parentadmin.py:132
+msgid "View on site"
+msgstr ""
+
+#: admin/parentadmin.py:196
+msgid "You do not have permission to move this node."
+msgstr ""
+
+#: models.py:46 models.py:193
+msgid "This node type should have a parent."
+msgstr ""
+
+#: models.py:47
+#, fuzzy
+#| msgid "The selected node cannot have child nodes."
+msgid "The selected parent cannot have child nodes."
+msgstr "De gekozen node kan geen subpagina's bevatten."
+
+#: models.py:48
+#, fuzzy
+#| msgid "The selected node cannot have child nodes."
+msgid "The selected parent cannot have this node type as a child!"
+msgstr "De gekozen node kan geen subpagina's bevatten."
+
+#: models.py:197
+#, python-brace-format
 msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow children!"
-msgstr "Kan ‘{0}’ niet onder ‘{1}’ plaatsen; een {2} element staat geen onderliggende elementen toe!"
+msgstr ""
+"Kan ‘{0}’ niet onder ‘{1}’ plaatsen; een {2} element staat geen "
+"onderliggende elementen toe!"
 
-#: templates/admin/polymorphic_tree/add_type_form.html:27
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "Corrigeer a.u.b. de volgende fout:"
-msgstr[1] "Corrigeer a.u.b. de volgende fouten:"
+#: models.py:203
+#, fuzzy, python-brace-format
+#| msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow children!"
+msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow {3} as a child!"
+msgstr ""
+"Kan ‘{0}’ niet onder ‘{1}’ plaatsen; een {2} element staat geen "
+"onderliggende elementen toe!"
 
-#: templates/admin/polymorphic_tree/jstree_list_results.html:99
+#: templates/admin/polymorphic_tree/change_form_breadcrumbs.html:5
+#: templates/admin/polymorphic_tree/delete_confirmation.html:7
+#: templates/admin/polymorphic_tree/object_history_breadcrumbs.html:5
+msgid "Home"
+msgstr ""
+
+#: templates/admin/polymorphic_tree/change_form_breadcrumbs.html:20
+#, fuzzy
+#| msgid "Add %s"
+msgid "Add"
+msgstr "%s toevoegen"
+
+#: templates/admin/polymorphic_tree/delete_confirmation.html:20
+msgid "Delete"
+msgstr ""
+
+#: templates/admin/polymorphic_tree/jstree_list_results.html:115
 msgid ""
 "Unable to move the node, the current display is out-of-date.\\nThe current "
 "page now reloaded."
 msgstr ""
 
-#: templates/admin/polymorphic_tree/jstree_list_results.html:107
+#: templates/admin/polymorphic_tree/jstree_list_results.html:123
 msgid ""
 "There was an error while moving the node, please reload the current page."
 msgstr ""
 "Er was een fout opgetreden bij het verplaatsen van de node, herlaad de "
 "huidige pagina a.u.b."
 
-#: utils/polymorphicadmin.py:37
-msgid "Type"
-msgstr "Type"
+#: templates/admin/polymorphic_tree/object_history_breadcrumbs.html:20
+msgid "History"
+msgstr ""
 
-#: utils/polymorphicadmin.py:290
-#, python-format
-msgid "Add %s"
-msgstr "%s toevoegen"
+#~ msgid "Please correct the error below."
+#~ msgid_plural "Please correct the errors below."
+#~ msgstr[0] "Corrigeer a.u.b. de volgende fout:"
+#~ msgstr[1] "Corrigeer a.u.b. de volgende fouten:"
 
-#: utils/polymorphicadmin.py:359
-msgid "Contents"
-msgstr "Inhoud"
+#~ msgid "Type"
+#~ msgstr "Type"
+
+#~ msgid "Contents"
+#~ msgstr "Inhoud"

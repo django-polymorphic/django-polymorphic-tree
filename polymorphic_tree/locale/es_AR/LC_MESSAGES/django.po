@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-30 14:49+0100\n"
+"POT-Creation-Date: 2017-02-18 19:29+0100\n"
 "PO-Revision-Date: 2011-01-10 23:54+0100\n"
 "Last-Translator: Gonzalo Bustos\n"
 "Language-Team: Spanish (Argentina) <LL@li.org>\n"
@@ -16,34 +16,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: admin/parentadmin.py:33
+#: admin/parentadmin.py:45
 msgid "Node type"
 msgstr "Tipo de nodo"
 
-#: admin/parentadmin.py:44
+#: admin/parentadmin.py:56
 msgid "node type"
 msgstr "tipo de nodo"
 
-#: admin/parentadmin.py:102
+#: admin/parentadmin.py:112
 msgid "Actions"
 msgstr "Acciones"
 
-#: admin/parentadmin.py:113
+#: admin/parentadmin.py:123
 msgid "Add sub node"
 msgstr "Agregar sub nodo"
 
-#: admin/parentadmin.py:121
+#: admin/parentadmin.py:132
 msgid "View on site"
 msgstr "Ver en sitio"
 
-#: admin/parentadmin.py:199
+#: admin/parentadmin.py:196
+msgid "You do not have permission to move this node."
+msgstr ""
+
+#: models.py:46 models.py:193
+msgid "This node type should have a parent."
+msgstr ""
+
+#: models.py:47
+#, fuzzy
+#| msgid "The selected node cannot have child nodes."
+msgid "The selected parent cannot have child nodes."
+msgstr "El nodo seleccionado no puede tener nodos hijos."
+
+#: models.py:48
+#, fuzzy
+#| msgid "The selected node cannot have child nodes."
+msgid "The selected parent cannot have this node type as a child!"
+msgstr "El nodo seleccionado no puede tener nodos hijos."
+
+#: models.py:197
 #, python-brace-format
 msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow children!"
 msgstr "No se puede ubicar ‘{0}’ bajo ‘{1}’; un {2} no permite hijos!"
 
-#: models.py:43
-msgid "The selected node cannot have child nodes."
-msgstr "El nodo seleccionado no puede tener nodos hijos."
+#: models.py:203
+#, fuzzy, python-brace-format
+#| msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow children!"
+msgid "Cannot place ‘{0}’ below ‘{1}’; a {2} does not allow {3} as a child!"
+msgstr "No se puede ubicar ‘{0}’ bajo ‘{1}’; un {2} no permite hijos!"
 
 #: templates/admin/polymorphic_tree/change_form_breadcrumbs.html:5
 #: templates/admin/polymorphic_tree/delete_confirmation.html:7
@@ -59,16 +81,19 @@ msgstr "Agregar"
 msgid "Delete"
 msgstr "Eliminar"
 
-#: templates/admin/polymorphic_tree/jstree_list_results.html:111
+#: templates/admin/polymorphic_tree/jstree_list_results.html:115
 msgid ""
 "Unable to move the node, the current display is out-of-date.\\nThe current "
 "page now reloaded."
-msgstr "No se puede mover el nodo, el display actual está desactualizado.\\nSe recargó la página actual."
+msgstr ""
+"No se puede mover el nodo, el display actual está desactualizado.\\nSe "
+"recargó la página actual."
 
-#: templates/admin/polymorphic_tree/jstree_list_results.html:119
+#: templates/admin/polymorphic_tree/jstree_list_results.html:123
 msgid ""
 "There was an error while moving the node, please reload the current page."
-msgstr "Hubo un error cuando se movía el nodo, por favor recargá la página actual."
+msgstr ""
+"Hubo un error cuando se movía el nodo, por favor recargá la página actual."
 
 #: templates/admin/polymorphic_tree/object_history_breadcrumbs.html:20
 msgid "History"
