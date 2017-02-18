@@ -1,3 +1,14 @@
+Changes in 1.4 (2017-02-18)
+---------------------------
+
+* Add ability to restrict children, via ``child_types`` list on the model.
+  The value can be ``["self", "app.Model", "Model", Model]``.
+* Added ability to set ``can_be_root`` to enforce using a node as child.
+* Add ``validate_move_to()`` method to perform extra checks on moving children.
+* Fix support for UUID fields as primary key.
+* **Security notice:** fixed missing permission check on moving nodes, all staff members could move nodes.
+
+
 Changes in 1.3.1 (2016-11-29)
 -----------------------------
 
