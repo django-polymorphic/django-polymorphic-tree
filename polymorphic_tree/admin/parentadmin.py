@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ugettext
 from future.builtins import int, str
 from mptt.admin import MPTTModelAdmin
 from mptt.exceptions import InvalidMove
@@ -193,7 +193,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
-                'error': _('You do not have permission to move this node.')
+                'error': ugettext('You do not have permission to move this node.')
             }), content_type='application/json', status=409)
 
         # Compare on strings to support UUID fields.
