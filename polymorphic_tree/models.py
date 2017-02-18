@@ -196,10 +196,12 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         self.validate_move_to(new_parent)
 
     def validate_move_to(self, new_parent):
-        """Can move be finished
+        """
+        Can move be finished
 
         Method have to be redefined in inherited model to define cases when
-        node can be moved. If method is not redefined moving always allows
+        node can be moved. If method is not redefined moving is always allowed.
+        The ``new_parent`` can be ``None`` when the node is moved to the root.
 
         To deny move, this method have to be raised ``ValidationError`` or
         ``InvalidMove`` from ``mptt.exceptions``
