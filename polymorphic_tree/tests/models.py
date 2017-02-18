@@ -133,3 +133,15 @@ class ModelWithInvalidMove(PolymorphicMPTTModel):
     def validate_move_to(self, target):
         """Raise ``InvalidMove``"""
         raise InvalidMove('Invalid move')
+
+
+class ModelMustBeChildRoot(PolymorphicMPTTModel):
+    """Model that must be a child"""
+    can_be_root = True
+
+    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children')
+    field8 = models.CharField(max_length=10)
+
+
+class ModelMustBeChild(ModelMustBeChildRoot):
+    can_be_root = False

@@ -233,3 +233,14 @@ class MPTTTests(TestCase):
         self.assertIsInstance(Model2A()._tree_manager, PolymorphicMPTTModelManager)
         self.assertIsInstance(Model2B()._tree_manager, PolymorphicMPTTModelManager)
         self.assertIsInstance(Model2C()._tree_manager, PolymorphicMPTTModelManager)
+
+    def test_can_be_root(self):
+        node = ModelMustBeChild(field8="foo")
+        self.assertRaisesMessage(ValidationError, 'This node type should have a parent', lambda: node.clean())
+
+        parent = ModelMustBeChildRoot(field8="test")
+        parent.clean()
+        parent.save()
+        node.parent = parent
+        node.clean()
+        node.save()

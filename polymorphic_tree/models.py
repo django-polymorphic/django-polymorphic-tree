@@ -6,6 +6,7 @@ import uuid
 import django
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
+from django.utils.encoding import force_text
 from django.utils.six import integer_types, string_types
 from django.utils.translation import ugettext_lazy as _
 from future.utils import with_metaclass
@@ -42,6 +43,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
     A foreignkey that limits the node types the parent can be.
     """
     default_error_messages = {
+        'required': _("This node type should have a parent."),
         'no_children_allowed': _("The selected parent cannot have child nodes."),
         'child_not_allowed': _("The selected parent cannot have this node type as a child!")
     }
@@ -53,6 +55,8 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
 
     def _validate_parent(self, parent, model_instance):
         if not parent:
+            # This can't test for model_instance.can_be_root,
+            # because clean() is not called for empty values.
             return
         elif isinstance(parent, integer_types) or isinstance(parent, uuid.UUID):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
@@ -75,8 +79,13 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
 
     #: Whether the node type allows to have children.
     can_have_children = True
+
+    #: Whether the node type can be a root node.
+    can_be_root = True
+
     #: Allowed child types for this page.
     child_types = []
+
     # Cache child types using a class variable to ensure that get_child_types
     # is run once per page class, per django initiation.
     __child_types = {}
@@ -179,7 +188,10 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         """
         new_parent = _get_new_parent(self, target, position)
 
-        if new_parent is not None:
+        if new_parent is None:
+            if not self.can_be_root:
+                raise InvalidMove(_("This node type should have a parent."))
+        else:
             if not new_parent.can_have_children:
                 raise InvalidMove(
                     _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
@@ -206,6 +218,18 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         To deny move, this method have to be raised ``ValidationError`` or
         ``InvalidMove`` from ``mptt.exceptions``
         """
+
+    def clean(self):
+        super(PolymorphicMPTTModel, self).clean()
+
+        try:
+            # Make sure form validation also reports choosing a wrong parent.
+            # This also updates what PolymorphicTreeForeignKey already does.
+            parent_id = getattr(self, self._mptt_meta.parent_attr + '_id')
+            parent = getattr(self, self._mptt_meta.parent_attr) if parent_id else None
+            self.validate_move(parent)
+        except InvalidMove as e:
+            raise ValidationError({self._mptt_meta.parent_attr: force_text(e)})
 
 
 def _get_new_parent(moved, target, position='first-child'):
