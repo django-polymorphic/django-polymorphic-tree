@@ -179,17 +179,18 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         """
         new_parent = _get_new_parent(self, target, position)
 
-        if not new_parent.can_have_children:
-            raise InvalidMove(
-                _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
-                .format(self, new_parent, new_parent._meta.verbose_name)
-            )
+        if new_parent is not None:
+            if not new_parent.can_have_children:
+                raise InvalidMove(
+                    _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
+                    .format(self, new_parent, new_parent._meta.verbose_name)
+                )
 
-        if not new_parent.is_child_allowed(self):
-            raise InvalidMove(
-                _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
-                .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
-            )
+            if not new_parent.is_child_allowed(self):
+                raise InvalidMove(
+                    _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
+                    .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
+                )
 
         # Allow custom validation
         self.validate_move_to(new_parent)
