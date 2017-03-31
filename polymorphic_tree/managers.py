@@ -27,6 +27,15 @@ class PolymorphicMPTTQuerySet(TreeQuerySet, PolymorphicQuerySet):
         """
         return self.filter(parent__isnull=True)
 
+    if django.VERSION >= (1, 7):
+        def as_manager(cls):
+            # Make sure the Django 1.7 way of creating managers works.
+            manager = PolymorphicMPTTModelManager.from_queryset(cls)()
+            manager._built_with_as_manager = True
+            return manager
+        as_manager.queryset_only = True
+        as_manager = classmethod(as_manager)
+
 
 class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
     """
