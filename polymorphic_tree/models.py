@@ -26,7 +26,9 @@ def _get_base_polymorphic_model(ChildModel):
     First model in the inheritance chain that inherited from the PolymorphicMPTTModel
     """
     for Model in reversed(ChildModel.mro()):
-        if isinstance(Model, PolymorphicMPTTModelBase) and Model is not PolymorphicMPTTModel:
+        if (isinstance(Model, PolymorphicMPTTModelBase) and
+                Model is not PolymorphicMPTTModel and
+                not Model._meta.abstract):
             return Model
     return None
 
