@@ -24,6 +24,7 @@ if not settings.configured:
                     'BACKEND': 'django.template.backends.django.DjangoTemplates',
                     'DIRS': (),
                     'OPTIONS': {
+                        'debug': True,
                         'loaders': (
                             'django.template.loaders.filesystem.Loader',
                             'django.template.loaders.app_directories.Loader',
@@ -42,6 +43,7 @@ if not settings.configured:
         )
     else:
         template_settings = dict(
+            TEMPLATE_DEBUG = True,
             TEMPLATE_LOADERS = (
                 'django.template.loaders.app_directories.Loader',
                 'django.template.loaders.filesystem.Loader',
@@ -53,7 +55,6 @@ if not settings.configured:
 
     settings.configure(
         DEBUG = False,  # will be False anyway by DjangoTestRunner.
-        TEMPLATE_DEBUG = True,
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
