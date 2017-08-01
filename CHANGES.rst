@@ -1,3 +1,10 @@
+Changes in 1.4.1 (2017-08-01)
+-----------------------------
+
+* Fixed inheriting ``PolymorphicMPTTModel`` in an abstract model.
+* Fixed ``PolymorphicMPTTQuerySet.as_manager()`` usage to return the proper manager.
+
+
 Changes in 1.4 (2017-02-18)
 ---------------------------
 
