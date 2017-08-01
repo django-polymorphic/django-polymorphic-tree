@@ -39,9 +39,9 @@ setup(
     license='Apache 2.0',
 
     install_requires=[
-        'django-polymorphic>=1.0.1',  # needed for Django 1.10.1 compatibility
-        'django-mptt>=0.7.0',         # Still allow 0.7 to have Django 1.6 support
-        'django-tag-parser>=2.1',     # ensure Django 1.8 compatibility
+        'django-polymorphic>=1.2',  # needed for Django 1.11 compatibility
+        'django-mptt>=0.8.0',
+        'django-tag-parser>=2.1',
         'future>=0.12.2',
     ],
     requires=[

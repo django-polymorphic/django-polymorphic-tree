@@ -13,12 +13,9 @@ from future.utils import with_metaclass
 from mptt.exceptions import InvalidMove
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey, raise_if_unsaved
 from polymorphic.base import PolymorphicModelBase
+from polymorphic.models import PolymorphicModel
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
 
-try:
-    from polymorphic.models import PolymorphicModel  # django-polymorphic 0.8
-except ImportError:
-    from polymorphic import PolymorphicModel
 
 
 def _get_base_polymorphic_model(ChildModel):
@@ -250,12 +247,3 @@ def _get_new_parent(moved, target, position='first-child'):
         return getattr(target, target._mptt_meta.parent_attr)
     else:
         raise ValueError("invalid mptt position argument")
-
-
-if django.VERSION < (1, 7):
-    # South integration
-    try:
-        from south.modelsinspector import add_introspection_rules
-        add_introspection_rules([], ["^polymorphic_tree\.models\.PolymorphicTreeForeignKey"])
-    except ImportError:
-        pass

@@ -2,18 +2,10 @@
 The manager class for the CMS models
 """
 import django
-from django.db.models.query import QuerySet
 from mptt.managers import TreeManager
+from mptt.querysets import TreeQuerySet
 from polymorphic.manager import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
-
-try:
-    # mptt 0.7 has queryset methods too
-    from mptt.querysets import TreeQuerySet
-except ImportError:
-    # provide compatibility with older mptt versions by adding a stub.
-    class TreeQuerySet(QuerySet):
-        pass
 
 
 class PolymorphicMPTTQuerySet(TreeQuerySet, PolymorphicQuerySet):
@@ -27,14 +19,13 @@ class PolymorphicMPTTQuerySet(TreeQuerySet, PolymorphicQuerySet):
         """
         return self.filter(parent__isnull=True)
 
-    if django.VERSION >= (1, 7):
-        def as_manager(cls):
-            # Make sure the Django 1.7 way of creating managers works.
-            manager = PolymorphicMPTTModelManager.from_queryset(cls)()
-            manager._built_with_as_manager = True
-            return manager
-        as_manager.queryset_only = True
-        as_manager = classmethod(as_manager)
+    def as_manager(cls):
+        # Make sure this way of creating managers works.
+        manager = PolymorphicMPTTModelManager.from_queryset(cls)()
+        manager._built_with_as_manager = True
+        return manager
+    as_manager.queryset_only = True
+    as_manager = classmethod(as_manager)
 
 
 class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
@@ -50,10 +41,6 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
         # In django
         qs = PolymorphicManager.get_queryset(self)  # can filter on proxy models
         return qs.order_by(self.tree_id_attr, self.left_attr)
-
-    # For Django 1.5
-    if django.VERSION < (1, 7):
-        get_query_set = get_queryset
 
     def toplevel(self):
         """
