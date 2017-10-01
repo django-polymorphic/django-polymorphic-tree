@@ -196,7 +196,7 @@ To test support for multiple Python and Django versions, you need to follow step
     pip install tox
     tox
 
-Python 2.7, 3.3, 3.4, 3.5 and 3.6 and django 1.7, 1.8, 1.9 and 1.10 are the currently supported versions.
+Python 2.7, 3.3, 3.4, 3.5 and 3.6 and django 1.7, 1.8, 1.9, 1.10 and 1.11 are the currently supported versions.
 
 Todo
 ----
