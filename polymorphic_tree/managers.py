@@ -4,9 +4,12 @@ The manager class for the CMS models
 import django
 from mptt.managers import TreeManager
 from mptt.querysets import TreeQuerySet
-from polymorphic.manager import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
 
+try:
+    from polymorphic.managers import PolymorphicManager
+except ImportError:
+    from polymorphic.manager import PolymorphicManager
 
 class PolymorphicMPTTQuerySet(TreeQuerySet, PolymorphicQuerySet):
     """
