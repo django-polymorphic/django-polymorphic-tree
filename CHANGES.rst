@@ -1,3 +1,9 @@
+Changes in 1.4.2 (2017-11-22)
+-----------------------------
+
+* Fixed compatibility with recent django-polymorphic_ releases.
+
+
 Changes in 1.4.1 (2017-08-01)
 -----------------------------
 
