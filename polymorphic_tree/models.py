@@ -174,6 +174,11 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
             return False
 
         child_types = self.get_child_types()
+
+        # this allows tree validation to occur in the event the child model is not
+	# yet created in db (ie. when django admin tries to validate)
+        child.pre_save_polymorphic()
+
         return not child_types or child.polymorphic_ctype_id in child_types
 
     def validate_move(self, target, position='first-child'):
