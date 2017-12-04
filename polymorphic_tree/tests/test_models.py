@@ -35,6 +35,7 @@ class PolymorphicTests(TestCase):
         test_custom_pk()
         test_fix_getattribute()
         test_parent_link_and_related_name()
+        test_child_type_validation_in_memory()
 
     """
 
@@ -226,6 +227,21 @@ class MPTTTests(TestCase):
         self.assertTrue(grandchild.is_child_node())
         self.assertTrue(grandchild.is_leaf_node())
         self.assertFalse(grandchild.is_root_node())
+
+    def test_child_type_validation_in_memory(self):
+        root_node = ModelRestrictedChildren.objects.create(field_b='root')
+
+        valid_child = ModelX(field_b='valid_child', field_x='ModelX', parent=root_node)
+        valid_child.clean()
+
+        with self.assertRaises(ValidationError) as context:
+            invalid_child = ModelY(field_b='invalid_child', field_y='ModelY', parent=root_node)
+            invalid_child.clean()
+
+        self.assertTrue('a model restricted children does not allow model y as a child!'
+         in context.exception.args[0]['parent'])
+
+
 
     def test_tree_manager(self):
         # Having the tree manager correct is absolutely essential,
