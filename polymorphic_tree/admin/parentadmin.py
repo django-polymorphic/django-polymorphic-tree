@@ -4,7 +4,6 @@ from distutils.version import StrictVersion
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _, ugettext
@@ -28,6 +27,11 @@ try:
 except ImportError:
     # Django 1.3 compatibility
     from django.conf.urls.defaults import url
+
+try:
+    from django.urls import reverse  # Django 1.10+
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 try:
     from django.contrib.auth import get_permission_codename
