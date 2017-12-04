@@ -34,4 +34,5 @@ class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
 
     list_display = ('title', 'actions_column',)
 
+
 admin.site.register(models.BaseTreeNode, TreeNodeParentAdmin)

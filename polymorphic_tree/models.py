@@ -17,7 +17,6 @@ from polymorphic.models import PolymorphicModel
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
 
 
-
 def _get_base_polymorphic_model(ChildModel):
     """
     First model in the inheritance chain that inherited from the PolymorphicMPTTModel
@@ -176,7 +175,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         child_types = self.get_child_types()
 
         # this allows tree validation to occur in the event the child model is not
-	# yet created in db (ie. when django admin tries to validate)
+        # yet created in db (ie. when django admin tries to validate)
         child.pre_save_polymorphic()
 
         return not child_types or child.polymorphic_ctype_id in child_types

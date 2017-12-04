@@ -239,9 +239,7 @@ class MPTTTests(TestCase):
             invalid_child.clean()
 
         self.assertTrue('a model restricted children does not allow model y as a child!'
-         in context.exception.args[0]['parent'])
-
-
+                        in context.exception.args[0]['parent'])
 
     def test_tree_manager(self):
         # Having the tree manager correct is absolutely essential,

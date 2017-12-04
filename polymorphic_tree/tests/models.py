@@ -146,6 +146,7 @@ class ModelMustBeChildRoot(PolymorphicMPTTModel):
 class ModelMustBeChild(ModelMustBeChildRoot):
     can_be_root = False
 
+
 class ModelRestrictedChildren(Base):
     child_types = [
         ModelX,
