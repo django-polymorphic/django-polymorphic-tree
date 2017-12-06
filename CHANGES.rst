@@ -49,7 +49,7 @@ Changes in 1.3
 Changes in 1.2.5
 ----------------
 
-* Fix grapelli theme appearance for admin list.
+* Fix grappelli theme appearance for admin list.
 
 
 Changes in 1.2.4
@@ -192,7 +192,7 @@ Changes in version 0.8.5 (beta release)
 Changes in version 0.8.4 (alpha release)
 ----------------------------------------
 
-* Fix list appearance in combination with django-grapelli
+* Fix list appearance in combination with django-grappelli
 * Improve error messages on invalid movements
 
 
