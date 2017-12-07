@@ -182,12 +182,11 @@ To run the included test suite, execute::
 To test support for multiple Python and Django versions, you need to follow steps below:
 
 * install project requirements in virtual environment
-* install python 2.7, 3.3, 3.4, 3.5, 3.6 python versions through pyenv (See pyenv (Linux) or Homebrew (Mac OS X).)
+* install python 2.7, 3.4, 3.5, 3.6 python versions through pyenv (See pyenv (Linux) or Homebrew (Mac OS X).)
 * create .python-version file and add full list of installed versions with which project have to be tested, example::
 
     2.6.9
     2.7.13
-    3.3.6
     3.4.5
     3.5.2
     3.6.0
@@ -196,7 +195,7 @@ To test support for multiple Python and Django versions, you need to follow step
     pip install tox
     tox
 
-Python 2.7, 3.3, 3.4, 3.5 and 3.6 and django 1.7, 1.8, 1.9, 1.10 and 1.11 are the currently supported versions.
+Python 2.7, 3.4, 3.5 and 3.6 and django 1.8, 1.10 and 1.11 are the currently supported versions.
 
 Todo
 ----
