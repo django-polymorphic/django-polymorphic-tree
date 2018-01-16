@@ -9,6 +9,7 @@ env:
 - PACKAGES="django>=1.8,<1.9"
 - PACKAGES="django>=1.10,<1.11"
 - PACKAGES="django>=1.11,<1.12"
+- PACKAGES="django==2.0"
 before_install:
 - pip install codecov
 install:
