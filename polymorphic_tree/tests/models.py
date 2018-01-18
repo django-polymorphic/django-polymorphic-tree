@@ -18,7 +18,8 @@ class PlainC(PlainB):
 
 
 class Model2A(ShowFieldContent, PolymorphicMPTTModel):
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent')
+    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent',
+                                       on_delete=models.CASCADE)
     field1 = models.CharField(max_length=10)
 
 
@@ -35,8 +36,10 @@ class Model2D(Model2C):
 
 
 class One2OneRelatingModel(PolymorphicMPTTModel):
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent')
-    one2one = models.OneToOneField(Model2A)
+    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent',
+                                       on_delete=models.CASCADE)
+    one2one = models.OneToOneField(Model2A,
+                                   on_delete=models.CASCADE)
     field1 = models.CharField(max_length=10)
 
 
@@ -45,7 +48,8 @@ class One2OneRelatingModelDerived(One2OneRelatingModel):
 
 
 class Base(ShowFieldContent, PolymorphicMPTTModel):
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent')
+    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent',
+                                       on_delete=models.CASCADE)
     field_b = models.CharField(max_length=10)
 
 
@@ -71,7 +75,8 @@ class ModelWithCustomParentName(PolymorphicMPTTModel):
                                       blank=True,
                                       null=True,
                                       related_name='subordinate',
-                                      verbose_name='Chief')
+                                      verbose_name='Chief',
+                                      on_delete=models.CASCADE)
     field5 = models.CharField(max_length=10)
 
     class MPTTMeta:
@@ -97,7 +102,8 @@ class ModelWithValidation(PolymorphicMPTTModel):
     parent = PolymorphicTreeForeignKey('self',
                                        blank=True,
                                        null=True,
-                                       related_name='children')
+                                       related_name='children',
+                                       on_delete=models.CASCADE)
 
     field6 = models.CharField(max_length=10)
 
@@ -126,7 +132,8 @@ class ModelWithInvalidMove(PolymorphicMPTTModel):
     parent = PolymorphicTreeForeignKey('self',
                                        blank=True,
                                        null=True,
-                                       related_name='children')
+                                       related_name='children',
+                                       on_delete=models.CASCADE)
 
     field7 = models.CharField(max_length=10)
 
@@ -139,7 +146,8 @@ class ModelMustBeChildRoot(PolymorphicMPTTModel):
     """Model that must be a child"""
     can_be_root = True
 
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children')
+    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children',
+                                       on_delete=models.CASCADE)
     field8 = models.CharField(max_length=10)
 
 
