@@ -6,6 +6,7 @@ Canges in 1.5 (2018-01-22)
 * Fixed crash in ``get_child_types()`` when ``can_have_children`` is ``False``.
 * Fixed child type validation, this now happens before the database saves.
 * Fixed spelling grapelli -> grappelli
+* Dropped Django 1.8 support.
 
 
 Changes in 1.4.2 (2017-11-22)
