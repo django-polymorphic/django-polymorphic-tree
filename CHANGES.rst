@@ -1,3 +1,12 @@
+Changes in git
+--------------
+
+* Added Django 2.0 support.
+* Dropped support for Django 1.7, 1.8 and 1.9 (same as django-polymorphic_).
+* Fixed child type validation, this now happens before the database saves.
+* Fixed spelling grapelli -> grappelli
+
+
 Changes in 1.4.2 (2017-11-22)
 -----------------------------
 
