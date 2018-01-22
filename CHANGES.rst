@@ -1,5 +1,5 @@
-Canges in 1.5 (2018-01-22)
---------------------------
+Changes in 1.5 (2018-01-22)
+---------------------------
 
 * Added Django 2.0 support.
 * Added ``base_manager_name`` setting in model ``Meta`` options, like django-polymorphic_ 2.0 does.
