@@ -1,8 +1,9 @@
-Changes in git
---------------
+Canges in 1.5 (2018-01-22)
+--------------------------
 
 * Added Django 2.0 support.
-* Dropped support for Django 1.7, 1.8 and 1.9 (same as django-polymorphic_).
+* Added ``base_manager_name`` setting in model ``Meta`` options, like django-polymorphic_ 2.0 does.
+* Fixed crash in ``get_child_types()`` when ``can_have_children`` is ``False``.
 * Fixed child type validation, this now happens before the database saves.
 * Fixed spelling grapelli -> grappelli
 
@@ -11,6 +12,8 @@ Changes in 1.4.2 (2017-11-22)
 -----------------------------
 
 * Fixed compatibility with recent django-polymorphic_ releases.
+* Dropped support for unmaintained Django versions: 1.6, 1.7, 1.9
+  (this should have warranted a 1.5 release, but it was accidentally slipped in).
 
 
 Changes in 1.4.1 (2017-08-01)

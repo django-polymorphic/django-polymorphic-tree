@@ -39,13 +39,13 @@ setup(
     license='Apache 2.0',
 
     install_requires=[
-        'django-polymorphic>=1.2',  # needed for Django 1.11 compatibility
+        'django-polymorphic>=1.3',  # Latest to support Django 1.8 and 1.10
         'django-mptt>=0.8.0',
         'django-tag-parser>=2.1',
         'future>=0.12.2',
     ],
     requires=[
-        'Django (>=1.6)',
+        'Django (>=1.8)',
     ],
     description="A polymorphic mptt structure to display content in a tree.",
     long_description=read('README.rst'),
@@ -68,18 +68,15 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Framework :: Django',
-        'Framework :: Django :: 1.7',
         'Framework :: Django :: 1.8',
-        'Framework :: Django :: 1.9',
         'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
