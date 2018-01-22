@@ -111,7 +111,10 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
         """
         key = self.page_key
         child_types = self._PolymorphicMPTTModel__child_types
-        if self.can_have_children and child_types.setdefault(key, None) is None:
+        if not self.can_have_children:
+            return []
+
+        if child_types.get(key, None) is None:
             new_children = []
             iterator = iter(self.child_types)
             for child in iterator:
@@ -135,6 +138,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
                     ct_id = ContentType.objects.get_for_model(child).id
                 new_children.append(ct_id)
             child_types[key] = new_children
+
         return child_types[key]
 
     # Define:
