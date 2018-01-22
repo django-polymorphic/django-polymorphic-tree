@@ -135,7 +135,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
                     ct_id = ContentType.objects.get_for_model(child).id
                 new_children.append(ct_id)
             child_types[key] = new_children
-        return child_types[key]
+        return child_types.get(key, None)
 
     # Define:
     # parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'),
