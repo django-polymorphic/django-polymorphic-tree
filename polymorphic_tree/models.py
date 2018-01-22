@@ -89,10 +89,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
     __child_types = {}
 
     # Django fields
-    if django.VERSION >= (1, 10):
-        objects = PolymorphicMPTTModelManager()
-    else:
-        _default_manager = PolymorphicMPTTModelManager()
+    objects = PolymorphicMPTTModelManager()
 
     @property
     def page_key(self):

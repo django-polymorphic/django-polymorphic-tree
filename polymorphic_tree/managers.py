@@ -34,19 +34,11 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
     #: The queryset class to use.
     queryset_class = PolymorphicMPTTQuerySet
 
-    def get_queryset(self):
-        # Re-apply the logic from django-polymorphic and django-mptt.
-        # As of django-mptt 0.7, TreeManager.get_querset() no longer calls super()
-        # In django
-        qs = PolymorphicManager.get_queryset(self)  # can filter on proxy models
-        return qs.order_by(self.tree_id_attr, self.left_attr)
-
     def toplevel(self):
         """
         Return all nodes which have no parent.
         """
-        # By using .all(), the proper get_query_set()/get_queryset() will be used for each Django version.
-        # Django 1.4/1.5 need to use get_query_set(), because the RelatedManager overrides that.
+        # Calling .all() is equivalent to .get_queryset()
         return self.all().toplevel()
 
     def _mptt_filter(self, qs=None, **filters):

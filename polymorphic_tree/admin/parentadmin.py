@@ -3,9 +3,13 @@ import sys
 from distutils.version import StrictVersion
 
 from django.conf import settings
+from django.conf.urls import url
+from django.contrib.auth import get_permission_codename
+from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _, ugettext
 from future.builtins import int, str
 from mptt.admin import MPTTModelAdmin
@@ -13,64 +17,26 @@ from mptt.exceptions import InvalidMove
 from polymorphic.admin import PolymorphicModelChoiceForm, PolymorphicParentModelAdmin
 from polymorphic_tree.models import PolymorphicMPTTModel
 
-try:
-    from polymorphic.__version__ import __version__ as polymorphic_version  # pre 0.8 used a __version__.py
-except ImportError:
-    from polymorphic import __version__ as polymorphic_version
-
 if sys.version_info[0] >= 3:
     long = int  # Python 2 compatibility
-
-try:
-    # Django 1.6 requires this
-    from django.conf.urls import url
-except ImportError:
-    # Django 1.3 compatibility
-    from django.conf.urls.defaults import url
-
-try:
-    from django.urls import reverse  # Django 1.10+
-except ImportError:
-    from django.core.urlresolvers import reverse
-
-try:
-    from django.contrib.auth import get_permission_codename
-except ImportError:
-    def get_permission_codename(action, opts):
-        return '%s_%s' % (action, opts.model_name)
-
-try:
-    transaction_atomic = transaction.atomic
-except AttributeError:
-    transaction_atomic = transaction.commit_on_success
 
 
 class NodeTypeChoiceForm(PolymorphicModelChoiceForm):
     type_label = _("Node type")
 
 
-try:
-    from django.contrib.admin import SimpleListFilter
-except ImportError:
-    extra_list_filters = ()
-else:
-    # Django 1.4+:
-    class NodeTypeListFilter(SimpleListFilter):
-        parameter_name = 'ct_id'
-        title = _('node type')
+class NodeTypeListFilter(SimpleListFilter):
+    parameter_name = 'ct_id'
+    title = _('node type')
 
-        def lookups(self, request, model_admin):
-            if StrictVersion(polymorphic_version) >= StrictVersion('0.6'):
-                return model_admin.get_child_type_choices(request, 'change')
-            return model_admin.get_child_type_choices()
+    def lookups(self, request, model_admin):
+        return model_admin.get_child_type_choices(request, 'change')
 
-        # Whoops: Django 1.6 didn't rename this one!
-        def queryset(self, request, queryset):
-            if self.value():
-                queryset = queryset.filter(polymorphic_ctype_id=self.value())
-            return queryset
-
-    extra_list_filters = (NodeTypeListFilter,)
+    # Whoops: Django 1.6 didn't rename this one!
+    def queryset(self, request, queryset):
+        if self.value():
+            queryset = queryset.filter(polymorphic_ctype_id=self.value())
+        return queryset
 
 
 class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmin):
@@ -84,7 +50,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     add_type_form = NodeTypeChoiceForm
 
     # Config list page:
-    list_filter = extra_list_filters
+    list_filter = (NodeTypeListFilter,)
 
     # TODO: disable the pagination in the admin, because it doesn't work with the current template code.
     # This is a workaround for https://github.com/edoburu/django-polymorphic-tree/issues/2 until
@@ -169,7 +135,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         info = _get_opt(self.model)
         return reverse('admin:{0}_{1}_moved'.format(*info), current_app=self.admin_site.name)
 
-    @transaction_atomic
+    @transaction.atomic
     def api_node_moved_view(self, request):
         """
         Update the position of a node, from a API request.

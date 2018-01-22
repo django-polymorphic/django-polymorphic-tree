@@ -49,10 +49,11 @@ class StylableResultList(BaseInclusionNode):
 
         if 'grappelli' in settings.INSTALLED_APPS:
             theme_css = 'polymorphic_tree/adminlist/nodetree_grappelli.css'
-        elif 'flat' in settings.INSTALLED_APPS or django.VERSION >= (1, 9):
-            theme_css = 'polymorphic_tree/adminlist/nodetree_flat.css'
-        else:
+        elif 'classic_theme' in settings.INSTALLED_APPS:
             theme_css = 'polymorphic_tree/adminlist/nodetree_classic.css'
+        else:
+            # flat theme aka Django 1.9 default
+            theme_css = 'polymorphic_tree/adminlist/nodetree_flat.css'
 
         return {
             'cl': cl,
@@ -225,7 +226,7 @@ def stylable_column_repr(cl, result, field_name):
         return _get_non_field_repr(cl, result, field_name)  # Field not found (maybe a function)
     else:
         row_classes = None
-        value = display_for_field(getattr(result, f.attname), f, get_empty_value_display(cl))  # Standard field
+        value = display_for_field(getattr(result, f.attname), f, cl.model_admin.get_empty_value_display())  # Standard field
         if isinstance(f, models.DateField) or isinstance(f, models.TimeField):
             row_classes = ['nowrap']
         return value, row_classes
@@ -267,7 +268,7 @@ def _get_non_field_repr(cl, result, field_name):
             result_repr = smart_text(value)
 
     except (AttributeError, ObjectDoesNotExist):
-        result_repr = get_empty_value_display(cl)
+        result_repr = cl.model_admin.get_empty_value_display()
     else:
         # Strip HTML tags in the resulting text, except if the
         # function has an "allow_tags" attribute set to True.
@@ -301,13 +302,3 @@ def display_for_field(value, field, empty_value_display):
         return formats.number_format(value)
     else:
         return smart_text(value)
-
-
-try:
-    from django.contrib.admin.views.main import EMPTY_CHANGELIST_VALUE  # Django 1.8 and lower.
-except ImportError:
-    def get_empty_value_display(cl):
-        return cl.model_admin.get_empty_value_display()
-else:
-    def get_empty_value_display(cl):
-        return EMPTY_CHANGELIST_VALUE
