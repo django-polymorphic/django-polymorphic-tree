@@ -91,6 +91,11 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
     # Django fields
     objects = PolymorphicMPTTModelManager()
 
+    class Meta:
+        abstract = True
+        ordering = ('tree_id', 'lft',)
+        base_manager_name = "objects"
+
     @property
     def page_key(self):
         """
@@ -131,10 +136,6 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
                 new_children.append(ct_id)
             child_types[key] = new_children
         return child_types[key]
-
-    class Meta:
-        abstract = True
-        ordering = ('tree_id', 'lft',)
 
     # Define:
     # parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'),
