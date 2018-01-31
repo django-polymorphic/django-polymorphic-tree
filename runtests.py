@@ -1,9 +1,14 @@
 #!/usr/bin/env python -Wd
 import sys
+import warnings
 import django
 from django.core.management import execute_from_command_line
 from django.conf import settings, global_settings as default_settings
 from os import path
+
+
+# python -Wd, or run via coverage:
+warnings.simplefilter('always', DeprecationWarning)
 
 # Give feedback on used versions
 sys.stderr.write('Using Python version {0} from {1}\n'.format(sys.version[:5], sys.executable))
