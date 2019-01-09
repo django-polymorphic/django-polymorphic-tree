@@ -159,7 +159,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         except self.model.DoesNotExist as e:
             return HttpResponseNotFound(json.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
-        if not request.user.has_perm(get_permission_codename('change', moved._meta), moved):
+        if not request.user.has_perm("%s.%s" % (moved._meta.app_label, get_permission_codename('change', moved._meta))):
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
