@@ -54,6 +54,7 @@ if not settings.configured:
                         'django.template.context_processors.request',
                         'django.template.context_processors.static',
                         'django.contrib.auth.context_processors.auth',
+                        'django.contrib.messages.context_processors.messages',
                     ),
                 },
             },
@@ -75,6 +76,11 @@ if not settings.configured:
             'django.contrib.auth.middleware.AuthenticationMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
             'django.middleware.locale.LocaleMiddleware',  # / will be redirected to /<locale>/
+        ),
+        MIDDLEWARE=(
+            'django.contrib.auth.middleware.AuthenticationMiddleware',
+            'django.contrib.messages.middleware.MessageMiddleware',
+            'django.contrib.sessions.middleware.SessionMiddleware',
         ),
         ROOT_URLCONF = 'example.urls',
         TEST_RUNNER = 'django.test.runner.DiscoverRunner',
