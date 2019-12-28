@@ -7,7 +7,6 @@ import django
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.utils.encoding import force_text
-from django.utils.six import integer_types, string_types
 from django.utils.translation import ugettext_lazy as _
 from future.utils import with_metaclass
 from mptt.exceptions import InvalidMove
@@ -56,7 +55,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
             # This can't test for model_instance.can_be_root,
             # because clean() is not called for empty values.
             return
-        elif isinstance(parent, integer_types) or isinstance(parent, uuid.UUID):
+        elif isinstance(parent, int) or isinstance(parent, uuid.UUID):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
             base_model = _get_base_polymorphic_model(model_instance.__class__)
             parent = base_model.objects.get(pk=parent)
@@ -118,7 +117,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
             new_children = []
             iterator = iter(self.child_types)
             for child in iterator:
-                if isinstance(child, string_types):
+                if isinstance(child, str):
                     child = str(child).lower()
                     # write self to refer to self
                     if child == 'self':
