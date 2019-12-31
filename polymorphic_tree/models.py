@@ -2,12 +2,12 @@
 Model that inherits from both Polymorphic and MPTT.
 """
 import uuid
+from six import integer_types, string_types
 
 import django
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.utils.encoding import force_text
-from django.utils.six import integer_types, string_types
 from django.utils.translation import ugettext_lazy as _
 from future.utils import with_metaclass
 from mptt.exceptions import InvalidMove
