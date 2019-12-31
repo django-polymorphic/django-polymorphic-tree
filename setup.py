@@ -43,6 +43,7 @@ setup(
         'django-mptt>=0.8.0',
         'django-tag-parser>=2.1',
         'future>=0.12.2',
+        'six>=1.13.0',
     ],
     requires=[
         'Django (>=1.8)',
