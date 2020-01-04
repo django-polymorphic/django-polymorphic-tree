@@ -1,3 +1,9 @@
+Changes in 1.5.1 (2020-01-04)
+-----------------------------
+
+* Fixed Django 3.0 compatibility by removing ``django.utils.six`` dependency.
+
+
 Changes in 1.5 (2018-01-22)
 ---------------------------
 
