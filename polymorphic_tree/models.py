@@ -1,13 +1,14 @@
 """
 Model that inherits from both Polymorphic and MPTT.
 """
+from __future__ import unicode_literals
 import uuid
 
 import django
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from future.utils import integer_types, string_types, with_metaclass
 from mptt.exceptions import InvalidMove
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey, raise_if_unsaved
@@ -194,17 +195,17 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
 
         if new_parent is None:
             if not self.can_be_root:
-                raise InvalidMove(_("This node type should have a parent."))
+                raise InvalidMove(ugettext("This node type should have a parent."))
         else:
             if not new_parent.can_have_children:
                 raise InvalidMove(
-                    _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
+                    ugettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
                     .format(self, new_parent, new_parent._meta.verbose_name)
                 )
 
             if not new_parent.is_child_allowed(self):
                 raise InvalidMove(
-                    _(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
+                    ugettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
                     .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
                 )
 
