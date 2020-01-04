@@ -7,9 +7,8 @@ import django
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.utils.encoding import force_text
-from django.utils.six import integer_types, string_types
 from django.utils.translation import ugettext_lazy as _
-from future.utils import with_metaclass
+from future.utils import integer_types, string_types, with_metaclass
 from mptt.exceptions import InvalidMove
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey, raise_if_unsaved
 from polymorphic.base import PolymorphicModelBase

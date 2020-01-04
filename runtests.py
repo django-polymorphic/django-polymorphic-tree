@@ -54,6 +54,7 @@ if not settings.configured:
                         'django.template.context_processors.request',
                         'django.template.context_processors.static',
                         'django.contrib.auth.context_processors.auth',
+                        'django.contrib.messages.context_processors.messages',
                     ),
                 },
             },
@@ -70,7 +71,7 @@ if not settings.configured:
             'polymorphic_tree.tests',
         ),
         # we define MIDDLEWARE_CLASSES explicitly, the default were changed in django 1.7
-        MIDDLEWARE_CLASSES=(
+        MIDDLEWARE=(
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
