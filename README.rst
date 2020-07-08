@@ -152,9 +152,9 @@ The ``admin.py`` file should define the admin, both for the child nodes and pare
     class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
         base_model = models.BaseTreeNode
         child_models = (
-            (models.CategoryNode, BaseChildAdmin),
-            (models.TextNode, TextNodeAdmin),  # custom admin allows custom edit/delete view.
-            (models.ImageNode, BaseChildAdmin),
+            models.CategoryNode,
+            models.TextNode,  # custom admin allows custom edit/delete view.
+            models.ImageNode,
         )
 
         list_display = ('title', 'actions_column',)
@@ -165,6 +165,9 @@ The ``admin.py`` file should define the admin, both for the child nodes and pare
             }
 
 
+    admin.site.register(models.CategoryNode, BaseChildAdmin)
+    admin.site.register(models.TextNode, TextNodeAdmin)
+    admin.site.register(models.ImageNode, BaseChildAdmin)
     admin.site.register(models.BaseTreeNode, TreeNodeParentAdmin)
 
 
