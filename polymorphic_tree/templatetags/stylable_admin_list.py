@@ -14,7 +14,7 @@ This feature can be activated by simply extending the template stylable/admin/ch
 import django
 from django.conf import settings
 from django.contrib.admin.templatetags.admin_list import _boolean_icon, result_headers
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, FieldDoesNotExist
 from django.db import models
 from django.template import Library
 from django.utils import formats, timezone
@@ -202,7 +202,7 @@ def _get_mptt_indent_field(cl, result):
     for field_name in cl.list_display:
         try:
             cl.lookup_opts.get_field(field_name)
-        except models.FieldDoesNotExist:
+        except FieldDoesNotExist:
             if mptt_indent_field is None:
                 attr = getattr(result, field_name, None)
                 if callable(attr):
@@ -222,7 +222,7 @@ def stylable_column_repr(cl, result, field_name):
     """
     try:
         f = cl.lookup_opts.get_field(field_name)
-    except models.FieldDoesNotExist:
+    except FieldDoesNotExist:
         return _get_non_field_repr(cl, result, field_name)  # Field not found (maybe a function)
     else:
         row_classes = None
