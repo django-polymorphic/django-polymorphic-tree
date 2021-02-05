@@ -37,6 +37,14 @@ register = Library()
 MPTT_ADMIN_LEVEL_INDENT = getattr(settings, 'MPTT_ADMIN_LEVEL_INDENT', 10)
 
 
+# Django 3.1 migration patch:
+FieldDoesNotExist = None
+if hasattr(django.db, 'FieldDoesNotExist'):
+    FieldDoesNotExist = django.db.FieldDoesNotExist
+else:
+    FieldDoesNotExist = django.core.exceptions.FieldDoesNotExist
+
+
 # Ideally the template name should be configurable too, provide a function instead of filename.
 # For now, just reuse the existing admin template for the list contents.
 class StylableResultList(BaseInclusionNode):
@@ -202,7 +210,7 @@ def _get_mptt_indent_field(cl, result):
     for field_name in cl.list_display:
         try:
             cl.lookup_opts.get_field(field_name)
-        except models.FieldDoesNotExist:
+        except FieldDoesNotExist:
             if mptt_indent_field is None:
                 attr = getattr(result, field_name, None)
                 if callable(attr):
@@ -222,7 +230,7 @@ def stylable_column_repr(cl, result, field_name):
     """
     try:
         f = cl.lookup_opts.get_field(field_name)
-    except models.FieldDoesNotExist:
+    except FieldDoesNotExist:
         return _get_non_field_repr(cl, result, field_name)  # Field not found (maybe a function)
     else:
         row_classes = None
