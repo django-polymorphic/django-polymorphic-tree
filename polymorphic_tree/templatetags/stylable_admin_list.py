@@ -39,8 +39,8 @@ MPTT_ADMIN_LEVEL_INDENT = getattr(settings, 'MPTT_ADMIN_LEVEL_INDENT', 10)
 
 # Django 3.1 migration patch:
 FieldDoesNotExist = None
-if hasattr(django.db, 'FieldDoesNotExist'):
-    FieldDoesNotExist = django.db.FieldDoesNotExist
+if hasattr(models, 'FieldDoesNotExist'):
+    FieldDoesNotExist = models.FieldDoesNotExist
 else:
     FieldDoesNotExist = django.core.exceptions.FieldDoesNotExist
 
