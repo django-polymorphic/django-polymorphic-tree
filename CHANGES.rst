@@ -1,3 +1,13 @@
+Changes in 2.0.0 (2021-04-01)
+-----------------------------
+
+* Fixed Django 3.1 compatibility.
+* Fixed Django 4.x deprecation warnings.
+* Bumped third party requirements to meaningful versions.
+* Dropped Django 1.10, 1.11, 2.0 support.
+* Dropped Python 2.7 support.
+
+
 Changes in 1.5.1 (2020-01-04)
 -----------------------------
 
