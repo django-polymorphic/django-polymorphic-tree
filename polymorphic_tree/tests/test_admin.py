@@ -1,6 +1,7 @@
 import sys
 from unittest import TestCase
 
+import polymorphic_tree.templatetags.stylable_admin_list  # noqa (only for import testing)
 from django.contrib.admin import AdminSite
 from polymorphic_tree.admin.parentadmin import get_permission_codename
 from polymorphic_tree.tests.admin import TreeNodeParentAdmin
