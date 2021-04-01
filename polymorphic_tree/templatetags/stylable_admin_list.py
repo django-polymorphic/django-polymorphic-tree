@@ -18,10 +18,9 @@ from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
 from django.db import models
 from django.template import Library
 from django.utils import formats, timezone
-from django.utils.encoding import force_text, smart_text
+from django.utils.encoding import force_str, smart_str
 from django.utils.html import conditional_escape, escape
 from django.utils.safestring import SafeData, mark_safe
-from future.builtins import str, zip
 from tag_parser.basetags import BaseInclusionNode
 
 # While this is based on mptt/templatetags/mptt_admin.py,
@@ -138,7 +137,7 @@ def stylable_items_for_result(cl, result, form):
 
         # This is all standard stuff, refactored to separate methods.
         result_repr, row_classes = stylable_column_repr(cl, result, field_name)
-        if force_text(result_repr) == '':
+        if force_str(result_repr) == '':
             result_repr = mark_safe('&nbsp;')
 
         # Custom stuff, select row classes
@@ -168,7 +167,7 @@ def stylable_items_for_result(cl, result, form):
                 else:
                     attr = pk
                 value = result.serializable_value(attr)
-                result_id = repr(force_text(value))[1:]
+                result_id = repr(force_str(value))[1:]
                 link_attr += ' onclick="opener.dismissRelatedLookupPopup(window, %s); return false;"' % result_id
 
             yield mark_safe(u'<%s%s><a href="%s"%s>%s</a></%s>' %
@@ -179,14 +178,14 @@ def stylable_items_for_result(cl, result, form):
             # custom ModelAdmin instances can provide fields on a per request basis
             if form and field_name in form.fields:
                 bf = form[field_name]
-                result_repr = mark_safe(force_text(bf.errors) + force_text(bf))
+                result_repr = mark_safe(force_str(bf.errors) + force_str(bf))
             else:
                 result_repr = conditional_escape(result_repr)
 
             yield mark_safe(u'<td%s>%s</td>' % (row_attr, result_repr))
 
     if form:
-        yield mark_safe(u'<td>%s</td>' % force_text(form[cl.model._meta.pk.name]))
+        yield mark_safe(u'<td>%s</td>' % force_str(form[cl.model._meta.pk.name]))
 
 
 def _get_mptt_indent_field(cl, result):
@@ -265,7 +264,7 @@ def _get_non_field_repr(cl, result, field_name):
             allow_tags = True
             result_repr = value
         else:
-            result_repr = smart_text(value)
+            result_repr = smart_str(value)
 
     except (AttributeError, ObjectDoesNotExist):
         result_repr = cl.model_admin.get_empty_value_display()
@@ -301,4 +300,4 @@ def display_for_field(value, field, empty_value_display):
     elif isinstance(field, models.FloatField):
         return formats.number_format(value)
     else:
-        return smart_text(value)
+        return smart_str(value)

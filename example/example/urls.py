@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.contrib import admin
 
 urlpatterns = [
@@ -6,5 +6,5 @@ urlpatterns = [
     # url(r'^$', 'example.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]

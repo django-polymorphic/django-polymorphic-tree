@@ -1,5 +1,4 @@
 import json
-import sys
 from distutils.version import StrictVersion
 
 from django.conf import settings
@@ -10,15 +9,11 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _, ugettext
-from future.builtins import int, str
+from django.utils.translation import gettext_lazy as _, gettext
 from mptt.admin import MPTTModelAdmin
 from mptt.exceptions import InvalidMove
 from polymorphic.admin import PolymorphicModelChoiceForm, PolymorphicParentModelAdmin
 from polymorphic_tree.models import PolymorphicMPTTModel
-
-if sys.version_info[0] >= 3:
-    long = int  # Python 2 compatibility
 
 
 class NodeTypeChoiceForm(PolymorphicModelChoiceForm):
@@ -163,7 +158,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
-                'error': ugettext('You do not have permission to move this node.')
+                'error': gettext('You do not have permission to move this node.')
             }), content_type='application/json', status=409)
 
         # Compare on strings to support UUID fields.
@@ -236,6 +231,6 @@ def _get_opt(model):
 
 def _get_pk_value(text):
     try:
-        return long(text)
+        return int(text)
     except ValueError:
         return text  # Allow uuid fields

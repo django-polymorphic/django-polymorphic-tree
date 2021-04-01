@@ -73,7 +73,7 @@ The ``models.py`` file should define the custom node type, and any fields it has
 .. code:: python
 
     from django.db import models
-    from django.utils.translation import ugettext_lazy as _
+    from django.utils.translation import gettext_lazy as _
     from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 
 
@@ -123,7 +123,7 @@ The ``admin.py`` file should define the admin, both for the child nodes and pare
 .. code:: python
 
     from django.contrib import admin
-    from django.utils.translation import ugettext_lazy as _
+    from django.utils.translation import gettext_lazy as _
     from polymorphic_tree.admin import PolymorphicMPTTParentModelAdmin, PolymorphicMPTTChildModelAdmin
     from . import models
 

@@ -1,15 +1,12 @@
 """
 Model that inherits from both Polymorphic and MPTT.
 """
-from __future__ import unicode_literals
 import uuid
 
-import django
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext, ugettext_lazy as _
-from future.utils import integer_types, string_types, with_metaclass
+from django.utils.encoding import force_str
+from django.utils.translation import gettext, gettext_lazy as _
 from mptt.exceptions import InvalidMove
 from mptt.models import MPTTModel, MPTTModelBase, TreeForeignKey, raise_if_unsaved
 from polymorphic.base import PolymorphicModelBase
@@ -56,7 +53,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
             # This can't test for model_instance.can_be_root,
             # because clean() is not called for empty values.
             return
-        elif isinstance(parent, integer_types) or isinstance(parent, uuid.UUID):
+        elif isinstance(parent, int) or isinstance(parent, uuid.UUID):
             # TODO: Improve this code, it's a bit of a hack now because the base model is not known in the NodeTypePool.
             base_model = _get_base_polymorphic_model(model_instance.__class__)
             parent = base_model.objects.get(pk=parent)
@@ -70,7 +67,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
             raise ValidationError(self.error_messages['child_not_allowed'])
 
 
-class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, PolymorphicModel)):
+class PolymorphicMPTTModel(MPTTModel, PolymorphicModel, metaclass=PolymorphicMPTTModelBase):
     """
     The base class for all nodes; a mapping of an URL to content (e.g. a HTML page, text file, blog, etc..)
     """
@@ -118,7 +115,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
             new_children = []
             iterator = iter(self.child_types)
             for child in iterator:
-                if isinstance(child, string_types):
+                if isinstance(child, str):
                     child = str(child).lower()
                     # write self to refer to self
                     if child == 'self':
@@ -195,17 +192,17 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
 
         if new_parent is None:
             if not self.can_be_root:
-                raise InvalidMove(ugettext("This node type should have a parent."))
+                raise InvalidMove(gettext("This node type should have a parent."))
         else:
             if not new_parent.can_have_children:
                 raise InvalidMove(
-                    ugettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
+                    gettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
                     .format(self, new_parent, new_parent._meta.verbose_name)
                 )
 
             if not new_parent.is_child_allowed(self):
                 raise InvalidMove(
-                    ugettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
+                    gettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
                     .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
                 )
 
@@ -234,7 +231,7 @@ class PolymorphicMPTTModel(with_metaclass(PolymorphicMPTTModelBase, MPTTModel, P
             parent = getattr(self, self._mptt_meta.parent_attr) if parent_id else None
             self.validate_move(parent)
         except InvalidMove as e:
-            raise ValidationError({self._mptt_meta.parent_attr: force_text(e)})
+            raise ValidationError({self._mptt_meta.parent_attr: force_str(e)})
 
 
 def _get_new_parent(moved, target, position='first-child'):

@@ -1,16 +1,12 @@
 import sys
 from unittest import TestCase
+from unittest.mock import MagicMock
 
 import polymorphic_tree.templatetags.stylable_admin_list  # noqa (only for import testing)
 from django.contrib.admin import AdminSite
 from polymorphic_tree.admin.parentadmin import get_permission_codename
 from polymorphic_tree.tests.admin import TreeNodeParentAdmin
 from polymorphic_tree.tests.models import Model2A, ModelWithCustomParentName, ModelWithInvalidMove, ModelWithValidation
-
-if sys.version_info[0] == 3:
-    from unittest.mock import MagicMock
-else:
-    from mock import MagicMock
 
 
 class PolymorphicAdminTests(TestCase):
