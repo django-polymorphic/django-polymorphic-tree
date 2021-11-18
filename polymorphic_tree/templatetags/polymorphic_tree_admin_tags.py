@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.template import Library, Node, TemplateSyntaxError, Variable
 from django.utils.safestring import mark_safe
 from mptt.templatetags.mptt_tags import cache_tree_children
+
 from polymorphic_tree.templatetags.stylable_admin_list import stylable_column_repr
 
 register = Library()
@@ -27,7 +28,6 @@ def mptt_breadcrumb(node):
 
 
 class AdminListRecurseTreeNode(Node):
-
     def __init__(self, template_nodes, cl_var):
         self.template_nodes = template_nodes
         self.cl_var = cl_var
@@ -36,11 +36,11 @@ class AdminListRecurseTreeNode(Node):
     def parse(cls, parser, token):
         bits = token.contents.split()
         if len(bits) != 2:
-            raise TemplateSyntaxError('%s tag requires an admin ChangeList' % bits[0])
+            raise TemplateSyntaxError("%s tag requires an admin ChangeList" % bits[0])
 
         cl_var = Variable(bits[1])
 
-        template_nodes = parser.parse(('endadminlist_recursetree',))
+        template_nodes = parser.parse(("endadminlist_recursetree",))
         parser.delete_first_token()
         return cls(template_nodes, cl_var)
 
@@ -53,15 +53,15 @@ class AdminListRecurseTreeNode(Node):
             bits.append(self._render_node(context, cl, child))
 
         columns = self._get_column_repr(cl, node)  # list(tuple(name, html), ..)
-        first_real_column = next(col for col in columns if col[0] != 'action_checkbox')
+        first_real_column = next(col for col in columns if col[0] != "action_checkbox")
 
-        context['columns'] = columns
-        context['other_columns'] = [col for col in columns if col[0] not in ('action_checkbox', first_real_column[0])]
-        context['first_column'] = first_real_column[1]
-        context['named_columns'] = dict(columns)
-        context['node'] = node
-        context['change_url'] = cl.url_for_result(node)
-        context['children'] = mark_safe(''.join(bits))
+        context["columns"] = columns
+        context["other_columns"] = [col for col in columns if col[0] not in ("action_checkbox", first_real_column[0])]
+        context["first_column"] = first_real_column[1]
+        context["named_columns"] = dict(columns)
+        context["node"] = node
+        context["change_url"] = cl.url_for_result(node)
+        context["children"] = mark_safe("".join(bits))
 
         # Render
         rendered = self.template_nodes.render(context)
@@ -73,7 +73,7 @@ class AdminListRecurseTreeNode(Node):
         assert isinstance(cl, ChangeList), "cl variable should be an admin ChangeList"  # Also assists PyCharm
         roots = cache_tree_children(cl.result_list)
         bits = [self._render_node(context, cl, node) for node in roots]
-        return ''.join(bits)
+        return "".join(bits)
 
     def _get_column_repr(self, cl, node):
         columns = []

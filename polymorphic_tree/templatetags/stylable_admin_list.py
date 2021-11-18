@@ -33,7 +33,7 @@ from tag_parser.basetags import BaseInclusionNode
 register = Library()
 
 # Get app settings
-MPTT_ADMIN_LEVEL_INDENT = getattr(settings, 'MPTT_ADMIN_LEVEL_INDENT', 10)
+MPTT_ADMIN_LEVEL_INDENT = getattr(settings, "MPTT_ADMIN_LEVEL_INDENT", 10)
 
 
 # Ideally the template name should be configurable too, provide a function instead of filename.
@@ -46,22 +46,21 @@ class StylableResultList(BaseInclusionNode):
     def get_context_data(self, parent_context, *tag_args, **tag_kwargs):
         cl = tag_args[0]
 
-        if 'grappelli' in settings.INSTALLED_APPS:
-            theme_css = 'polymorphic_tree/adminlist/nodetree_grappelli.css'
-        elif 'classic_theme' in settings.INSTALLED_APPS:
-            theme_css = 'polymorphic_tree/adminlist/nodetree_classic.css'
+        if "grappelli" in settings.INSTALLED_APPS:
+            theme_css = "polymorphic_tree/adminlist/nodetree_grappelli.css"
+        elif "classic_theme" in settings.INSTALLED_APPS:
+            theme_css = "polymorphic_tree/adminlist/nodetree_classic.css"
         else:
             # flat theme aka Django 1.9 default
-            theme_css = 'polymorphic_tree/adminlist/nodetree_flat.css'
+            theme_css = "polymorphic_tree/adminlist/nodetree_flat.css"
 
         return {
-            'cl': cl,
-            'result_headers': list(stylable_result_headers(cl)),
-            'results': list(stylable_results(cl)),
-            'nodetree_theme_css': theme_css,
-
+            "cl": cl,
+            "result_headers": list(stylable_result_headers(cl)),
+            "results": list(stylable_results(cl)),
+            "nodetree_theme_css": theme_css,
             # added for frontend
-            'has_add_permission': parent_context['has_add_permission'],
+            "has_add_permission": parent_context["has_add_permission"],
         }
 
 
@@ -80,25 +79,26 @@ def stylable_result_headers(cl):
     cl = The django ChangeList object
     """
     for field_name, header in zip(cl.list_display, result_headers(cl)):
-        header['field_name'] = field_name  # For JavaScript
+        header["field_name"] = field_name  # For JavaScript
 
-        if header.get('class_attrib'):
+        if header.get("class_attrib"):
             # Remove any sorting marker for mptt tables, because they are not sortable.
-            if hasattr(cl.model, '_mptt_meta'):
-                header['class_attrib'] = header['class_attrib'].replace('sortable', '').replace('sorted', '').replace('ascending', '')
+            if hasattr(cl.model, "_mptt_meta"):
+                header["class_attrib"] = (
+                    header["class_attrib"].replace("sortable", "").replace("sorted", "").replace("ascending", "")
+                )
 
-            header['class_attrib'] = mark_safe(header['class_attrib'].replace('class="', 'class="col-%s ' % field_name))
+            header["class_attrib"] = mark_safe(header["class_attrib"].replace('class="', 'class="col-%s ' % field_name))
         else:
-            header['class_attrib'] = mark_safe(' class="col-%s"' % field_name)
+            header["class_attrib"] = mark_safe(' class="col-%s"' % field_name)
 
-        if 'url_primary' in header and 'url' not in header:
-            header['url'] = header['url_primary']  # Django 1.3 template compatibility.
+        if "url_primary" in header and "url" not in header:
+            header["url"] = header["url_primary"]  # Django 1.3 template compatibility.
 
         yield header
 
 
 class ResultListRow(list):
-
     def __init__(self, seq, object):
         super().__init__(seq)
         self.object = object
@@ -126,19 +126,19 @@ def stylable_items_for_result(cl, result, form):
     pk = cl.lookup_opts.pk.attname
 
     # Read any custom properties
-    list_column_classes = getattr(cl.model_admin, 'list_column_classes', {})
+    list_column_classes = getattr(cl.model_admin, "list_column_classes", {})
 
     # figure out which field to indent
     mptt_indent_field = _get_mptt_indent_field(cl, result)
 
     # Parse all fields to display
     for field_name in cl.list_display:
-        row_attr = ''
+        row_attr = ""
 
         # This is all standard stuff, refactored to separate methods.
         result_repr, row_classes = stylable_column_repr(cl, result, field_name)
-        if force_str(result_repr) == '':
-            result_repr = mark_safe('&nbsp;')
+        if force_str(result_repr) == "":
+            result_repr = mark_safe("&nbsp;")
 
         # Custom stuff, select row classes
         if field_name == mptt_indent_field:
@@ -150,15 +150,15 @@ def stylable_items_for_result(cl, result, form):
             row_classes.append(column_class)
 
         if row_classes:
-            row_attr += ' class="%s"' % ' '.join(row_classes)
+            row_attr += ' class="%s"' % " ".join(row_classes)
 
         # Add the link tag to the first field, or use list_display_links if it's defined.
         if (first and not cl.list_display_links) or field_name in cl.list_display_links:
-            table_tag = ('th' if first else 'td')
+            table_tag = "th" if first else "td"
             first = False
             url = cl.url_for_result(result)
 
-            link_attr = ''
+            link_attr = ""
             if cl.is_popup:
                 # Convert the pk to something that can be used in Javascript.
                 # Problem cases are long ints (23L) and non-ASCII strings.
@@ -170,8 +170,10 @@ def stylable_items_for_result(cl, result, form):
                 result_id = repr(force_str(value))[1:]
                 link_attr += ' onclick="opener.dismissRelatedLookupPopup(window, %s); return false;"' % result_id
 
-            yield mark_safe('<%s%s><a href="%s"%s>%s</a></%s>' %
-                            (table_tag, row_attr, url, link_attr, conditional_escape(result_repr), table_tag))
+            yield mark_safe(
+                '<%s%s><a href="%s"%s>%s</a></%s>'
+                % (table_tag, row_attr, url, link_attr, conditional_escape(result_repr), table_tag)
+            )
         else:
             # By default the fields come from ModelAdmin.list_editable,
             # but if we pull the fields out of the form instead,
@@ -182,10 +184,10 @@ def stylable_items_for_result(cl, result, form):
             else:
                 result_repr = conditional_escape(result_repr)
 
-            yield mark_safe(f'<td{row_attr}>{result_repr}</td>')
+            yield mark_safe(f"<td{row_attr}>{result_repr}</td>")
 
     if form:
-        yield mark_safe('<td>%s</td>' % force_str(form[cl.model._meta.pk.name]))
+        yield mark_safe("<td>%s</td>" % force_str(form[cl.model._meta.pk.name]))
 
 
 def _get_mptt_indent_field(cl, result):
@@ -193,7 +195,7 @@ def _get_mptt_indent_field(cl, result):
     Find the first field of the list, it will be indented visually.
     Allow working with normal models too.
     """
-    if not hasattr(result, '_mptt_meta'):
+    if not hasattr(result, "_mptt_meta"):
         return None
 
     # Taken from mptt_items_for_result() in mptt/templatetags/mptt_admin.py
@@ -225,9 +227,11 @@ def stylable_column_repr(cl, result, field_name):
         return _get_non_field_repr(cl, result, field_name)  # Field not found (maybe a function)
     else:
         row_classes = None
-        value = display_for_field(getattr(result, f.attname), f, cl.model_admin.get_empty_value_display())  # Standard field
+        value = display_for_field(
+            getattr(result, f.attname), f, cl.model_admin.get_empty_value_display()
+        )  # Standard field
         if isinstance(f, models.DateField) or isinstance(f, models.TimeField):
-            row_classes = ['nowrap']
+            row_classes = ["nowrap"]
         return value, row_classes
 
 
@@ -244,7 +248,7 @@ def _get_non_field_repr(cl, result, field_name):
         if callable(field_name):
             attr = field_name
             value = attr(result)
-        elif hasattr(cl.model_admin, field_name) and field_name not in ('__str__', '__unicode__'):
+        elif hasattr(cl.model_admin, field_name) and field_name not in ("__str__", "__unicode__"):
             attr = getattr(cl.model_admin, field_name)
             value = attr(result)
         else:
@@ -255,8 +259,8 @@ def _get_non_field_repr(cl, result, field_name):
                 value = attr
 
         # Parse special attributes of the item
-        allow_tags = getattr(attr, 'allow_tags', False)
-        boolean = getattr(attr, 'boolean', False)
+        allow_tags = getattr(attr, "allow_tags", False)
+        boolean = getattr(attr, "boolean", False)
         if boolean:
             allow_tags = True
             result_repr = _boolean_icon(value)

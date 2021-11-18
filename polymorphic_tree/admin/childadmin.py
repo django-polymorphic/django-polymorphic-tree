@@ -12,6 +12,7 @@ class PolymorphicMPTTChildModelAdmin(PolymorphicChildModelAdmin, MPTTModelAdmin)
     The internal machinery
     The admin screen for the ``PolymorphicMPTTModel`` objects.
     """
+
     base_model = None
     base_form = PolymorpicMPTTAdminForm
     base_fieldsets = None

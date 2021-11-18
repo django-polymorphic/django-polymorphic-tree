@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from mptt.exceptions import InvalidMove
 from polymorphic.showfields import ShowFieldContent
+
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 
 
@@ -18,8 +19,9 @@ class PlainC(PlainB):
 
 
 class Model2A(ShowFieldContent, PolymorphicMPTTModel):
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent',
-                                       on_delete=models.CASCADE)
+    parent = PolymorphicTreeForeignKey(
+        "self", blank=True, null=True, related_name="children", verbose_name="parent", on_delete=models.CASCADE
+    )
     field1 = models.CharField(max_length=10)
 
 
@@ -36,10 +38,10 @@ class Model2D(Model2C):
 
 
 class One2OneRelatingModel(PolymorphicMPTTModel):
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent',
-                                       on_delete=models.CASCADE)
-    one2one = models.OneToOneField(Model2A,
-                                   on_delete=models.CASCADE)
+    parent = PolymorphicTreeForeignKey(
+        "self", blank=True, null=True, related_name="children", verbose_name="parent", on_delete=models.CASCADE
+    )
+    one2one = models.OneToOneField(Model2A, on_delete=models.CASCADE)
     field1 = models.CharField(max_length=10)
 
 
@@ -48,8 +50,9 @@ class One2OneRelatingModelDerived(One2OneRelatingModel):
 
 
 class Base(ShowFieldContent, PolymorphicMPTTModel):
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name='parent',
-                                       on_delete=models.CASCADE)
+    parent = PolymorphicTreeForeignKey(
+        "self", blank=True, null=True, related_name="children", verbose_name="parent", on_delete=models.CASCADE
+    )
     field_b = models.CharField(max_length=10)
 
 
@@ -71,16 +74,14 @@ class ModelWithCustomParentName(PolymorphicMPTTModel):
         chief (ModelWithCustomParentName): parent
         field5 (str): test field
     """
-    chief = PolymorphicTreeForeignKey('self',
-                                      blank=True,
-                                      null=True,
-                                      related_name='subordinate',
-                                      verbose_name='Chief',
-                                      on_delete=models.CASCADE)
+
+    chief = PolymorphicTreeForeignKey(
+        "self", blank=True, null=True, related_name="subordinate", verbose_name="Chief", on_delete=models.CASCADE
+    )
     field5 = models.CharField(max_length=10)
 
     class MPTTMeta:
-        parent_attr = 'chief'
+        parent_attr = "chief"
 
     def __str__(self):
         return self.field5
@@ -99,19 +100,13 @@ class ModelWithValidation(PolymorphicMPTTModel):
         field6 (str): test field
     """
 
-    parent = PolymorphicTreeForeignKey('self',
-                                       blank=True,
-                                       null=True,
-                                       related_name='children',
-                                       on_delete=models.CASCADE)
+    parent = PolymorphicTreeForeignKey("self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
 
     field6 = models.CharField(max_length=10)
 
     def clean(self):
         """Raise validation error"""
-        raise ValidationError({
-            'parent': 'There is something with parent field'
-        })
+        raise ValidationError({"parent": "There is something with parent field"})
 
     def validate_move_to(self, target):
         """Execute ``clean``"""
@@ -129,25 +124,21 @@ class ModelWithInvalidMove(PolymorphicMPTTModel):
         field7 (str): test field
     """
 
-    parent = PolymorphicTreeForeignKey('self',
-                                       blank=True,
-                                       null=True,
-                                       related_name='children',
-                                       on_delete=models.CASCADE)
+    parent = PolymorphicTreeForeignKey("self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
 
     field7 = models.CharField(max_length=10)
 
     def validate_move_to(self, target):
         """Raise ``InvalidMove``"""
-        raise InvalidMove('Invalid move')
+        raise InvalidMove("Invalid move")
 
 
 class ModelMustBeChildRoot(PolymorphicMPTTModel):
     """Model that must be a child"""
+
     can_be_root = True
 
-    parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children',
-                                       on_delete=models.CASCADE)
+    parent = PolymorphicTreeForeignKey("self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
     field8 = models.CharField(max_length=10)
 
 

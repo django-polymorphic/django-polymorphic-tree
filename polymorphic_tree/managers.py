@@ -23,6 +23,7 @@ class PolymorphicMPTTQuerySet(TreeQuerySet, PolymorphicQuerySet):
         manager = PolymorphicMPTTModelManager.from_queryset(cls)()
         manager._built_with_as_manager = True
         return manager
+
     as_manager.queryset_only = True
     as_manager = classmethod(as_manager)
 
@@ -31,6 +32,7 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
     """
     Base class for a model manager.
     """
+
     #: The queryset class to use.
     queryset_class = PolymorphicMPTTQuerySet
 
@@ -54,7 +56,7 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
 
         return super()._mptt_filter(qs, **filters)
 
-    def move_node(self, node, target, position='last-child'):
+    def move_node(self, node, target, position="last-child"):
         """
         Move a node to a new location.
         This also performs checks whether the target allows this node to reside there.

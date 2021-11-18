@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.test import TestCase
+
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
 
 from .models import *
@@ -40,34 +41,56 @@ class PolymorphicTests(TestCase):
         Create the chain of objects of Model2,
         this is reused in various tests.
         """
-        Model2A.objects.create(field1='A1')
-        Model2B.objects.create(field1='B1', field2='B2')
-        Model2C.objects.create(field1='C1', field2='C2', field3='C3')
-        Model2D.objects.create(field1='D1', field2='D2', field3='D3', field4='D4')
+        Model2A.objects.create(field1="A1")
+        Model2B.objects.create(field1="B1", field2="B2")
+        Model2C.objects.create(field1="C1", field2="C2", field3="C3")
+        Model2D.objects.create(field1="D1", field2="D2", field3="D3", field4="D4")
 
     def test_simple_inheritance(self):
         self.create_model2abcd()
 
         objects = list(Model2A.objects.all())
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>')
-        self.assertEqual(repr(objects[1]), '<Model2B: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0, field2 "B2">')
-        self.assertEqual(repr(objects[2]), '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">')
-        self.assertEqual(repr(objects[3]), '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">')
+        self.assertEqual(
+            repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>'
+        )
+        self.assertEqual(
+            repr(objects[1]),
+            '<Model2B: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0, field2 "B2">',
+        )
+        self.assertEqual(
+            repr(objects[2]),
+            '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">',
+        )
+        self.assertEqual(
+            repr(objects[3]),
+            '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">',
+        )
 
     def test_manual_get_real_instance(self):
         self.create_model2abcd()
 
-        o = Model2A.objects.non_polymorphic().get(field1='C1')
-        self.assertEqual(repr(o.get_real_instance()), '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">')
+        o = Model2A.objects.non_polymorphic().get(field1="C1")
+        self.assertEqual(
+            repr(o.get_real_instance()),
+            '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">',
+        )
 
     def test_non_polymorphic(self):
         self.create_model2abcd()
 
         objects = list(Model2A.objects.all().non_polymorphic())
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>')
-        self.assertEqual(repr(objects[1]), '<Model2A: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0>')
-        self.assertEqual(repr(objects[2]), '<Model2A: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0>')
-        self.assertEqual(repr(objects[3]), '<Model2A: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0>')
+        self.assertEqual(
+            repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>'
+        )
+        self.assertEqual(
+            repr(objects[1]), '<Model2A: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0>'
+        )
+        self.assertEqual(
+            repr(objects[2]), '<Model2A: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0>'
+        )
+        self.assertEqual(
+            repr(objects[3]), '<Model2A: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0>'
+        )
 
     def test_get_real_instances(self):
         self.create_model2abcd()
@@ -75,32 +98,57 @@ class PolymorphicTests(TestCase):
 
         # from queryset
         objects = qs.get_real_instances()
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>')
-        self.assertEqual(repr(objects[1]), '<Model2B: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0, field2 "B2">')
-        self.assertEqual(repr(objects[2]), '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">')
-        self.assertEqual(repr(objects[3]), '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">')
+        self.assertEqual(
+            repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>'
+        )
+        self.assertEqual(
+            repr(objects[1]),
+            '<Model2B: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0, field2 "B2">',
+        )
+        self.assertEqual(
+            repr(objects[2]),
+            '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">',
+        )
+        self.assertEqual(
+            repr(objects[3]),
+            '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">',
+        )
 
         # from a manual list
         objects = Model2A.objects.get_real_instances(list(qs))
-        self.assertEqual(repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>')
-        self.assertEqual(repr(objects[1]), '<Model2B: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0, field2 "B2">')
-        self.assertEqual(repr(objects[2]), '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">')
-        self.assertEqual(repr(objects[3]), '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">')
+        self.assertEqual(
+            repr(objects[0]), '<Model2A: id 1, parent None, field1 "A1", lft 1, rght 2, tree_id 1, level 0>'
+        )
+        self.assertEqual(
+            repr(objects[1]),
+            '<Model2B: id 2, parent None, field1 "B1", lft 1, rght 2, tree_id 2, level 0, field2 "B2">',
+        )
+        self.assertEqual(
+            repr(objects[2]),
+            '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">',
+        )
+        self.assertEqual(
+            repr(objects[3]),
+            '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">',
+        )
 
     def test_translate_polymorphic_q_object(self):
         self.create_model2abcd()
 
         q = Model2A.translate_polymorphic_Q_object(Q(instance_of=Model2C))
         objects = Model2A.objects.filter(q)
-        self.assertEqual(repr(objects[0]), '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">')
-        self.assertEqual(repr(objects[1]), '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">')
+        self.assertEqual(
+            repr(objects[0]),
+            '<Model2C: id 3, parent None, field1 "C1", lft 1, rght 2, tree_id 3, level 0, field2 "C2", field3 "C3">',
+        )
+        self.assertEqual(
+            repr(objects[1]),
+            '<Model2D: id 4, parent None, field1 "D1", lft 1, rght 2, tree_id 4, level 0, field2 "D2", field3 "D3", field4 "D4">',
+        )
 
     def test_base_manager(self):
         def base_manager(model):
-            return (
-                type(model._base_manager),
-                model._base_manager.model
-            )
+            return (type(model._base_manager), model._base_manager.model)
 
         self.assertEqual(base_manager(PlainA), (models.Manager, PlainA))
         self.assertEqual(base_manager(PlainB), (models.Manager, PlainB))
@@ -113,30 +161,47 @@ class PolymorphicTests(TestCase):
         self.assertEqual(base_manager(Model2C), (PolymorphicMPTTModelManager, Model2C))
 
         self.assertEqual(base_manager(One2OneRelatingModel), (PolymorphicMPTTModelManager, One2OneRelatingModel))
-        self.assertEqual(base_manager(One2OneRelatingModelDerived), (PolymorphicMPTTModelManager, One2OneRelatingModelDerived))
+        self.assertEqual(
+            base_manager(One2OneRelatingModelDerived), (PolymorphicMPTTModelManager, One2OneRelatingModelDerived)
+        )
 
     def test_instance_default_manager(self):
         def show_default_manager(instance):
-            return "{} {}".format(
-                repr(type(instance.__class__.objects)),
-                repr(instance.__class__.objects.model)
-            )
+            return "{} {}".format(repr(type(instance.__class__.objects)), repr(instance.__class__.objects.model))
 
-        plain_a = PlainA(field1='C1')
-        plain_b = PlainB(field2='C1')
-        plain_c = PlainC(field3='C1')
+        plain_a = PlainA(field1="C1")
+        plain_b = PlainB(field2="C1")
+        plain_c = PlainC(field3="C1")
 
-        model_2a = Model2A(field1='C1')
-        model_2b = Model2B(field2='C1')
-        model_2c = Model2C(field3='C1')
+        model_2a = Model2A(field1="C1")
+        model_2b = Model2B(field2="C1")
+        model_2c = Model2C(field3="C1")
 
-        self.assertEqual(show_default_manager(plain_a), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainA'>")
-        self.assertEqual(show_default_manager(plain_b), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainB'>")
-        self.assertEqual(show_default_manager(plain_c), "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainC'>")
+        self.assertEqual(
+            show_default_manager(plain_a),
+            "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainA'>",
+        )
+        self.assertEqual(
+            show_default_manager(plain_b),
+            "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainB'>",
+        )
+        self.assertEqual(
+            show_default_manager(plain_c),
+            "<class 'django.db.models.manager.Manager'> <class 'polymorphic_tree.tests.models.PlainC'>",
+        )
 
-        self.assertEqual(show_default_manager(model_2a), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2A'>")
-        self.assertEqual(show_default_manager(model_2b), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2B'>")
-        self.assertEqual(show_default_manager(model_2c), "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2C'>")
+        self.assertEqual(
+            show_default_manager(model_2a),
+            "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2A'>",
+        )
+        self.assertEqual(
+            show_default_manager(model_2b),
+            "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2B'>",
+        )
+        self.assertEqual(
+            show_default_manager(model_2c),
+            "<class 'polymorphic_tree.managers.PolymorphicMPTTModelManager'> <class 'polymorphic_tree.tests.models.Model2C'>",
+        )
 
 
 class MPTTTests(TestCase):
@@ -147,11 +212,11 @@ class MPTTTests(TestCase):
     """
 
     def test_sibling_methods(self):
-        """ https://github.com/edoburu/django-polymorphic-tree/issues/37 """
-        root_node = Base.objects.create(field_b='root')
-        sibling_a = Base.objects.create(field_b='first', parent=root_node)
-        sibling_b = ModelX.objects.create(field_b='second', field_x='ModelX', parent=root_node)
-        sibling_c = ModelY.objects.create(field_b='third', field_y='ModelY', parent=root_node)
+        """https://github.com/edoburu/django-polymorphic-tree/issues/37"""
+        root_node = Base.objects.create(field_b="root")
+        sibling_a = Base.objects.create(field_b="first", parent=root_node)
+        sibling_b = ModelX.objects.create(field_b="second", field_x="ModelX", parent=root_node)
+        sibling_c = ModelY.objects.create(field_b="third", field_y="ModelY", parent=root_node)
 
         # sanity checks
         self.assertEqual(list(root_node.get_descendants()), [sibling_a, sibling_b, sibling_c])
@@ -171,10 +236,10 @@ class MPTTTests(TestCase):
         self.assertEqual(sibling_c.get_next_sibling(), None)
 
     def test_get_ancestors(self):
-        """ https://github.com/edoburu/django-polymorphic-tree/issues/32 """
-        root_node = Base.objects.create(field_b='root')
-        child = ModelX.objects.create(field_b='child', field_x='ModelX', parent=root_node)
-        grandchild = ModelY.objects.create(field_b='grandchild', field_y='ModelY', parent=child)
+        """https://github.com/edoburu/django-polymorphic-tree/issues/32"""
+        root_node = Base.objects.create(field_b="root")
+        child = ModelX.objects.create(field_b="child", field_x="ModelX", parent=root_node)
+        grandchild = ModelY.objects.create(field_b="grandchild", field_y="ModelY", parent=child)
 
         self.assertEqual(list(root_node.get_ancestors()), [])
         self.assertEqual(list(child.get_ancestors()), [root_node])
@@ -189,9 +254,9 @@ class MPTTTests(TestCase):
         self.assertEqual(list(grandchild.get_ancestors(ascending=True)), [child, root_node])
 
     def test_is_ancestor_of(self):
-        root_node = Base.objects.create(field_b='root')
-        child = ModelX.objects.create(field_b='child', field_x='ModelX', parent=root_node)
-        grandchild = ModelY.objects.create(field_b='grandchild', field_y='ModelY', parent=child)
+        root_node = Base.objects.create(field_b="root")
+        child = ModelX.objects.create(field_b="child", field_x="ModelX", parent=root_node)
+        grandchild = ModelY.objects.create(field_b="grandchild", field_y="ModelY", parent=child)
 
         self.assertTrue(root_node.is_ancestor_of(child))
         self.assertTrue(root_node.is_ancestor_of(grandchild))
@@ -201,9 +266,9 @@ class MPTTTests(TestCase):
         self.assertFalse(grandchild.is_ancestor_of(root_node))
 
     def test_node_type_checking(self):
-        root_node = Base.objects.create(field_b='root')
-        child = ModelX.objects.create(field_b='child', field_x='ModelX', parent=root_node)
-        grandchild = ModelY.objects.create(field_b='grandchild', field_y='ModelY', parent=child)
+        root_node = Base.objects.create(field_b="root")
+        child = ModelX.objects.create(field_b="child", field_x="ModelX", parent=root_node)
+        grandchild = ModelY.objects.create(field_b="grandchild", field_y="ModelY", parent=child)
 
         self.assertFalse(root_node.is_child_node())
         self.assertFalse(root_node.is_leaf_node())
@@ -218,17 +283,17 @@ class MPTTTests(TestCase):
         self.assertFalse(grandchild.is_root_node())
 
     def test_child_type_validation_in_memory(self):
-        root_node = ModelRestrictedChildren.objects.create(field_b='root')
+        root_node = ModelRestrictedChildren.objects.create(field_b="root")
 
-        valid_child = ModelX(field_b='valid_child', field_x='ModelX', parent=root_node)
+        valid_child = ModelX(field_b="valid_child", field_x="ModelX", parent=root_node)
         valid_child.clean()
 
         with self.assertRaises(ValidationError) as context:
-            invalid_child = ModelY(field_b='invalid_child', field_y='ModelY', parent=root_node)
+            invalid_child = ModelY(field_b="invalid_child", field_y="ModelY", parent=root_node)
             invalid_child.clean()
 
-        msg = context.exception.args[0]['parent']
-        self.assertIn('a model restricted children does not allow model y as a child!', msg)
+        msg = context.exception.args[0]["parent"]
+        self.assertIn("a model restricted children does not allow model y as a child!", msg)
 
     def test_tree_manager(self):
         # Having the tree manager correct is absolutely essential,
@@ -239,7 +304,7 @@ class MPTTTests(TestCase):
 
     def test_can_be_root(self):
         node = ModelMustBeChild(field8="foo")
-        self.assertRaisesMessage(ValidationError, 'This node type should have a parent', lambda: node.clean())
+        self.assertRaisesMessage(ValidationError, "This node type should have a parent", lambda: node.clean())
 
         parent = ModelMustBeChildRoot(field8="test")
         parent.clean()
