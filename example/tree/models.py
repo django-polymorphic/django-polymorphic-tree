@@ -1,11 +1,9 @@
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import gettext_lazy as _
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 
 
 # A base model for the tree:
-@python_2_unicode_compatible
 class BaseTreeNode(PolymorphicMPTTModel):
     parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children', verbose_name=_('parent'))
     title = models.CharField(_("Title"), max_length=200)

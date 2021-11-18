@@ -38,6 +38,5 @@ class PolymorphicMPTTChildModelAdmin(PolymorphicChildModelAdmin, MPTTModelAdmin)
     def object_history_template(self):
         # Insert template before default admin/polymorphic to have the tree in the breadcrumb
         templates = super().object_history_template
-        if isinstance(templates, list):  # allow pre django-polymorphic 0.9.1 to work without errors.
-            templates.insert(-2, "admin/polymorphic_tree/object_history.html")
+        templates.insert(-2, "admin/polymorphic_tree/object_history.html")
         return templates
