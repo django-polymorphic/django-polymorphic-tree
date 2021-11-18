@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.db.models import Q
 from django.test import TestCase
 from polymorphic_tree.managers import PolymorphicMPTTModelManager
@@ -118,7 +117,7 @@ class PolymorphicTests(TestCase):
 
     def test_instance_default_manager(self):
         def show_default_manager(instance):
-            return "{0} {1}".format(
+            return "{} {}".format(
                 repr(type(instance.__class__.objects)),
                 repr(instance.__class__.objects.model)
             )

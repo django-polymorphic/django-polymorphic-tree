@@ -100,7 +100,7 @@ def stylable_result_headers(cl):
 class ResultListRow(list):
 
     def __init__(self, seq, object):
-        super(ResultListRow, self).__init__(seq)
+        super().__init__(seq)
         self.object = object
 
 
@@ -170,7 +170,7 @@ def stylable_items_for_result(cl, result, form):
                 result_id = repr(force_str(value))[1:]
                 link_attr += ' onclick="opener.dismissRelatedLookupPopup(window, %s); return false;"' % result_id
 
-            yield mark_safe(u'<%s%s><a href="%s"%s>%s</a></%s>' %
+            yield mark_safe('<%s%s><a href="%s"%s>%s</a></%s>' %
                             (table_tag, row_attr, url, link_attr, conditional_escape(result_repr), table_tag))
         else:
             # By default the fields come from ModelAdmin.list_editable,
@@ -182,10 +182,10 @@ def stylable_items_for_result(cl, result, form):
             else:
                 result_repr = conditional_escape(result_repr)
 
-            yield mark_safe(u'<td%s>%s</td>' % (row_attr, result_repr))
+            yield mark_safe(f'<td{row_attr}>{result_repr}</td>')
 
     if form:
-        yield mark_safe(u'<td>%s</td>' % force_str(form[cl.model._meta.pk.name]))
+        yield mark_safe('<td>%s</td>' % force_str(form[cl.model._meta.pk.name]))
 
 
 def _get_mptt_indent_field(cl, result):

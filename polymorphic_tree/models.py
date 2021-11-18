@@ -44,7 +44,7 @@ class PolymorphicTreeForeignKey(TreeForeignKey):
     }
 
     def clean(self, value, model_instance):
-        value = super(PolymorphicTreeForeignKey, self).clean(value, model_instance)
+        value = super().clean(value, model_instance)
         self._validate_parent(value, model_instance)
         return value
 
@@ -196,13 +196,13 @@ class PolymorphicMPTTModel(MPTTModel, PolymorphicModel, metaclass=PolymorphicMPT
         else:
             if not new_parent.can_have_children:
                 raise InvalidMove(
-                    gettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
+                    gettext('Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow children!')
                     .format(self, new_parent, new_parent._meta.verbose_name)
                 )
 
             if not new_parent.is_child_allowed(self):
                 raise InvalidMove(
-                    gettext(u'Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
+                    gettext('Cannot place \u2018{0}\u2019 below \u2018{1}\u2019; a {2} does not allow {3} as a child!')
                     .format(self, target, target._meta.verbose_name, self._meta.verbose_name)
                 )
 
@@ -222,7 +222,7 @@ class PolymorphicMPTTModel(MPTTModel, PolymorphicModel, metaclass=PolymorphicMPT
         """
 
     def clean(self):
-        super(PolymorphicMPTTModel, self).clean()
+        super().clean()
 
         try:
             # Make sure form validation also reports choosing a wrong parent.
@@ -242,7 +242,7 @@ def _get_new_parent(moved, target, position='first-child'):
         return target
     elif position in ('left', 'right'):
         # left/right of an other node
-        parent_attr_id = '{}_id'.format(moved._mptt_meta.parent_attr)
+        parent_attr_id = f'{moved._mptt_meta.parent_attr}_id'
         if getattr(target, parent_attr_id) == getattr(moved, parent_attr_id):
             # kept inside the same parent, hopefully use the cache we already have.
             return getattr(moved, moved._mptt_meta.parent_attr)

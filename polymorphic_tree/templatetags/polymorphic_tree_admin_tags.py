@@ -61,7 +61,7 @@ class AdminListRecurseTreeNode(Node):
         context['named_columns'] = dict(columns)
         context['node'] = node
         context['change_url'] = cl.url_for_result(node)
-        context['children'] = mark_safe(u''.join(bits))
+        context['children'] = mark_safe(''.join(bits))
 
         # Render
         rendered = self.template_nodes.render(context)

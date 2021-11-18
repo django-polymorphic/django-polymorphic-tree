@@ -52,7 +52,7 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
                 qs.model = self._base_manager.model
                 qs.query.model = self._base_manager.model
 
-        return super(PolymorphicMPTTModelManager, self)._mptt_filter(qs, **filters)
+        return super()._mptt_filter(qs, **filters)
 
     def move_node(self, node, target, position='last-child'):
         """
@@ -60,4 +60,4 @@ class PolymorphicMPTTModelManager(TreeManager, PolymorphicManager):
         This also performs checks whether the target allows this node to reside there.
         """
         node.validate_move(target, position=position)
-        return super(PolymorphicMPTTModelManager, self).move_node(node, target, position=position)
+        return super().move_node(node, target, position=position)

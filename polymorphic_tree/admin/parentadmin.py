@@ -52,13 +52,13 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     # proper pagination code (or a different JavaScript frontend) is included to deal with the interrupted tree levels.
     list_per_page = 10000
 
-    EMPTY_ACTION_ICON = u'<span><img src="{STATIC_URL}polymorphic_tree/icons/blank.gif" width="16" height="16" alt="" class="{css_class}"/></span>'
+    EMPTY_ACTION_ICON = '<span><img src="{STATIC_URL}polymorphic_tree/icons/blank.gif" width="16" height="16" alt="" class="{css_class}"/></span>'
 
     # ---- List code ----
 
     @property
     def change_list_template(self):
-        templates = super(PolymorphicMPTTParentModelAdmin, self).change_list_template
+        templates = super().change_list_template
         templates.insert(-1, 'admin/polymorphic_tree/change_list.html')  # Just before admin/change_list.html
         return templates
 
@@ -71,7 +71,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         An extra column to display action icons.
         Can be included in the :attr:`~django.contrib.admin.ModelAdmin.list_display` attribute.
         """
-        return u' '.join(self.get_action_icons(node))
+        return ' '.join(self.get_action_icons(node))
 
     actions_column.allow_tags = True
     actions_column.short_description = _('Actions')
@@ -83,8 +83,8 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         actions = []
         if node.can_have_children:
             actions.append(
-                u'<a href="add/?{parent_attr}={id}" title="{title}" class="add-child-object">'
-                u'<img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
+                '<a href="add/?{parent_attr}={id}" title="{title}" class="add-child-object">'
+                '<img src="{static}polymorphic_tree/icons/page_new.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     parent_attr=self.model._mptt_meta.parent_attr, id=node.pk, title=_('Add sub node'), static=settings.STATIC_URL)
             )
         else:
@@ -92,15 +92,15 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
 
         if self.can_preview_object(node):
             actions.append(
-                u'<a href="{url}" title="{title}" target="_blank">'
-                u'<img src="{static}polymorphic_tree/icons/world.gif" width="16" height="16" alt="{title}" /></a>'.format(
+                '<a href="{url}" title="{title}" target="_blank">'
+                '<img src="{static}polymorphic_tree/icons/world.gif" width="16" height="16" alt="{title}" /></a>'.format(
                     url=node.get_absolute_url(), title=_('View on site'), static=settings.STATIC_URL)
             )
 
         # The is_first_sibling and is_last_sibling is quite heavy. Instead rely on CSS to hide the arrows.
-        move_up = u'<a href="{0}/move_up/" class="move-up">\u2191</a>'.format(node.pk)
-        move_down = u'<a href="{0}/move_down/" class="move-down">\u2193</a>'.format(node.pk)
-        actions.append(u'<span class="no-js">{0}{1}</span>'.format(move_up, move_down))
+        move_up = f'<a href="{node.pk}/move_up/" class="move-up">\u2191</a>'
+        move_down = f'<a href="{node.pk}/move_down/" class="move-down">\u2193</a>'
+        actions.append(f'<span class="no-js">{move_up}{move_down}</span>')
         return actions
 
     def can_preview_object(self, node):
@@ -115,10 +115,10 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         """
         Add custom URLs for moving nodes.
         """
-        base_urls = super(PolymorphicMPTTParentModelAdmin, self).get_urls()
+        base_urls = super().get_urls()
         info = _get_opt(self.model)
         extra_urls = [
-            url(r'^api/node-moved/$', self.admin_site.admin_view(self.api_node_moved_view), name='{0}_{1}_moved'.format(*info)),
+            url(r'^api/node-moved/$', self.admin_site.admin_view(self.api_node_moved_view), name='{}_{}_moved'.format(*info)),
             url(r'^(\d+)/move_up/$', self.admin_site.admin_view(self.move_up_view)),
             url(r'^(\d+)/move_down/$', self.admin_site.admin_view(self.move_down_view)),
         ]
@@ -128,7 +128,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
     def api_node_moved_view_url(self):
         # Provided for result list template
         info = _get_opt(self.model)
-        return reverse('admin:{0}_{1}_moved'.format(*info), current_app=self.admin_site.name)
+        return reverse('admin:{}_{}_moved'.format(*info), current_app=self.admin_site.name)
 
     @transaction.atomic
     def api_node_moved_view(self, request):
@@ -154,7 +154,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         except self.model.DoesNotExist as e:
             return HttpResponseNotFound(json.dumps({'action': 'reload', 'error': str(e[0])}), content_type='application/json')
 
-        if not request.user.has_perm("%s.%s" % (moved._meta.app_label, get_permission_codename('change', moved._meta))):
+        if not request.user.has_perm("{}.{}".format(moved._meta.app_label, get_permission_codename('change', moved._meta))):
             return HttpResponse(json.dumps({
                 'action': 'reject',
                 'moved_id': moved_id,
@@ -162,7 +162,7 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
             }), content_type='application/json', status=409)
 
         # Compare on strings to support UUID fields.
-        parent_attr_id = '{}_id'.format(moved._mptt_meta.parent_attr)
+        parent_attr_id = f'{moved._mptt_meta.parent_attr}_id'
         if str(getattr(moved, parent_attr_id)) != str(previous_parent_id):
             return HttpResponse(json.dumps({
                 'action': 'reload',
