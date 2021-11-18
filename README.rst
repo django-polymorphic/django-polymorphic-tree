@@ -1,5 +1,8 @@
-.. image:: https://img.shields.io/travis/django-polymorphic/django-polymorphic-tree/master.svg?branch=master
-    :target: http://travis-ci.org/django-polymorphic/django-polymorphic-tree
+django-polymorphic-tree
+=======================
+
+.. image:: https://github.com/django-polymorphic/django-polymorphic-tree/actions/workflows/tests.yaml/badge.svg?branch=master
+    :target: https://github.com/django-polymorphic/django-polymorphic-tree/actions/workflows/tests.yaml
 .. image:: https://img.shields.io/pypi/v/django-polymorphic-tree.svg
     :target: https://pypi.python.org/pypi/django-polymorphic-tree/
 .. image:: https://img.shields.io/pypi/l/django-polymorphic-tree.svg
@@ -7,8 +10,6 @@
 .. image:: https://img.shields.io/codecov/c/github/django-polymorphic/django-polymorphic-tree/master.svg
     :target: https://codecov.io/github/django-polymorphic/django-polymorphic-tree?branch=master
 
-django-polymorphic-tree
-=======================
 
 This package combines django-mptt_ with django-polymorphic_.
 You can write Django models that form a tree structure where each node can be a different model type.

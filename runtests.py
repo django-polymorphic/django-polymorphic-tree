@@ -25,6 +25,7 @@ if not settings.configured:
     settings.configure(
         DEBUG=False,  # will be False anyway by DjangoTestRunner.
         DATABASES={"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}},
+        DEFAULT_AUTO_FIELD="django.db.models.AutoField",
         CACHES={
             # By explicit since many tests also need the caching support
             "default": {
@@ -32,6 +33,7 @@ if not settings.configured:
                 "LOCATION": "unique-snowflake",
             }
         },
+        SECRET_KEY="testtest",
         TEMPLATES=[
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -55,11 +57,11 @@ if not settings.configured:
             },
         ],
         INSTALLED_APPS=(
+            "django.contrib.admin",
             "django.contrib.auth",
             "django.contrib.contenttypes",
             "django.contrib.messages",
             "django.contrib.sites",
-            "django.contrib.admin",
             "mptt",
             "polymorphic",
             "polymorphic_tree",
