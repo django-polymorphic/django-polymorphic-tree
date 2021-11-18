@@ -1,3 +1,11 @@
+Changes in 2.1 (2021-11-18)
+---------------------------
+
+* Added Django 4.0 compatibility.
+* Fixed permission check for moving nodes.
+* Dropped Python 3.5 support.
+
+
 Changes in 2.0.0 (2021-04-01)
 -----------------------------
 
