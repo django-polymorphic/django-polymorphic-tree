@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CategoryNode',
             fields=[
-                ('basetreenode_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tree.BaseTreeNode')),
+                ('basetreenode_ptr', models.OneToOneField(on_delete=models.CASCADE, parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tree.BaseTreeNode')),
                 ('opening_title', models.CharField(max_length=200, verbose_name='Opening title')),
                 ('opening_image', models.ImageField(upload_to='images', null=True, verbose_name='Opening image', blank=True)),
             ],
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ImageNode',
             fields=[
-                ('basetreenode_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tree.BaseTreeNode')),
+                ('basetreenode_ptr', models.OneToOneField(on_delete=models.CASCADE, parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tree.BaseTreeNode')),
                 ('image', models.ImageField(upload_to='images', verbose_name='Image')),
             ],
             options={
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TextNode',
             fields=[
-                ('basetreenode_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tree.BaseTreeNode')),
+                ('basetreenode_ptr', models.OneToOneField(on_delete=models.CASCADE, parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tree.BaseTreeNode')),
                 ('extra_text', models.TextField(verbose_name='Extra text')),
             ],
             options={
@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='basetreenode',
             name='polymorphic_ctype',
-            field=models.ForeignKey(related_name=b'polymorphic_tree.basetreenode_set+', editable=False, to='contenttypes.ContentType', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name=b'polymorphic_tree.basetreenode_set+', editable=False, to='contenttypes.ContentType', null=True),
             preserve_default=True,
         ),
     ]

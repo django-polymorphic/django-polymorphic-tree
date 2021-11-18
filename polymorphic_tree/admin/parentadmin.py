@@ -2,7 +2,7 @@ import json
 from distutils.version import StrictVersion
 
 from django.conf import settings
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.contrib.auth import get_permission_codename
 from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
@@ -118,9 +118,9 @@ class PolymorphicMPTTParentModelAdmin(PolymorphicParentModelAdmin, MPTTModelAdmi
         base_urls = super().get_urls()
         info = _get_opt(self.model)
         extra_urls = [
-            url(r'^api/node-moved/$', self.admin_site.admin_view(self.api_node_moved_view), name='{}_{}_moved'.format(*info)),
-            url(r'^(\d+)/move_up/$', self.admin_site.admin_view(self.move_up_view)),
-            url(r'^(\d+)/move_down/$', self.admin_site.admin_view(self.move_down_view)),
+            path('api/node-moved/', self.admin_site.admin_view(self.api_node_moved_view), name='{}_{}_moved'.format(*info)),
+            re_path(r'^(\d+)/move_up/$', self.admin_site.admin_view(self.move_up_view)),
+            re_path(r'^(\d+)/move_down/$', self.admin_site.admin_view(self.move_down_view)),
         ]
         return extra_urls + base_urls
 
