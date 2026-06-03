@@ -1,5 +1,4 @@
 import json
-from distutils.version import StrictVersion
 
 from django.conf import settings
 from django.contrib.admin import SimpleListFilter
