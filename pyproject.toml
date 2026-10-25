@@ -12,3 +12,7 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.coverage.run]
+source = ["polymorphic_tree/"]
+omit = ["*/migrations/*"]

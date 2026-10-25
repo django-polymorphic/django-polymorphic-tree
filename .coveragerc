@@ -1,4 +1,0 @@
-[run]
-source = polymorphic_tree/
-omit =
-    */migrations/*
