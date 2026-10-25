@@ -1,3 +1,9 @@
+Changes in 2.1.1 (2026-10-25)
+-----------------------------
+
+* Removed unused distutils import, fixing Python 3.12+ compatibility.
+
+
 Changes in 2.1 (2021-11-18)
 ---------------------------
 
